@@ -3,6 +3,7 @@
 #### prerequisites
 0. install pip3 packages: <br>
 pip3 install
+graphviz
 jupyterlab
 missingno
 numpy
@@ -13,6 +14,7 @@ scikit-learn
 scikit-learn-extra
 scipy
 seaborn
+tensorflow
 1. download the oulad dataset from https://analyse.kmi.open.ac.uk/open_dataset
 2. extract all files here in the OULAD directory
 3. cd FCI
