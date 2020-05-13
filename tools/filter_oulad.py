@@ -1,9 +1,11 @@
 """ Filtering out one specific course and merging all tables into one
 """
+import re
 
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+from sklearn.impute import SimpleImputer
 
 def getOneCourse(dataset_dict, code_module, code_presentation):
     '''
@@ -132,7 +134,12 @@ def cleanAndMap(final_df, encode=True):
     # replacing NaNs
     final_df.loc[final_df['weight_mean'].isna(), 'weight_mean'] = 0
     final_df.loc[final_df['score_mean'].isna(), 'score_mean'] = 0
+    final_df.loc[final_df['sum_click_mean'].isna(), 'sum_click_mean'] = 0
     final_df.loc[final_df['date_submitted_mean'].isna(), 'date_submitted_mean'] = -1
+
+    activities = [x for x in final_df.columns if re.search("^activity_type", x)]
+    imp = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0)
+    final_df.loc[:,activities] = imp.fit_transform(final_df.loc[:,activities])
 
     if not encode:
         return

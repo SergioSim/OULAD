@@ -1,2 +1,4 @@
 *
 !.gitignore
+!student_matrix.csv
+!student_matrix_filtered.csv
