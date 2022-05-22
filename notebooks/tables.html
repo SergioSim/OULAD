@@ -1,0 +1,1438 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tables of the OULAD dataset &#8212; Analysis of the OULAD dataset</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Welcome" href="../intro.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Analysis of the OULAD dataset</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../intro.html">
+   Welcome
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Tables of the OULAD dataset
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/notebooks/tables.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/SergioSim/OULAD"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/SergioSim/OULAD/issues/new?title=Issue%20on%20page%20%2Fnotebooks/tables.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/SergioSim/OULAD/master?urlpath=tree/src/jupyterbook/notebooks/tables.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#assessments">
+   Assessments
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#courses">
+   Courses
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#student-assessment">
+   Student Assessment
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#student-info">
+   Student Info
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#student-registration">
+   Student Registration
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#student-vle">
+   Student VLE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#vle">
+   VLE
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Tables of the OULAD dataset</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#assessments">
+   Assessments
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#courses">
+   Courses
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#student-assessment">
+   Student Assessment
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#student-info">
+   Student Info
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#student-registration">
+   Student Registration
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#student-vle">
+   Student VLE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#vle">
+   VLE
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="tables-of-the-oulad-dataset">
+<h1>Tables of the OULAD dataset<a class="headerlink" href="#tables-of-the-oulad-dataset" title="Permalink to this headline">¶</a></h1>
+<p>Let’s take a first look at the OULAD tables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+
+<span class="kn">from</span> <span class="nn">oulad</span> <span class="kn">import</span> <span class="n">get_oulad</span>
+
+<span class="c1"># Load the OULAD dataset in memory</span>
+<span class="n">oulad</span> <span class="o">=</span> <span class="n">get_oulad</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="assessments">
+<h2>Assessments<a class="headerlink" href="#assessments" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">assessments</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>id_assessment</th>
+      <th>assessment_type</th>
+      <th>date</th>
+      <th>weight</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>1752</td>
+      <td>TMA</td>
+      <td>19.0</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>1753</td>
+      <td>TMA</td>
+      <td>54.0</td>
+      <td>20.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>1754</td>
+      <td>TMA</td>
+      <td>117.0</td>
+      <td>20.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>1755</td>
+      <td>TMA</td>
+      <td>166.0</td>
+      <td>20.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>1756</td>
+      <td>TMA</td>
+      <td>215.0</td>
+      <td>30.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>201</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>37443</td>
+      <td>CMA</td>
+      <td>229.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>202</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>37435</td>
+      <td>TMA</td>
+      <td>61.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>203</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>37436</td>
+      <td>TMA</td>
+      <td>124.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>204</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>37437</td>
+      <td>TMA</td>
+      <td>173.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>205</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>37444</td>
+      <td>Exam</td>
+      <td>229.0</td>
+      <td>100.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>206 rows × 6 columns</p>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="courses">
+<h2>Courses<a class="headerlink" href="#courses" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">courses</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>module_presentation_length</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>268</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAA</td>
+      <td>2014J</td>
+      <td>269</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>BBB</td>
+      <td>2013J</td>
+      <td>268</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>BBB</td>
+      <td>2014J</td>
+      <td>262</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>BBB</td>
+      <td>2013B</td>
+      <td>240</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>BBB</td>
+      <td>2014B</td>
+      <td>234</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>CCC</td>
+      <td>2014J</td>
+      <td>269</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>CCC</td>
+      <td>2014B</td>
+      <td>241</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>DDD</td>
+      <td>2013J</td>
+      <td>261</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>DDD</td>
+      <td>2014J</td>
+      <td>262</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>DDD</td>
+      <td>2013B</td>
+      <td>240</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>DDD</td>
+      <td>2014B</td>
+      <td>241</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>EEE</td>
+      <td>2013J</td>
+      <td>268</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>EEE</td>
+      <td>2014J</td>
+      <td>269</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>EEE</td>
+      <td>2014B</td>
+      <td>241</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>FFF</td>
+      <td>2013J</td>
+      <td>268</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>FFF</td>
+      <td>2014J</td>
+      <td>269</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>FFF</td>
+      <td>2013B</td>
+      <td>240</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>FFF</td>
+      <td>2014B</td>
+      <td>241</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>GGG</td>
+      <td>2013J</td>
+      <td>261</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>269</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>GGG</td>
+      <td>2014B</td>
+      <td>241</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="student-assessment">
+<h2>Student Assessment<a class="headerlink" href="#student-assessment" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_assessment</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id_assessment</th>
+      <th>id_student</th>
+      <th>date_submitted</th>
+      <th>is_banked</th>
+      <th>score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1752</td>
+      <td>11391</td>
+      <td>18</td>
+      <td>0</td>
+      <td>78.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1752</td>
+      <td>28400</td>
+      <td>22</td>
+      <td>0</td>
+      <td>70.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1752</td>
+      <td>31604</td>
+      <td>17</td>
+      <td>0</td>
+      <td>72.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1752</td>
+      <td>32885</td>
+      <td>26</td>
+      <td>0</td>
+      <td>69.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1752</td>
+      <td>38053</td>
+      <td>19</td>
+      <td>0</td>
+      <td>79.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>173907</th>
+      <td>37443</td>
+      <td>527538</td>
+      <td>227</td>
+      <td>0</td>
+      <td>60.0</td>
+    </tr>
+    <tr>
+      <th>173908</th>
+      <td>37443</td>
+      <td>534672</td>
+      <td>229</td>
+      <td>0</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>173909</th>
+      <td>37443</td>
+      <td>546286</td>
+      <td>215</td>
+      <td>0</td>
+      <td>80.0</td>
+    </tr>
+    <tr>
+      <th>173910</th>
+      <td>37443</td>
+      <td>546724</td>
+      <td>230</td>
+      <td>0</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>173911</th>
+      <td>37443</td>
+      <td>558486</td>
+      <td>224</td>
+      <td>0</td>
+      <td>80.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>173912 rows × 5 columns</p>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="student-info">
+<h2>Student Info<a class="headerlink" href="#student-info" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_info</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>id_student</th>
+      <th>gender</th>
+      <th>region</th>
+      <th>highest_education</th>
+      <th>imd_band</th>
+      <th>age_band</th>
+      <th>num_of_prev_attempts</th>
+      <th>studied_credits</th>
+      <th>disability</th>
+      <th>final_result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>11391</td>
+      <td>M</td>
+      <td>East Anglian Region</td>
+      <td>HE Qualification</td>
+      <td>90-100%</td>
+      <td>55&lt;=</td>
+      <td>0</td>
+      <td>240</td>
+      <td>N</td>
+      <td>Pass</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>28400</td>
+      <td>F</td>
+      <td>Scotland</td>
+      <td>HE Qualification</td>
+      <td>20-30%</td>
+      <td>35-55</td>
+      <td>0</td>
+      <td>60</td>
+      <td>N</td>
+      <td>Pass</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>30268</td>
+      <td>F</td>
+      <td>North Western Region</td>
+      <td>A Level or Equivalent</td>
+      <td>30-40%</td>
+      <td>35-55</td>
+      <td>0</td>
+      <td>60</td>
+      <td>Y</td>
+      <td>Withdrawn</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>31604</td>
+      <td>F</td>
+      <td>South East Region</td>
+      <td>A Level or Equivalent</td>
+      <td>50-60%</td>
+      <td>35-55</td>
+      <td>0</td>
+      <td>60</td>
+      <td>N</td>
+      <td>Pass</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>32885</td>
+      <td>F</td>
+      <td>West Midlands Region</td>
+      <td>Lower Than A Level</td>
+      <td>50-60%</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>60</td>
+      <td>N</td>
+      <td>Pass</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>32588</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2640965</td>
+      <td>F</td>
+      <td>Wales</td>
+      <td>Lower Than A Level</td>
+      <td>10-20</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>30</td>
+      <td>N</td>
+      <td>Fail</td>
+    </tr>
+    <tr>
+      <th>32589</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2645731</td>
+      <td>F</td>
+      <td>East Anglian Region</td>
+      <td>Lower Than A Level</td>
+      <td>40-50%</td>
+      <td>35-55</td>
+      <td>0</td>
+      <td>30</td>
+      <td>N</td>
+      <td>Distinction</td>
+    </tr>
+    <tr>
+      <th>32590</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2648187</td>
+      <td>F</td>
+      <td>South Region</td>
+      <td>A Level or Equivalent</td>
+      <td>20-30%</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>30</td>
+      <td>Y</td>
+      <td>Pass</td>
+    </tr>
+    <tr>
+      <th>32591</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2679821</td>
+      <td>F</td>
+      <td>South East Region</td>
+      <td>Lower Than A Level</td>
+      <td>90-100%</td>
+      <td>35-55</td>
+      <td>0</td>
+      <td>30</td>
+      <td>N</td>
+      <td>Withdrawn</td>
+    </tr>
+    <tr>
+      <th>32592</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2684003</td>
+      <td>F</td>
+      <td>Yorkshire Region</td>
+      <td>HE Qualification</td>
+      <td>50-60%</td>
+      <td>35-55</td>
+      <td>0</td>
+      <td>30</td>
+      <td>N</td>
+      <td>Distinction</td>
+    </tr>
+  </tbody>
+</table>
+<p>32593 rows × 12 columns</p>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="student-registration">
+<h2>Student Registration<a class="headerlink" href="#student-registration" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_registration</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>id_student</th>
+      <th>date_registration</th>
+      <th>date_unregistration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>11391</td>
+      <td>-159.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>28400</td>
+      <td>-53.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>30268</td>
+      <td>-92.0</td>
+      <td>12.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>31604</td>
+      <td>-52.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>32885</td>
+      <td>-176.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>32588</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2640965</td>
+      <td>-4.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>32589</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2645731</td>
+      <td>-23.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>32590</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2648187</td>
+      <td>-129.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>32591</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2679821</td>
+      <td>-49.0</td>
+      <td>101.0</td>
+    </tr>
+    <tr>
+      <th>32592</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>2684003</td>
+      <td>-28.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>32593 rows × 5 columns</p>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="student-vle">
+<h2>Student VLE<a class="headerlink" href="#student-vle" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>id_student</th>
+      <th>id_site</th>
+      <th>date</th>
+      <th>sum_click</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>28400</td>
+      <td>546652</td>
+      <td>-10</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>28400</td>
+      <td>546652</td>
+      <td>-10</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>28400</td>
+      <td>546652</td>
+      <td>-10</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>28400</td>
+      <td>546614</td>
+      <td>-10</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>28400</td>
+      <td>546714</td>
+      <td>-10</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>10655275</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>675811</td>
+      <td>896943</td>
+      <td>269</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>10655276</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>675578</td>
+      <td>896943</td>
+      <td>269</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>10655277</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>654064</td>
+      <td>896943</td>
+      <td>269</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>10655278</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>654064</td>
+      <td>896939</td>
+      <td>269</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>10655279</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>654064</td>
+      <td>896939</td>
+      <td>269</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>10655280 rows × 6 columns</p>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="vle">
+<h2>VLE<a class="headerlink" href="#vle" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">vle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id_site</th>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>activity_type</th>
+      <th>week_from</th>
+      <th>week_to</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>546943</td>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>resource</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>546712</td>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>oucontent</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>546998</td>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>resource</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>546888</td>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>url</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>547035</td>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>resource</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>6359</th>
+      <td>897063</td>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>resource</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6360</th>
+      <td>897109</td>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>resource</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6361</th>
+      <td>896965</td>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>oucontent</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6362</th>
+      <td>897060</td>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>resource</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6363</th>
+      <td>897100</td>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>resource</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>6364 rows × 6 columns</p>
+</div></div></div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="../intro.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Welcome</p>
+        </div>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By SergioSim<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
