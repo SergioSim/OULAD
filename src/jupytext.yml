@@ -1,0 +1,1 @@
+formats: jupyterbook/notebooks///ipynb,notebooks///py:percent

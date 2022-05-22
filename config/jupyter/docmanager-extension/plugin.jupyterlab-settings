@@ -1,0 +1,8 @@
+{
+    "autosave": true,
+    "autosaveInterval": 120,
+    "lastModifiedCheckMargin": 500,
+    "defaultViewers": {
+        "python": "Jupytext Notebook"
+    }
+}

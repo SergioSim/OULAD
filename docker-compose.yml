@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: .
+      target: development
+      args:
+        DOCKER_USER: ${DOCKER_USER:-1000}
+    user: ${DOCKER_USER:-1000}
+    image: sergiosim/oulad:development
+    init: true
+    environment:
+      HOME: /app/.jupyter
+      PYLINTHOME: /app/.pylint.d
+      PYTHONPATH: /app/src
+    ports:
+      - "${OULAD_JUPYTER_PORT:-8888}:${OULAD_JUPYTER_PORT:-8888}"
+    volumes:
+      - .:/app

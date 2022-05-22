@@ -1,0 +1,92 @@
+version: 2.1
+
+jobs:
+  # Check that the git history is clean and complies with our expectations
+  # Retrieved from https://github.com/openfun/ralph
+  lint-git:
+    docker:
+      - image: circleci/python:3.9-buster
+    working_directory: ~/oulad
+    steps:
+      # Checkout repository sources
+      - checkout
+      # Make sure the changes don't add a "print" statement to the code base.
+      # We should exclude the ".circleci" folder from the search as the very command that checks
+      # the absence of "print" is including a "print(" itself.
+      - run:
+          name: enforce absence of print statements in code
+          command: |
+            ! git diff origin/master..HEAD -- . ':(exclude).circleci' | grep "print("
+      - run:
+          name: Check absence of fixup commits
+          command: |
+            ! git log | grep 'fixup!'
+      - run:
+          name: Install gitlint
+          command: |
+            pip install --user gitlint
+      - run:
+          name: lint commit messages added to master
+          command: |
+            ~/.local/bin/gitlint --commits origin/master..HEAD
+
+  # Build the package dependencies
+  build:
+    docker:
+      - image: cimg/python:3.10.0
+    working_directory: ~/oulad
+    steps:
+      # Checkout repository sources
+      - checkout
+      - run:
+          name: "Build the package"
+          command: pip install --user -r requirements.txt
+      - save_cache:
+          paths:
+            - ~/.local
+          key: v1-dependencies-{{ .Revision }}
+
+  # Lint source code
+  lint:
+    docker:
+      - image: cimg/python:3.10.0
+    working_directory: ~/oulad
+    steps:
+      # Checkout repository sources
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ .Revision }}
+      - run:
+          name: Lint code with flake8
+          command: ~/.local/bin/flake8
+      - run:
+          name: Lint code with isort
+          command: ~/.local/bin/isort --recursive --check-only .
+      - run:
+          name: Lint code with black
+          command: ~/.local/bin/black src --check
+      - run:
+          name: Lint code with pylint
+          command: ~/.local/bin/pylint src
+      - run:
+          name: Lint code with bandit
+          command: ~/.local/bin/bandit -qr src
+
+workflows:
+  oulad:
+    jobs:
+      - lint-git:
+          filters:
+            tags:
+              only: /.*/
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - lint:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /.*/

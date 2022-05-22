@@ -1,0 +1,81 @@
+{
+    "codeCellConfig": {
+        "autoClosingBrackets": false,
+        "cursorBlinkRate": 530,
+        "fontFamily": null,
+        "fontSize": null,
+        "lineHeight": null,
+        "lineNumbers": false,
+        "lineWrap": "off",
+        "matchBrackets": true,
+        "readOnly": false,
+        "insertSpaces": true,
+        "tabSize": 4,
+        "wordWrapColumn": 86,
+        "rulers": [
+            86
+        ],
+        "codeFolding": false,
+        "lineWiseCopyCut": true,
+        "showTrailingSpace": false
+    },
+    "defaultCell": "code",
+    "kernelShutdown": false,
+    "markdownCellConfig": {
+        "autoClosingBrackets": false,
+        "cursorBlinkRate": 530,
+        "fontFamily": null,
+        "fontSize": null,
+        "lineHeight": null,
+        "lineNumbers": false,
+        "lineWrap": "on",
+        "matchBrackets": false,
+        "readOnly": false,
+        "insertSpaces": true,
+        "tabSize": 4,
+        "wordWrapColumn": 86,
+        "rulers": [
+            86
+        ],
+        "codeFolding": false,
+        "lineWiseCopyCut": true,
+        "showTrailingSpace": false
+    },
+    "rawCellConfig": {
+        "autoClosingBrackets": false,
+        "cursorBlinkRate": 530,
+        "fontFamily": null,
+        "fontSize": null,
+        "lineHeight": null,
+        "lineNumbers": false,
+        "lineWrap": "on",
+        "matchBrackets": false,
+        "readOnly": false,
+        "insertSpaces": true,
+        "tabSize": 4,
+        "wordWrapColumn": 86,
+        "rulers": [
+            86
+        ],
+        "codeFolding": false,
+        "lineWiseCopyCut": true,
+        "showTrailingSpace": false
+    },
+    "scrollPastEnd": true,
+    "recordTiming": false,
+    "numberCellsToRenderDirectly": 99999,
+    "remainingTimeBeforeRescheduling": 50,
+    "renderCellOnIdle": true,
+    "observedTopMargin": "1000px",
+    "observedBottomMargin": "1000px",
+    "maxNumberOutputs": 50,
+    "showEditorForReadOnlyMarkdown": true,
+    "kernelStatus": {
+        "showOnStatusBar": false,
+        "showProgress": true
+    },
+    "experimentalDisableDocumentWideUndoRedo": false,
+    "renderingLayout": "default",
+    "sideBySideLeftMarginOverride": "10px",
+    "sideBySideRightMarginOverride": "10px"
+}
