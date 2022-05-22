@@ -1,2 +1,18 @@
+# Project Data
 OULAD/
 
+# Lint
+.pylint.d
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter lab files
+.jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# Jupyter book files
+_build
