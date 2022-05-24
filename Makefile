@@ -43,7 +43,6 @@ build: ## build the docker container
 build-jupyter-book: \
 	sync-jupyter-notebooks
 build-jupyter-book: ## build the jupyter book
-	@rm -rf src/jupyterbook/_build
 	@bin/jupyter-book build src/jupyterbook
 .PHONY: build-jupyter-book
 
@@ -56,7 +55,12 @@ clear: ## remove temporary project files; to keep the OULAD tables use KEEP_OULA
 	@find . -depth -type d -name "__pycache__" -exec rm -rf {} \;
 .PHONY: clear
 
+clear-jupyter-book: ## remove the jupyter book build files
+	@rm -rf src/jupyterbook/_build
+.PHONY: clear-jupyter-book
+
 deploy-jupyter-book: \
+	clear-jupyter-book \
 	build-jupyter-book
 deploy-jupyter-book: ## deploy the jupyter book to gh-pages using the ghp-import package
 	ghp-import -n -p -f src/jupyterbook/_build/html
