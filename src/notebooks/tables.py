@@ -38,6 +38,12 @@ display(oulad.assessments)
 display(oulad.courses)
 
 # %% [markdown]
+# ## Domains
+
+# %%
+display(oulad.domains)
+
+# %% [markdown]
 # ## Student Assessment
 
 # %%
