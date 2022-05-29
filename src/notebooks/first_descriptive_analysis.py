@@ -23,6 +23,7 @@
 # We also take some notes at the end which might be used later.
 #
 # ```{bibliography}
+# :filter: docname in docnames
 # ```
 
 # %%

@@ -6,3 +6,4 @@ root: intro
 chapters:
 - file: notebooks/tables
 - file: notebooks/first_descriptive_analysis
+- file: notebooks/identifying_key_milestones

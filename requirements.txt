@@ -5,6 +5,7 @@ flake8==4.0.1
 ghp-import==2.1.0
 isort==5.10.1
 jupyterlab==3.4.2
+jupyterlab-myst==0.1.6
 jupyter-book==0.12.3
 jupytext==1.13.8
 matplotlib==3.5.2
