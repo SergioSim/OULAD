@@ -828,9 +828,10 @@ values and then remove the <code class="docutils literal notranslate"><span clas
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">final_exam_score_nas</span> <span class="o">=</span> <span class="n">feature_table</span><span class="o">.</span><span class="n">final_exam_score</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
-    <span class="n">feature_table_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">final_exam_score_nas</span><span class="p">,</span> <span class="s2">&quot;final_exam_score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_table</span><span class="p">[</span>
-        <span class="n">final_exam_score_nas</span>
-    <span class="p">]</span><span class="o">.</span><span class="n">final_result</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;Pass&quot;</span><span class="p">,</span> <span class="s2">&quot;Distinction&quot;</span><span class="p">])</span>
+    <span class="n">feature_table_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">final_exam_score_nas</span><span class="p">,</span> <span class="s2">&quot;final_exam_score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">feature_table</span><span class="p">[</span><span class="n">final_exam_score_nas</span><span class="p">]</span><span class="o">.</span><span class="n">final_result</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;Pass&quot;</span><span class="p">,</span> <span class="s2">&quot;Distinction&quot;</span><span class="p">])</span>
+        <span class="o">*</span> <span class="mi">40</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">feature_table</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;final_result&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
 
@@ -916,7 +917,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>-1.0</td>
       <td>-1.0</td>
       <td>-1.0</td>
-      <td>False</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>8462</th>
@@ -936,7 +937,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>-1.0</td>
       <td>-1.0</td>
       <td>-1.0</td>
-      <td>False</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>27417</th>
@@ -956,7 +957,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>6.0</td>
       <td>-1.0</td>
       <td>-1.0</td>
-      <td>False</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>27935</th>
@@ -976,7 +977,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>63.0</td>
       <td>-1.0</td>
       <td>-1.0</td>
-      <td>False</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>28046</th>
@@ -1076,7 +1077,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>-1.0</td>
       <td>27.0</td>
       <td>26.0</td>
-      <td>False</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2698251</th>
@@ -1116,7 +1117,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>-1.0</td>
       <td>-1.0</td>
       <td>-1.0</td>
-      <td>False</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -1333,75 +1334,37 @@ and, as in the work of Tomasevic et al., we scale and nomalize the selected feat
   </thead>
   <tbody>
     <tr>
-      <th>596093</th>
-      <td>0</td>
-      <td>0.50</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.141505</td>
-      <td>0.016211</td>
-      <td>0.077568</td>
-      <td>0.056721</td>
-      <td>0.068314</td>
-      <td>0.006035</td>
-      <td>0.72</td>
-      <td>0.79</td>
-      <td>0.74</td>
-      <td>0.87</td>
-      <td>0.57</td>
-      <td>0.45</td>
-    </tr>
-    <tr>
-      <th>515247</th>
+      <th>557404</th>
       <td>1</td>
-      <td>0.50</td>
+      <td>0.75</td>
       <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.216774</td>
-      <td>0.043981</td>
-      <td>0.083857</td>
-      <td>0.034965</td>
-      <td>0.001090</td>
-      <td>0.000000</td>
-      <td>0.57</td>
-      <td>0.67</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
+      <td>0.0</td>
+      <td>0.137484</td>
+      <td>0.061856</td>
+      <td>0.160377</td>
+      <td>0.165751</td>
+      <td>0.134878</td>
+      <td>0.095308</td>
+      <td>0.87</td>
+      <td>0.90</td>
+      <td>0.99</td>
+      <td>0.71</td>
+      <td>0.90</td>
+      <td>0.66</td>
     </tr>
     <tr>
-      <th>368436</th>
+      <th>2710343</th>
       <td>0</td>
       <td>0.25</td>
       <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.566452</td>
-      <td>0.086975</td>
-      <td>0.250524</td>
-      <td>0.217560</td>
-      <td>0.194404</td>
-      <td>0.043663</td>
-      <td>0.77</td>
-      <td>0.77</td>
-      <td>0.84</td>
-      <td>0.65</td>
-      <td>0.75</td>
-      <td>0.44</td>
-    </tr>
-    <tr>
-      <th>573235</th>
-      <td>0</td>
-      <td>0.75</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.232258</td>
-      <td>0.007471</td>
-      <td>0.071279</td>
+      <td>0.2</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.85</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.01</td>
       <td>-0.01</td>
       <td>-0.01</td>
       <td>-0.01</td>
@@ -1409,23 +1372,61 @@ and, as in the work of Tomasevic et al., we scale and nomalize the selected feat
       <td>-0.01</td>
     </tr>
     <tr>
-      <th>1614808</th>
+      <th>632486</th>
       <td>1</td>
       <td>0.50</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.128709</td>
+      <td>0.036082</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.73</td>
+      <td>0.52</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+    </tr>
+    <tr>
+      <th>562287</th>
+      <td>1</td>
+      <td>0.50</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+    </tr>
+    <tr>
+      <th>266286</th>
+      <td>1</td>
+      <td>0.75</td>
       <td>0.5</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
+      <td>0.0</td>
+      <td>0.268282</td>
+      <td>0.037723</td>
+      <td>0.062893</td>
+      <td>0.291209</td>
+      <td>0.170459</td>
+      <td>0.088710</td>
+      <td>0.50</td>
+      <td>0.81</td>
+      <td>0.85</td>
+      <td>0.58</td>
+      <td>0.62</td>
+      <td>0.28</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1447,98 +1448,98 @@ and, as in the work of Tomasevic et al., we scale and nomalize the selected feat
       <td>...</td>
     </tr>
     <tr>
-      <th>582554</th>
+      <th>8462</th>
       <td>0</td>
-      <td>0.25</td>
+      <td>0.75</td>
+      <td>1.0</td>
       <td>0.0</td>
+      <td>0.142499</td>
+      <td>0.041471</td>
+      <td>0.095388</td>
+      <td>0.037546</td>
       <td>0.000000</td>
-      <td>0.155699</td>
-      <td>0.044404</td>
-      <td>0.160377</td>
-      <td>0.099456</td>
-      <td>0.075945</td>
-      <td>0.061058</td>
-      <td>0.79</td>
+      <td>0.000000</td>
+      <td>0.93</td>
       <td>0.83</td>
-      <td>0.82</td>
-      <td>0.71</td>
-      <td>0.75</td>
-      <td>0.73</td>
-    </tr>
-    <tr>
-      <th>484266</th>
-      <td>0</td>
-      <td>0.25</td>
-      <td>0.0</td>
-      <td>0.166667</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-    </tr>
-    <tr>
-      <th>50619</th>
-      <td>0</td>
-      <td>0.50</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-    </tr>
-    <tr>
-      <th>600671</th>
-      <td>0</td>
-      <td>0.25</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.126022</td>
-      <td>0.025796</td>
-      <td>0.112159</td>
-      <td>0.111888</td>
-      <td>0.180596</td>
-      <td>0.108626</td>
       <td>0.87</td>
-      <td>0.98</td>
-      <td>0.79</td>
-      <td>0.94</td>
-      <td>0.82</td>
-      <td>0.92</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
     </tr>
     <tr>
-      <th>601289</th>
-      <td>1</td>
-      <td>0.75</td>
+      <th>624105</th>
+      <td>0</td>
+      <td>0.25</td>
       <td>0.5</td>
+      <td>0.0</td>
+      <td>0.086084</td>
+      <td>0.033037</td>
+      <td>0.015723</td>
+      <td>0.007326</td>
       <td>0.000000</td>
-      <td>0.006452</td>
-      <td>0.051734</td>
-      <td>0.162474</td>
-      <td>0.053613</td>
-      <td>0.106831</td>
-      <td>0.020234</td>
-      <td>0.38</td>
-      <td>0.34</td>
-      <td>0.53</td>
+      <td>0.000000</td>
+      <td>0.18</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+    </tr>
+    <tr>
+      <th>2414973</th>
+      <td>0</td>
       <td>0.50</td>
-      <td>0.28</td>
+      <td>0.0</td>
+      <td>0.2</td>
+      <td>0.016715</td>
+      <td>0.015230</td>
+      <td>0.029350</td>
+      <td>0.005495</td>
+      <td>0.004137</td>
+      <td>0.071848</td>
+      <td>0.41</td>
+      <td>0.37</td>
+      <td>0.62</td>
+      <td>0.52</td>
+      <td>0.41</td>
+      <td>0.42</td>
+    </tr>
+    <tr>
+      <th>444847</th>
+      <td>1</td>
+      <td>0.50</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.017133</td>
+      <td>0.005623</td>
+      <td>0.011530</td>
+      <td>0.001832</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>0.38</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+    </tr>
+    <tr>
+      <th>600648</th>
+      <td>0</td>
+      <td>0.25</td>
+      <td>0.5</td>
+      <td>0.0</td>
+      <td>0.125366</td>
+      <td>0.033505</td>
+      <td>0.164570</td>
+      <td>0.042125</td>
+      <td>0.008275</td>
+      <td>0.000000</td>
+      <td>0.68</td>
+      <td>0.70</td>
+      <td>0.66</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
       <td>-0.01</td>
     </tr>
   </tbody>
@@ -1568,10 +1569,6 @@ ranges if these were specified in the paper:</p>
 2 * (precision * recall) / (precision + recall)</p>
 <p>However, in contrast to the paper, we use 5-fold cross validation during the grid
 search phase.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>We will have to use multi-processing to speed up gridsearch in future.</p>
-</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hyperparameter search space</span>
@@ -1626,7 +1623,7 @@ search phase.</p>
 <span class="p">}</span>
 
 <span class="k">for</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">hyperparameters</span> <span class="ow">in</span> <span class="n">classifier_hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">gs_classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">classifier</span><span class="p">(),</span> <span class="n">hyperparameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">)</span>
+    <span class="n">gs_classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">classifier</span><span class="p">(),</span> <span class="n">hyperparameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">gs_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">classifier</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: score=</span><span class="si">{</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> &quot;</span>
@@ -1636,20 +1633,18 @@ search phase.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KNeighborsClassifier: score=0.8893 best_parameters={&#39;n_neighbors&#39;: 28, &#39;weights&#39;: &#39;distance&#39;}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KNeighborsClassifier: score=0.9097 best_parameters={&#39;n_neighbors&#39;: 23, &#39;weights&#39;: &#39;distance&#39;}
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SVC: score=0.8995 best_parameters={&#39;C&#39;: 10, &#39;gamma&#39;: 0.1, &#39;kernel&#39;: &#39;rbf&#39;, &#39;probability&#39;: True}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SVC: score=0.9117 best_parameters={&#39;C&#39;: 1.0, &#39;gamma&#39;: &#39;scale&#39;, &#39;kernel&#39;: &#39;rbf&#39;, &#39;probability&#39;: True}
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MLPClassifier: score=0.9075 best_parameters={&#39;hidden_layer_sizes&#39;: (52, 10), &#39;max_iter&#39;: 1000, &#39;random_state&#39;: 0, &#39;validation_fraction&#39;: 0.2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MLPClassifier: score=0.9123 best_parameters={&#39;hidden_layer_sizes&#39;: (20,), &#39;max_iter&#39;: 1000, &#39;random_state&#39;: 0, &#39;validation_fraction&#39;: 0.2}
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DecisionTreeClassifier: score=0.8917 best_parameters={&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 6, &#39;min_samples_leaf&#39;: 2, &#39;min_samples_split&#39;: 6, &#39;splitter&#39;: &#39;random&#39;}
-GaussianNB: score=0.8877 best_parameters={&#39;var_smoothing&#39;: 1e-09}
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LogisticRegression: score=0.8807 best_parameters={&#39;solver&#39;: &#39;lbfgs&#39;}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DecisionTreeClassifier: score=0.9212 best_parameters={&#39;criterion&#39;: &#39;entropy&#39;, &#39;max_depth&#39;: 5, &#39;min_samples_leaf&#39;: 8, &#39;min_samples_split&#39;: 2, &#39;splitter&#39;: &#39;best&#39;}
+GaussianNB: score=0.8963 best_parameters={&#39;var_smoothing&#39;: 1e-09}
+LogisticRegression: score=0.9137 best_parameters={&#39;solver&#39;: &#39;lbfgs&#39;}
 </pre></div>
 </div>
 </div>
@@ -1844,7 +1839,9 @@ current results.</p>
     <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">estimators</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">hyperparameters</span> <span class="ow">in</span> <span class="n">classifier_hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">gs_classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">classifier</span><span class="p">(),</span> <span class="n">hyperparameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">)</span>
+        <span class="n">gs_classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+            <span class="n">classifier</span><span class="p">(),</span> <span class="n">hyperparameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="p">)</span>
         <span class="n">gs_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
         <span class="n">estimators</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">classifier</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">gs_classifier</span><span class="p">))</span>
         <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">))</span>
@@ -1875,7 +1872,7 @@ current results.</p>
         <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">max_score</span><span class="p">:</span>
             <span class="n">max_score</span> <span class="o">=</span> <span class="n">score</span>
             <span class="n">merging_threshold</span> <span class="o">=</span> <span class="n">mt</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MultiCons: selected merging_threshold=</span><span class="si">{</span><span class="n">merging_threshold</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MultiCons: selected merging_threshold=</span><span class="si">{</span><span class="n">merging_threshold</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">recommended_consensus</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">MultiCons</span><span class="p">(</span><span class="o">**</span><span class="n">multicons_options</span><span class="p">,</span> <span class="n">merging_threshold</span><span class="o">=</span><span class="n">merging_threshold</span><span class="p">)</span>
@@ -1899,19 +1896,19 @@ current results.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=25...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.0
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.00
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=53...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.05
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.00
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=88...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.8
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.05
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=123...
@@ -1923,13 +1920,13 @@ current results.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=165...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.8500000000000001
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.65
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=207...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.9
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.30
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 score at different points in time:
@@ -1964,75 +1961,75 @@ current results.</p>
   <tbody>
     <tr>
       <th>KNeighborsClassifier</th>
-      <td>0.7543</td>
-      <td>0.7904</td>
-      <td>0.8298</td>
-      <td>0.8911</td>
-      <td>0.8772</td>
-      <td>0.8964</td>
+      <td>0.7337</td>
+      <td>0.7931</td>
+      <td>0.8416</td>
+      <td>0.8870</td>
+      <td>0.8977</td>
+      <td>0.8990</td>
     </tr>
     <tr>
       <th>SVC</th>
-      <td>0.7653</td>
-      <td>0.8156</td>
-      <td>0.8274</td>
-      <td>0.8918</td>
-      <td>0.8835</td>
-      <td>0.9076</td>
+      <td>0.7439</td>
+      <td>0.8040</td>
+      <td>0.8400</td>
+      <td>0.8832</td>
+      <td>0.8953</td>
+      <td>0.9031</td>
     </tr>
     <tr>
       <th>MLPClassifier</th>
-      <td>0.7648</td>
-      <td>0.8035</td>
-      <td>0.8290</td>
-      <td>0.8829</td>
-      <td>0.8728</td>
-      <td>0.9097</td>
-    </tr>
-    <tr>
-      <th>DecisionTreeClassifier</th>
-      <td>0.7710</td>
-      <td>0.8059</td>
-      <td>0.8214</td>
-      <td>0.8795</td>
-      <td>0.8667</td>
-      <td>0.9118</td>
-    </tr>
-    <tr>
-      <th>GaussianNB</th>
-      <td>0.7537</td>
-      <td>0.8068</td>
-      <td>0.8299</td>
-      <td>0.8731</td>
-      <td>0.8637</td>
-      <td>0.8784</td>
-    </tr>
-    <tr>
-      <th>LogisticRegression</th>
-      <td>0.7614</td>
-      <td>0.7993</td>
-      <td>0.8276</td>
-      <td>0.8896</td>
-      <td>0.8836</td>
-      <td>0.8822</td>
-    </tr>
-    <tr>
-      <th>Voting</th>
-      <td>0.7663</td>
-      <td>0.8176</td>
-      <td>0.8251</td>
-      <td>0.8829</td>
-      <td>0.8865</td>
+      <td>0.7500</td>
+      <td>0.8194</td>
+      <td>0.8479</td>
+      <td>0.8752</td>
+      <td>0.9025</td>
       <td>0.9063</td>
     </tr>
     <tr>
-      <th>MultiCons</th>
-      <td>0.7562</td>
-      <td>0.8090</td>
-      <td>0.8207</td>
-      <td>0.8867</td>
+      <th>DecisionTreeClassifier</th>
+      <td>0.7423</td>
+      <td>0.7978</td>
+      <td>0.8454</td>
       <td>0.8835</td>
-      <td>0.9103</td>
+      <td>0.8684</td>
+      <td>0.8956</td>
+    </tr>
+    <tr>
+      <th>GaussianNB</th>
+      <td>0.7521</td>
+      <td>0.8133</td>
+      <td>0.8448</td>
+      <td>0.8621</td>
+      <td>0.8767</td>
+      <td>0.8792</td>
+    </tr>
+    <tr>
+      <th>LogisticRegression</th>
+      <td>0.7435</td>
+      <td>0.8169</td>
+      <td>0.8493</td>
+      <td>0.8774</td>
+      <td>0.9062</td>
+      <td>0.8880</td>
+    </tr>
+    <tr>
+      <th>Voting</th>
+      <td>0.7598</td>
+      <td>0.8146</td>
+      <td>0.8508</td>
+      <td>0.8799</td>
+      <td>0.9040</td>
+      <td>0.8983</td>
+    </tr>
+    <tr>
+      <th>MultiCons</th>
+      <td>0.7488</td>
+      <td>0.7974</td>
+      <td>0.8516</td>
+      <td>0.8832</td>
+      <td>0.8956</td>
+      <td>0.9051</td>
     </tr>
   </tbody>
 </table>
