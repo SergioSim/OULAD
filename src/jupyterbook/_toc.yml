@@ -7,3 +7,4 @@ chapters:
 - file: notebooks/tables
 - file: notebooks/first_descriptive_analysis
 - file: notebooks/identifying_key_milestones
+- file: notebooks/predicting_students_final_exam_outcome
