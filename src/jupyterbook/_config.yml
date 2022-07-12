@@ -10,6 +10,7 @@ logo: ""
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: force
+  timeout: 600 # 10 minutes cell execution timeout.
 
 # Define the name of the latex output file for PDF builds
 latex:
