@@ -214,9 +214,10 @@ def fill_nas(feature_table_df):
     """
 
     final_exam_score_nas = feature_table.final_exam_score.isna()
-    feature_table_df.loc[final_exam_score_nas, "final_exam_score"] = feature_table[
-        final_exam_score_nas
-    ].final_result.isin(["Pass", "Distinction"])
+    feature_table_df.loc[final_exam_score_nas, "final_exam_score"] = (
+        feature_table[final_exam_score_nas].final_result.isin(["Pass", "Distinction"])
+        * 40
+    )
     return feature_table.drop(columns="final_result").fillna(-1)
 
 
@@ -377,7 +378,7 @@ x_train, x_test, y_train, y_test = normalized_train_test_split(feature_table)
 display(x_train)
 
 # %% [markdown]
-# ### Classification
+# ## Classification
 #
 # As in the work of Tomasevic et al., we will compare the classification performances
 # for the student final exam pass prediction (score >= 40).
@@ -400,10 +401,6 @@ display(x_train)
 #
 # However, in contrast to the paper, we use 5-fold cross validation during the grid
 # search phase.
-#
-# ```{note}
-# We will have to use multi-processing to speed up gridsearch in future.
-# ```
 
 # %%
 # Hyperparameter search space
@@ -458,7 +455,7 @@ classifier_hyperparameters = {
 }
 
 for classifier, hyperparameters in classifier_hyperparameters.items():
-    gs_classifier = GridSearchCV(classifier(), hyperparameters, scoring="f1")
+    gs_classifier = GridSearchCV(classifier(), hyperparameters, scoring="f1", n_jobs=-1)
     gs_classifier.fit(x_train, y_train)
     print(
         f"{classifier.__name__}: score={gs_classifier.score(x_test, y_test):.4f} "
@@ -519,7 +516,9 @@ for day in [25, 53, 88, 123, 165, 207]:
     predictions = []
     estimators = []
     for classifier, hyperparameters in classifier_hyperparameters.items():
-        gs_classifier = GridSearchCV(classifier(), hyperparameters, scoring="f1")
+        gs_classifier = GridSearchCV(
+            classifier(), hyperparameters, scoring="f1", n_jobs=-1
+        )
         gs_classifier.fit(x_train, y_train)
         estimators.append((classifier.__name__, gs_classifier))
         predictions.append(gs_classifier.predict(x_test))
@@ -550,7 +549,7 @@ for day in [25, 53, 88, 123, 165, 207]:
         if score > max_score:
             max_score = score
             merging_threshold = mt
-    print(f"MultiCons: selected merging_threshold={merging_threshold}")
+    print(f"MultiCons: selected merging_threshold={merging_threshold:0.2f}")
 
     recommended_consensus = (
         MultiCons(**multicons_options, merging_threshold=merging_threshold)
