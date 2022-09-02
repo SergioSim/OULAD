@@ -304,7 +304,7 @@ display(feature_table)
 #             </td>
 #             <td class="text-left">
 #                 <ul>
-#                     <li>0-100 scaled to 0-1</li>
+#                     <li>0-100 scaled to [0-1]</li>
 #                 </ul>
 #             </td>
 #         </tr>

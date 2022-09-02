@@ -134,14 +134,14 @@ plt.show()
 # %% [markdown]
 # ## Notes
 #
-# - The inital total number of students in the selected modules was 38239.
-# - Students in a module-presentation are organised into study groups of ~20 people.
+# - The initial total number of students in the selected modules was 38239.
+# - Students in a module presentation are organized into study groups of ~20 people.
 # - Module resources are available from the VLE system a few weeks before the start.
 # - If the final exam `date` is missing in the `assessments` table, it takes place
-#   during the last week of the module-presentation.
+#   during the last week of the module presentation.
 # - The structure of B and J presentations may differ.
-# - In the `student_registration` table if the `date_unregistration` field is present
-#   the student has withdrawn.
+# - In the `student_registration` table, the student has withdrawn if the
+#   `date_unregistration` field is present.
 # - If the student does not submit an assessment, no result is recorded.
-# - Results of the final exam are usually missing.
-# - An assessmnet score lower than 40 is interpreted as a failure.
+# - The results of the final exam are usually missing.
+# - An assessment score lower than 40 is interpreted as a failure.
