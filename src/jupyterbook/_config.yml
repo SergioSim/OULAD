@@ -3,7 +3,7 @@
 
 title: Analysis of the OULAD dataset
 author: SergioSim
-copyright: "2021"
+copyright: "2023"
 logo: ""
 
 # Force re-execution of notebooks on each build.
@@ -11,6 +11,9 @@ logo: ""
 execute:
   execute_notebooks: force
   timeout: 600 # 10 minutes cell execution timeout.
+
+parse:
+  myst_heading_anchors: 4
 
 # Define the name of the latex output file for PDF builds
 latex:

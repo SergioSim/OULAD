@@ -5,14 +5,14 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # # Predicting students final exam outcome
 #
 # This section aims to predict the `student final exam outcome`
@@ -48,7 +48,7 @@ from oulad import get_oulad
 oulad = get_oulad()
 
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ## Preparing train/test data
 #
 # ### Selecting features
@@ -91,6 +91,7 @@ oulad = get_oulad()
 #         </tr>
 #     </tbody>
 # </table>
+
 
 # %%
 def get_feature_table(max_date=500, code_presentation="2013J"):
@@ -178,7 +179,7 @@ feature_table = pd.concat(
 )
 display(feature_table)
 
-# %% [markdown] tags=[]
+# %% [markdown] user_expressions=[]
 # ### Pre-Processing
 #
 # #### Handling NAs
@@ -194,7 +195,7 @@ print(
 )
 
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # This is explained in the original OULAD paper of Kuzilek et al.
 # [\[KHZ17\]](../notebooks/first_descriptive_analysis.html#id1):
 # ```
@@ -206,6 +207,7 @@ print(
 # values and then remove the `final_results` column.
 #
 # Other columns containing missing values we fill with the value `-1`.
+
 
 # %%
 def fill_nas(feature_table_df):
@@ -224,8 +226,7 @@ def fill_nas(feature_table_df):
 feature_table = fill_nas(feature_table)
 display(feature_table)
 
-
-# %% [markdown] tags=[] jp-MarkdownHeadingCollapsed=true
+# %% [markdown] user_expressions=[]
 # #### Splitting train / test data and Normalization
 #
 # Now we randomly split the feature table rows into a train (80%) and test (20%) table
@@ -311,7 +312,10 @@ display(feature_table)
 #     </tbody>
 # </table>
 
-# %% tags=[]
+# %%
+RANDOM_STATE = 0
+
+
 def normalized_train_test_split(feature_table_df, is_for_classification=True):
     """Returns the normalized tain/test split computed form the feature table.
 
@@ -323,6 +327,7 @@ def normalized_train_test_split(feature_table_df, is_for_classification=True):
         feature_table_df.drop(columns="final_exam_score"),
         feature_table_df["final_exam_score"],
         test_size=0.2,
+        random_state=RANDOM_STATE,
     )
 
     # Scale scores per assessment and final_exam_score.
@@ -377,7 +382,7 @@ def normalized_train_test_split(feature_table_df, is_for_classification=True):
 x_train, x_test, y_train, y_test = normalized_train_test_split(feature_table)
 display(x_train)
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ## Classification
 #
 # As in the work of Tomasevic et al., we will compare the classification performances
@@ -410,25 +415,34 @@ classifier_hyperparameters = {
     KNeighborsClassifier: [
         # {"n_neighbors": range(1, 51), "weights":["uniform", "distance"]}
         # We reduce search space for speed
-        {"n_neighbors": range(20, 30), "weights": ["uniform", "distance"]}
+        {
+            "n_neighbors": [24],
+            "weights": ["distance"],
+        }
     ],
     # Support Vector Machines
     SVC: [
-        {"kernel": ["linear"], "C": [0.1, 1.0, 10], "probability": [True]},
+        # {
+        #     "kernel": ["linear"],
+        #     "C": [0.1, 1.0, 10],
+        #     "probability": [True],
+        #     "random_state": [RANDOM_STATE],
+        # },
         {
             "kernel": ["rbf"],
-            "C": [0.1, 1.0, 10],
-            "gamma": ["scale", "auto", 0.0001, 0.01, 0.1],
+            "C": [10],  # [0.1, 1.0, 10],
+            "gamma": ["scale"],  # ["scale", "auto", 0.0001, 0.01, 0.1],
             "probability": [True],
+            "random_state": [RANDOM_STATE],
         },
     ],
     # Artificial Neural Networks
     MLPClassifier: [
         {
-            "random_state": [0],
             "max_iter": [1000],
             "validation_fraction": [0.2],
-            "hidden_layer_sizes": [(10,), (20,), (52, 10)],
+            "hidden_layer_sizes": [(10,)],  # [(10,), (20,), (52, 10)],
+            "random_state": [RANDOM_STATE],
             # [(i,) for i in range(2, 100, 10)] + [
             #     (i, j) for i in range(2, 100, 10) for j in range(2, 100, 10)
             # ],
@@ -441,17 +455,27 @@ classifier_hyperparameters = {
     # Decision Tree
     DecisionTreeClassifier: [
         {
-            "criterion": ["gini", "entropy"],
-            "splitter": ["best", "random"],
-            "max_depth": [None, *list(range(1, 11))],
-            "min_samples_split": range(2, 11, 2),
-            "min_samples_leaf": range(2, 11, 2),
+            "criterion": ["entropy"],  # ["gini", "entropy"],
+            "splitter": ["best"],  # ["best", "random"],
+            "max_depth": [6],  # [None, *list(range(1, 11))],
+            "min_samples_split": [2],  # range(2, 11, 2),
+            "min_samples_leaf": [10],  # range(2, 11, 2),
+            "random_state": [RANDOM_STATE],
         },
     ],
     # Naive Bayes
-    GaussianNB: [{"var_smoothing": [1e-9, 1e-8, 1e-7, 1e-6]}],
+    GaussianNB: [
+        {
+            "var_smoothing": [1e-9],  # [1e-9, 1e-8, 1e-7, 1e-6]
+        }
+    ],
     # Logistic Regression
-    LogisticRegression: [{"solver": ["lbfgs", "saga"]}],
+    LogisticRegression: [
+        {
+            "solver": ["lbfgs"],  # ["lbfgs", "saga"],
+            "random_state": [RANDOM_STATE],
+        }
+    ],
 }
 
 for classifier, hyperparameters in classifier_hyperparameters.items():
@@ -463,7 +487,7 @@ for classifier, hyperparameters in classifier_hyperparameters.items():
     )
 
 
-# %% [markdown] tags=[]
+# %% [markdown] user_expressions=[]
 # ### Classification at different points in time
 #
 # Predicting student final exam outcome seems to be more valuable at an early stage of
@@ -486,7 +510,7 @@ oulad.assessments[
     )
 ].sort_values("date")
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # We note that each course module has six intermediary assessments.
 #
 # Next, we use the final submisssion `date` field to filter out assessment related
