@@ -5,14 +5,14 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
 
-# %% [markdown] tags=[]
+# %% [markdown] user_expressions=[]
 # # Identifying key milestones
 #
 # This section aims to reproduce the `key splitting milestone identification` approach
@@ -56,7 +56,7 @@ from oulad import get_oulad
 
 oulad = get_oulad()
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ## Cumulative weighted assessments scores
 #
 # We use the weighted assessment score for the key performance metric, in this example.
@@ -109,7 +109,7 @@ unstacked_cumulative_weighted_assessment_score = (
 
 display(cumulative_weighted_assessment_score)
 
-# %% [markdown] tags=[]
+# %% [markdown] user_expressions=[]
 # ### Step 2: Perform statistical tests
 #
 # Let's first check whether we can use the Unpaired t-test.
@@ -142,7 +142,7 @@ display(cumulative_weighted_assessment_score)
 cumulative_weighted_assessment_score.boxplot(by="final_result", figsize=(14, 12))
 plt.show()
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # We can see quite a few outliers, notably in the `Pass` student group.
 #
 # ###### **Detecting extreme outliers statistically**
@@ -175,7 +175,7 @@ print(
     f"% of the dataset (N={cumulative_weighted_assessment_score.count().sum()})"
 )
 
-# %% [markdown] tags=[]
+# %% [markdown] user_expressions=[]
 # We suspect that the number of outliers might bias the test.
 # However, as their proportion is relatively small (0.56%) and the dataset is quite
 # large (3740), we assume that the impact of the bias will be limited.
@@ -197,7 +197,7 @@ for arr in cumulative_weighted_assessment_score.hist(figsize=(12, 6)):
         )
         ax.plot(x, y, color="green")
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # We notice that the shape of the distribution (blue histogram / red density) is quite
 # different from the normal bell curve (in green).
 #
@@ -212,7 +212,7 @@ probplot(cumulative_weighted_assessment_score[131.0], dist="norm", plot=axes[1, 
 probplot(cumulative_weighted_assessment_score[166.0], dist="norm", plot=axes[1, 1])
 plt.show()
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # Here too, we notice that the distribution deviates from the theoretical quantiles
 # and thus seems to be not normal.
 #
@@ -230,7 +230,7 @@ cumulative_weighted_assessment_score.agg(
     lambda x: shapiro(x).pvalue <= 0.05
 ).rename_axis("date").reset_index(name="H0 rejected")
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # The Shapiro-Wilk test indicates evidence that the distributions are
 # **not** normally distributed.
 #
@@ -260,7 +260,7 @@ cumulative_weighted_assessment_score.agg(
     <= 0.05
 ).rename_axis("date").reset_index(name="H0 rejected")
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # The Levene test indicates that there is evidence that the variances are **different**.
 #
 # ###### **Conclusion**
@@ -323,7 +323,7 @@ significance_df = (
 
 display(significance_df)
 
-# %% [markdown] tags=[]
+# %% [markdown] user_expressions=[]
 # As in the work of Hlosta et al. the hypothesis test indicates a
 # significant difference between the groups in the time slices, starting from the
 # first time slice (the assessment from day 33).
@@ -379,12 +379,12 @@ splitting_values = pd.DataFrame(
 )
 display(splitting_values)
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # We note that although we get results of similar quality, there are some differences.
 # For instance, in the work of Hlosta et al. the obtained splitting values were around
 # \[`13`, `20`, `40`, and `55`]
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ### Step 4: Plot the time-series graph
 #
 # Finally, let's plot the results.
@@ -428,7 +428,7 @@ fill_between_plot("Withdrawn", "orange", mean_and_quartiles["Withdrawn"].T)
 plt.legend()
 plt.show()
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # Here too, we get similar graphs.
 # We note from this visualization that a clear distinction can be made between
 # `Distinction/Pass` and `Fail/Withdrawn` students if only considering the 25 and
@@ -469,7 +469,7 @@ fill_between_plot("Withdrawn", "orange", mean_and_quartiles["Withdrawn"].T)
 plt.legend()
 plt.show()
 
-# %% [markdown] tags=[]
+# %% [markdown] user_expressions=[]
 # We note that there is much more overlapping if considering the extremes.
 # This might explain why the splitting line was lower than expected previously, as it
 # tries to balance the tradeoff between passing students with a lower score and failing
@@ -520,7 +520,7 @@ cumulative_click_count = (
 )
 display(cumulative_click_count)
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ### Step 2: Perform statistical tests
 #
 # As in the first example, let's first check whether we can use the Unpaired t-test.
@@ -554,7 +554,7 @@ print(
     f"% of the dataset (N={cumulative_click_count.count().sum()})"
 )
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # We note that the outliers ratio is more significant than in the previous example.
 # However, as the number of samples is much more prominent in this case, we also suppose
 # that the impact on the t-test will be limited.
@@ -576,7 +576,7 @@ cumulative_click_count.agg(
     <= 0.05
 ).rename_axis("date").reset_index(0, drop=True).reset_index(name="H0 rejected")
 
-# %% [markdown] tags=[]
+# %% [markdown] user_expressions=[]
 # The Levene test indicates that there is evidence that the variances are **different**.
 #
 # ###### **Conclusion**
@@ -629,11 +629,11 @@ significance_df = (
 
 display(significance_df)
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # The hypothesis test indicates a significant difference in the variance between the
 # groups in the time slices, starting from the first time slice (from the day -18).
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ### Step 3: Compute the splitting value
 #
 # As in the first example, in this step, we try to compute the splitting value in each
@@ -678,7 +678,7 @@ for date in cumulative_click_count.columns:
 splitting_values = pd.DataFrame(splitting_values, index=cumulative_click_count.columns)
 display(splitting_values)
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ### Step 4: Plot the time-series graph
 #
 # Finally, let's plot the results.

@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -25,7 +25,7 @@ from oulad import get_oulad
 # Load the OULAD dataset in memory
 oulad = get_oulad()
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ## Assessments
 
 # %%
