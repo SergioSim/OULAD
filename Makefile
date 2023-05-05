@@ -3,7 +3,7 @@
 DOCKER_UID           = $(shell id -u)
 DOCKER_GID           = $(shell id -g)
 DOCKER_USER          = $(DOCKER_UID):$(DOCKER_GID)
-COMPOSE              = DOCKER_USER=$(DOCKER_USER) docker-compose
+COMPOSE              = DOCKER_USER=$(DOCKER_USER) docker compose
 COMPOSE_RUN          = $(COMPOSE) run --rm
 COMPOSE_RUN_APP      = $(COMPOSE_RUN) app
 
@@ -86,27 +86,27 @@ lint: \
   lint-bandit
 .PHONY: lint
 
-lint-black: ## lint back-end python sources with black
+lint-black: ## lint python sources with black
 	@echo 'lint:black started…'
 	@$(COMPOSE_RUN_APP) black src
 .PHONY: lint-black
 
-lint-flake8: ## lint back-end python sources with flake8
+lint-flake8: ## lint python sources with flake8
 	@echo 'lint:flake8 started…'
 	@$(COMPOSE_RUN_APP) flake8
 .PHONY: lint-flake8
 
-lint-isort: ## automatically re-arrange python imports in back-end code base
+lint-isort: ## automatically re-arrange python imports
 	@echo 'lint:isort started…'
-	@$(COMPOSE_RUN_APP) isort --atomic .
+	@$(COMPOSE_RUN_APP) isort --atomic src
 .PHONY: lint-isort
 
-lint-pylint: ## lint back-end python sources with pylint
+lint-pylint: ## lint python sources with pylint
 	@echo 'lint:pylint started…'
 	@$(COMPOSE_RUN_APP) pylint src
 .PHONY: lint-pylint
 
-lint-bandit: ## lint back-end python sources with bandit
+lint-bandit: ## lint python sources with bandit
 	@echo 'lint:bandit started…'
 	@$(COMPOSE_RUN_APP) bandit -qr src
 .PHONY: lint-bandit
