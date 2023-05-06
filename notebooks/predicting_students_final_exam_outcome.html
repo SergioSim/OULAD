@@ -1,335 +1,380 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Predicting students final exam outcome &#8212; Analysis of the OULAD dataset</title>
-    
-  <link href="../_static/css/theme.css" rel="stylesheet">
-  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/predicting_students_final_exam_outcome';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Optimize MOOC learner pathways" href="optimize_mooc_learner_pathways.html" />
     <link rel="prev" title="Identifying key milestones" href="identifying_key_milestones.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
 
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+  
+  <div class="sidebar-header-items sidebar-primary__section">
     
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
-      
-      
-      
-      <h1 class="site-logo" id="site-title">Analysis of the OULAD dataset</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../intro.html">
-   Welcome
-  </a>
- </li>
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Analysis of the OULAD dataset</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tables.html">Tables of the OULAD dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="first_descriptive_analysis.html">A first descriptive analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="identifying_key_milestones.html">Identifying key milestones</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Predicting students final exam outcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize_mooc_learner_pathways.html">Optimize MOOC learner pathways</a></li>
 </ul>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="tables.html">
-   Tables of the OULAD dataset
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="first_descriptive_analysis.html">
-   A first descriptive analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="identifying_key_milestones.html">
-   Identifying key milestones
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Predicting students final exam outcome
-  </a>
- </li>
-</ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/notebooks/predicting_students_final_exam_outcome.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+</nav></div>
     </div>
-</div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
-            <!-- Source interaction buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/SergioSim/OULAD"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/SergioSim/OULAD/issues/new?title=Issue%20on%20page%20%2Fnotebooks/predicting_students_final_exam_outcome.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+      </div>
+      
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/SergioSim/OULAD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/SergioSim/OULAD/issues/new?title=Issue%20on%20page%20%2Fnotebooks/predicting_students_final_exam_outcome.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/SergioSim/OULAD/master?urlpath=tree/src/jupyterbook/notebooks/predicting_students_final_exam_outcome.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/predicting_students_final_exam_outcome.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
     </div>
+  
 </div>
+</div>
+              
+              
 
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Predicting students final exam outcome</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div>
+                <h2> Contents </h2>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#preparing-train-test-data">
-   Preparing train/test data
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#selecting-features">
-     Selecting features
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#pre-processing">
-     Pre-Processing
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#handling-nas">
-       Handling NAs
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#splitting-train-test-data-and-normalization">
-       Splitting train / test data and Normalization
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#classification">
-   Classification
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#classification-at-different-points-in-time">
-     Classification at different points in time
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preparing-train-test-data">Preparing train/test data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-features">Selecting features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing">Pre-Processing</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-nas">Handling NAs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#splitting-train-test-data-and-normalization">Splitting train / test data and Normalization</a></li>
 </ul>
-
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classification">Classification</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-at-different-points-in-time">Classification at different points in time</a></li>
+</ul>
+</li>
+</ul>
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Predicting students final exam outcome</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#preparing-train-test-data">
-   Preparing train/test data
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#selecting-features">
-     Selecting features
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#pre-processing">
-     Pre-Processing
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#handling-nas">
-       Handling NAs
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#splitting-train-test-data-and-normalization">
-       Splitting train / test data and Normalization
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#classification">
-   Classification
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#classification-at-different-points-in-time">
-     Classification at different points in time
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="predicting-students-final-exam-outcome">
-<h1>Predicting students final exam outcome<a class="headerlink" href="#predicting-students-final-exam-outcome" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="predicting-students-final-exam-outcome">
+<h1>Predicting students final exam outcome<a class="headerlink" href="#predicting-students-final-exam-outcome" title="Permalink to this heading">#</a></h1>
 <p>This section aims to predict the <code class="docutils literal notranslate"><span class="pre">student</span> <span class="pre">final</span> <span class="pre">exam</span> <span class="pre">outcome</span></code>
 (Pass (score &gt;= 40) / Fail (score &lt; 40)).
 We try to replicate the machine learning analysis techinques from the work of
@@ -367,10 +412,10 @@ Tomasevic et al. (2020) <span id="id1">[<a class="reference internal" href="#id5
 </div>
 </div>
 </div>
-<div class="section" id="preparing-train-test-data">
-<h2>Preparing train/test data<a class="headerlink" href="#preparing-train-test-data" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="selecting-features">
-<h3>Selecting features<a class="headerlink" href="#selecting-features" title="Permalink to this headline">¶</a></h3>
+<section id="preparing-train-test-data">
+<h2>Preparing train/test data<a class="headerlink" href="#preparing-train-test-data" title="Permalink to this heading">#</a></h2>
+<section id="selecting-features">
+<h3>Selecting features<a class="headerlink" href="#selecting-features" title="Permalink to this heading">#</a></h3>
 <p>In the work of Tomasevic et al. the student data from the <code class="docutils literal notranslate"><span class="pre">DDD</span></code> module of the
 <code class="docutils literal notranslate"><span class="pre">2013J</span></code> and <code class="docutils literal notranslate"><span class="pre">2014B</span></code> presentations combined is used.</p>
 <p>Similarly, we try to select the same seven distinct attributes from the three distinct
@@ -409,7 +454,7 @@ types below:</p>
 </table><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_feature_table</span><span class="p">(</span><span class="n">max_date</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">code_presentation</span><span class="o">=</span><span class="s2">&quot;2013J&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the feature table computed from the OULAD dataset.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the feature table computed from the OULAD dataset.&quot;&quot;&quot;</span>
 
     <span class="c1"># Select all assessments from the module.</span>
     <span class="n">assessments</span> <span class="o">=</span> <span class="n">oulad</span><span class="o">.</span><span class="n">assessments</span><span class="p">[</span>
@@ -792,11 +837,11 @@ types below:</p>
 <p>3166 rows × 18 columns</p>
 </div></div></div>
 </div>
-</div>
-<div class="section" id="pre-processing">
-<h3>Pre-Processing<a class="headerlink" href="#pre-processing" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="handling-nas">
-<h4>Handling NAs<a class="headerlink" href="#handling-nas" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="pre-processing">
+<h3>Pre-Processing<a class="headerlink" href="#pre-processing" title="Permalink to this heading">#</a></h3>
+<section id="handling-nas">
+<h4>Handling NAs<a class="headerlink" href="#handling-nas" title="Permalink to this heading">#</a></h4>
 <p>We notice many missing values from the <code class="docutils literal notranslate"><span class="pre">final_exam_score</span></code> column in the selected
 feature table.</p>
 <div class="cell docutils container">
@@ -804,7 +849,7 @@ feature table.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
     <span class="sa">f</span><span class="s2">&quot;The feature table has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows and the final exam score &quot;</span>
     <span class="sa">f</span><span class="s2">&quot;column has </span><span class="si">{</span><span class="n">feature_table</span><span class="o">.</span><span class="n">final_exam_score</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> rows with NAs &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="mi">100</span><span class="o">*</span><span class="n">feature_table</span><span class="o">.</span><span class="n">final_exam_score</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">%).&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="mi">100</span><span class="o">*</span><span class="n">feature_table</span><span class="o">.</span><span class="n">final_exam_score</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">%).&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -816,7 +861,7 @@ feature table.</p>
 </div>
 </div>
 <p>This is explained in the original OULAD paper of Kuzilek et al.
-<a class="reference external" href="../notebooks/first_descriptive_analysis.html#id1">[KHZ17]</a>:</p>
+<span class="xref myst">[KHZ17]</span>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Results</span> <span class="n">of</span> <span class="n">the</span> <span class="n">final</span> <span class="n">exam</span> <span class="n">are</span> <span class="n">usually</span> <span class="n">missing</span> <span class="p">(</span><span class="n">since</span> <span class="n">they</span> <span class="n">are</span> <span class="n">scored</span> <span class="ow">and</span> <span class="n">used</span> <span class="k">for</span> <span class="n">the</span>
 <span class="n">final</span> <span class="n">marking</span> <span class="n">immediately</span> <span class="n">at</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">module</span><span class="p">)</span><span class="o">.</span>
 </pre></div>
@@ -827,7 +872,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fill_nas</span><span class="p">(</span><span class="n">feature_table_df</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Fills NAs in the `final_exam_score` column with `final_result` values,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fills NAs in the `final_exam_score` column with `final_result` values,</span>
 <span class="sd">    drops the `final_result` column and fills remaining NAs with the value `-1`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1128,9 +1173,9 @@ values and then remove the <code class="docutils literal notranslate"><span clas
 <p>3166 rows × 17 columns</p>
 </div></div></div>
 </div>
-</div>
-<div class="section" id="splitting-train-test-data-and-normalization">
-<h4>Splitting train / test data and Normalization<a class="headerlink" href="#splitting-train-test-data-and-normalization" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="splitting-train-test-data-and-normalization">
+<h4>Splitting train / test data and Normalization<a class="headerlink" href="#splitting-train-test-data-and-normalization" title="Permalink to this heading">#</a></h4>
 <p>Now we randomly split the feature table rows into a train (80%) and test (20%) table
 and, as in the work of Tomasevic et al., we scale and nomalize the selected features:</p>
 <table class="colwidths-auto table">
@@ -1206,15 +1251,18 @@ and, as in the work of Tomasevic et al., we scale and nomalize the selected feat
             </td>
             <td class="text-left">
                 <ul>
-                    <li>0-100 scaled to 0-1</li>
+                    <li>0-100 scaled to [0-1]</li>
                 </ul>
             </td>
         </tr>
     </tbody>
 </table><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">normalized_train_test_split</span><span class="p">(</span><span class="n">feature_table_df</span><span class="p">,</span> <span class="n">is_for_classification</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the normalized tain/test split computed form the feature table.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RANDOM_STATE</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">normalized_train_test_split</span><span class="p">(</span><span class="n">feature_table_df</span><span class="p">,</span> <span class="n">is_for_classification</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the normalized tain/test split computed form the feature table.</span>
 
 <span class="sd">    If `is_for_classification` is set to true (default) the final_exam_score will be</span>
 <span class="sd">    converted into two classes 0 (score &lt; 40 == Fail) and 1 (score &gt;= 40 == Pass).</span>
@@ -1224,6 +1272,7 @@ and, as in the work of Tomasevic et al., we scale and nomalize the selected feat
         <span class="n">feature_table_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;final_exam_score&quot;</span><span class="p">),</span>
         <span class="n">feature_table_df</span><span class="p">[</span><span class="s2">&quot;final_exam_score&quot;</span><span class="p">],</span>
         <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">RANDOM_STATE</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># Scale scores per assessment and final_exam_score.</span>
@@ -1338,99 +1387,99 @@ and, as in the work of Tomasevic et al., we scale and nomalize the selected feat
   </thead>
   <tbody>
     <tr>
-      <th>561195</th>
+      <th>546040</th>
       <td>0</td>
-      <td>0.25</td>
-      <td>0.5</td>
+      <td>0.75</td>
+      <td>0.0</td>
       <td>0.000000</td>
-      <td>0.241538</td>
-      <td>0.047364</td>
-      <td>0.189727</td>
-      <td>0.190365</td>
-      <td>0.122093</td>
-      <td>0.099752</td>
-      <td>0.81</td>
+      <td>0.016715</td>
+      <td>0.000564</td>
+      <td>0.063941</td>
+      <td>0.026418</td>
+      <td>0.008721</td>
+      <td>0.026269</td>
+      <td>0.61</td>
+      <td>0.58</td>
       <td>0.77</td>
-      <td>0.86</td>
-      <td>0.71</td>
-      <td>0.88</td>
-      <td>0.62</td>
+      <td>0.66</td>
+      <td>0.51</td>
+      <td>0.57</td>
     </tr>
     <tr>
-      <th>623815</th>
-      <td>1</td>
-      <td>0.50</td>
+      <th>391537</th>
+      <td>0</td>
       <td>0.5</td>
+      <td>0.0</td>
+      <td>0.333333</td>
+      <td>0.027163</td>
+      <td>0.006484</td>
+      <td>0.116352</td>
+      <td>0.035742</td>
+      <td>0.021076</td>
+      <td>0.089102</td>
+      <td>0.34</td>
+      <td>0.36</td>
+      <td>0.39</td>
+      <td>0.36</td>
+      <td>0.30</td>
+      <td>0.75</td>
+    </tr>
+    <tr>
+      <th>571682</th>
+      <td>0</td>
+      <td>0.5</td>
+      <td>0.0</td>
       <td>0.000000</td>
-      <td>0.232762</td>
-      <td>0.084297</td>
-      <td>0.324948</td>
-      <td>0.532246</td>
-      <td>0.178052</td>
-      <td>0.052183</td>
-      <td>0.87</td>
-      <td>0.89</td>
-      <td>0.60</td>
-      <td>0.68</td>
-      <td>0.45</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
       <td>-0.01</td>
     </tr>
     <tr>
-      <th>579134</th>
+      <th>376280</th>
       <td>1</td>
-      <td>0.25</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.055997</td>
-      <td>0.017761</td>
-      <td>0.117400</td>
-      <td>0.177933</td>
-      <td>0.122093</td>
-      <td>0.060348</td>
-      <td>0.51</td>
-      <td>0.64</td>
-      <td>0.76</td>
-      <td>0.51</td>
-      <td>0.62</td>
-      <td>0.19</td>
-    </tr>
-    <tr>
-      <th>631299</th>
-      <td>0</td>
-      <td>0.50</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.019641</td>
-      <td>0.014519</td>
-      <td>0.017820</td>
-      <td>0.058275</td>
-      <td>0.007994</td>
-      <td>0.013135</td>
-      <td>0.41</td>
-      <td>0.88</td>
-      <td>0.28</td>
-      <td>0.41</td>
-      <td>0.46</td>
-      <td>0.42</td>
-    </tr>
-    <tr>
-      <th>356297</th>
-      <td>0</td>
-      <td>0.25</td>
       <td>0.5</td>
+      <td>0.5</td>
+      <td>0.166667</td>
+      <td>0.017133</td>
       <td>0.000000</td>
-      <td>0.200167</td>
-      <td>0.062306</td>
-      <td>0.054507</td>
-      <td>0.324786</td>
-      <td>0.162791</td>
-      <td>0.069578</td>
-      <td>0.81</td>
-      <td>0.84</td>
-      <td>0.86</td>
-      <td>0.76</td>
-      <td>0.88</td>
-      <td>0.70</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+    </tr>
+    <tr>
+      <th>577638</th>
+      <td>1</td>
+      <td>0.5</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.081488</td>
+      <td>0.012405</td>
+      <td>0.049266</td>
+      <td>0.023310</td>
+      <td>0.006541</td>
+      <td>0.002485</td>
+      <td>0.75</td>
+      <td>0.77</td>
+      <td>0.55</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1452,89 +1501,89 @@ and, as in the work of Tomasevic et al., we scale and nomalize the selected feat
       <td>...</td>
     </tr>
     <tr>
-      <th>590541</th>
+      <th>537747</th>
       <td>1</td>
-      <td>0.50</td>
+      <td>0.75</td>
       <td>0.5</td>
       <td>0.000000</td>
-      <td>0.100293</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
-      <td>-0.01</td>
+      <td>0.142499</td>
+      <td>0.039752</td>
+      <td>0.177149</td>
+      <td>0.035742</td>
+      <td>0.123910</td>
+      <td>0.036564</td>
+      <td>0.89</td>
+      <td>0.87</td>
+      <td>0.92</td>
+      <td>0.80</td>
+      <td>0.71</td>
+      <td>0.69</td>
     </tr>
     <tr>
-      <th>594086</th>
-      <td>0</td>
-      <td>0.50</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.057668</td>
-      <td>0.025515</td>
-      <td>0.030398</td>
-      <td>0.027972</td>
-      <td>0.033430</td>
-      <td>0.003195</td>
-      <td>0.58</td>
-      <td>0.60</td>
-      <td>0.59</td>
-      <td>0.67</td>
-      <td>0.53</td>
-      <td>-0.01</td>
-    </tr>
-    <tr>
-      <th>325497</th>
-      <td>1</td>
-      <td>0.50</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.144170</td>
-      <td>0.031717</td>
-      <td>0.248428</td>
-      <td>0.082362</td>
-      <td>0.127907</td>
-      <td>0.034434</td>
-      <td>0.43</td>
-      <td>0.65</td>
-      <td>0.79</td>
-      <td>0.40</td>
-      <td>0.53</td>
-      <td>0.47</td>
-    </tr>
-    <tr>
-      <th>366267</th>
+      <th>552747</th>
       <td>1</td>
       <td>0.25</td>
+      <td>0.5</td>
+      <td>0.000000</td>
+      <td>0.485583</td>
+      <td>0.042430</td>
+      <td>0.208595</td>
+      <td>0.310023</td>
+      <td>0.332485</td>
+      <td>0.173589</td>
+      <td>0.90</td>
+      <td>0.92</td>
+      <td>0.97</td>
+      <td>0.97</td>
+      <td>0.94</td>
+      <td>0.92</td>
+    </tr>
+    <tr>
+      <th>608848</th>
+      <td>1</td>
+      <td>0.5</td>
       <td>0.0</td>
-      <td>0.166667</td>
-      <td>0.007104</td>
-      <td>0.002537</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.58</td>
-      <td>0.55</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
       <td>-0.01</td>
       <td>-0.01</td>
       <td>-0.01</td>
       <td>-0.01</td>
     </tr>
     <tr>
-      <th>578544</th>
+      <th>614649</th>
       <td>0</td>
       <td>0.25</td>
       <td>0.0</td>
       <td>0.000000</td>
-      <td>0.009193</td>
+      <td>0.017969</td>
+      <td>0.000282</td>
+      <td>0.026205</td>
       <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.41</td>
+      <td>0.19</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+      <td>-0.01</td>
+    </tr>
+    <tr>
+      <th>623099</th>
+      <td>0</td>
+      <td>0.5</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.060176</td>
+      <td>0.000282</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -1551,11 +1600,11 @@ and, as in the work of Tomasevic et al., we scale and nomalize the selected feat
 <p>2532 rows × 16 columns</p>
 </div></div></div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="classification">
-<h2>Classification<a class="headerlink" href="#classification" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+</section>
+<section id="classification">
+<h2>Classification<a class="headerlink" href="#classification" title="Permalink to this heading">#</a></h2>
 <p>As in the work of Tomasevic et al., we will compare the classification performances
 for the student final exam pass prediction (score &gt;= 40).</p>
 <p>We use the same models and try to perform a grid search over the same Hyper-parameter
@@ -1583,25 +1632,34 @@ search phase.</p>
     <span class="n">KNeighborsClassifier</span><span class="p">:</span> <span class="p">[</span>
         <span class="c1"># {&quot;n_neighbors&quot;: range(1, 51), &quot;weights&quot;:[&quot;uniform&quot;, &quot;distance&quot;]}</span>
         <span class="c1"># We reduce search space for speed</span>
-        <span class="p">{</span><span class="s2">&quot;n_neighbors&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;distance&quot;</span><span class="p">]}</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;n_neighbors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">24</span><span class="p">],</span>
+            <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
     <span class="p">],</span>
     <span class="c1"># Support Vector Machines</span>
     <span class="n">SVC</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span><span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">],</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s2">&quot;probability&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">]},</span>
+        <span class="c1"># {</span>
+        <span class="c1">#     &quot;kernel&quot;: [&quot;linear&quot;],</span>
+        <span class="c1">#     &quot;C&quot;: [0.1, 1.0, 10],</span>
+        <span class="c1">#     &quot;probability&quot;: [True],</span>
+        <span class="c1">#     &quot;random_state&quot;: [RANDOM_STATE],</span>
+        <span class="c1"># },</span>
         <span class="p">{</span>
             <span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;rbf&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>  <span class="c1"># [0.1, 1.0, 10],</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;scale&quot;, &quot;auto&quot;, 0.0001, 0.01, 0.1],</span>
             <span class="s2">&quot;probability&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">],</span>
+            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
         <span class="p">},</span>
     <span class="p">],</span>
     <span class="c1"># Artificial Neural Networks</span>
     <span class="n">MLPClassifier</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
             <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">],</span>
             <span class="s2">&quot;validation_fraction&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">],</span>
-            <span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">10</span><span class="p">,),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,),</span> <span class="p">(</span><span class="mi">52</span><span class="p">,</span> <span class="mi">10</span><span class="p">)],</span>
+            <span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">10</span><span class="p">,)],</span>  <span class="c1"># [(10,), (20,), (52, 10)],</span>
+            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
             <span class="c1"># [(i,) for i in range(2, 100, 10)] + [</span>
             <span class="c1">#     (i, j) for i in range(2, 100, 10) for j in range(2, 100, 10)</span>
             <span class="c1"># ],</span>
@@ -1614,48 +1672,56 @@ search phase.</p>
     <span class="c1"># Decision Tree</span>
     <span class="n">DecisionTreeClassifier</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;gini&quot;</span><span class="p">,</span> <span class="s2">&quot;entropy&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;splitter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">))],</span>
-            <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;entropy&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;gini&quot;, &quot;entropy&quot;],</span>
+            <span class="s2">&quot;splitter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;best&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;best&quot;, &quot;random&quot;],</span>
+            <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span>  <span class="c1"># [None, *list(range(1, 11))],</span>
+            <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>  <span class="c1"># range(2, 11, 2),</span>
+            <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>  <span class="c1"># range(2, 11, 2),</span>
+            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
         <span class="p">},</span>
     <span class="p">],</span>
     <span class="c1"># Naive Bayes</span>
-    <span class="n">GaussianNB</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;var_smoothing&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">]}],</span>
+    <span class="n">GaussianNB</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;var_smoothing&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-9</span><span class="p">],</span>  <span class="c1"># [1e-9, 1e-8, 1e-7, 1e-6]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
     <span class="c1"># Logistic Regression</span>
-    <span class="n">LogisticRegression</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;saga&quot;</span><span class="p">]}],</span>
+    <span class="n">LogisticRegression</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;lbfgs&quot;, &quot;saga&quot;],</span>
+            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
 <span class="p">}</span>
 
 <span class="k">for</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">hyperparameters</span> <span class="ow">in</span> <span class="n">classifier_hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="n">gs_classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">classifier</span><span class="p">(),</span> <span class="n">hyperparameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">gs_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">classifier</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: score=</span><span class="si">{</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">classifier</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: score=</span><span class="si">{</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;best_parameters=</span><span class="si">{</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">best_params_</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KNeighborsClassifier: score=0.9187 best_parameters={&#39;n_neighbors&#39;: 29, &#39;weights&#39;: &#39;distance&#39;}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KNeighborsClassifier: score=0.8962 best_parameters={&#39;n_neighbors&#39;: 24, &#39;weights&#39;: &#39;distance&#39;}
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SVC: score=0.9157 best_parameters={&#39;C&#39;: 10, &#39;gamma&#39;: &#39;scale&#39;, &#39;kernel&#39;: &#39;rbf&#39;, &#39;probability&#39;: True}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SVC: score=0.8950 best_parameters={&#39;C&#39;: 10, &#39;gamma&#39;: &#39;scale&#39;, &#39;kernel&#39;: &#39;rbf&#39;, &#39;probability&#39;: True, &#39;random_state&#39;: 0}
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MLPClassifier: score=0.9114 best_parameters={&#39;hidden_layer_sizes&#39;: (52, 10), &#39;max_iter&#39;: 1000, &#39;random_state&#39;: 0, &#39;validation_fraction&#39;: 0.2}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MLPClassifier: score=0.8914 best_parameters={&#39;hidden_layer_sizes&#39;: (10,), &#39;max_iter&#39;: 1000, &#39;random_state&#39;: 0, &#39;validation_fraction&#39;: 0.2}
+DecisionTreeClassifier: score=0.8719 best_parameters={&#39;criterion&#39;: &#39;entropy&#39;, &#39;max_depth&#39;: 6, &#39;min_samples_leaf&#39;: 10, &#39;min_samples_split&#39;: 2, &#39;random_state&#39;: 0, &#39;splitter&#39;: &#39;best&#39;}
+GaussianNB: score=0.8806 best_parameters={&#39;var_smoothing&#39;: 1e-09}
+LogisticRegression: score=0.8919 best_parameters={&#39;random_state&#39;: 0, &#39;solver&#39;: &#39;lbfgs&#39;}
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DecisionTreeClassifier: score=0.9079 best_parameters={&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 6, &#39;min_samples_leaf&#39;: 10, &#39;min_samples_split&#39;: 10, &#39;splitter&#39;: &#39;best&#39;}
-GaussianNB: score=0.8847 best_parameters={&#39;var_smoothing&#39;: 1e-09}
-LogisticRegression: score=0.9076 best_parameters={&#39;solver&#39;: &#39;lbfgs&#39;}
-</pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="classification-at-different-points-in-time">
-<h3>Classification at different points in time<a class="headerlink" href="#classification-at-different-points-in-time" title="Permalink to this headline">¶</a></h3>
+<section id="classification-at-different-points-in-time">
+<h3>Classification at different points in time<a class="headerlink" href="#classification-at-different-points-in-time" title="Permalink to this heading">#</a></h3>
 <p>Predicting student final exam outcome seems to be more valuable at an early stage of
 the course as it might give instuctors more time to help the students at risk.
 However, predicting early is more challenging as less data is available for the
@@ -1912,25 +1978,25 @@ current results.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=88...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.05
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.00
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=123...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.35
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.05
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=165...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.60
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.05
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing classification results at day=207...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.75
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiCons: selected merging_threshold=0.70
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>F1 score at different points in time:
@@ -1965,83 +2031,83 @@ current results.</p>
   <tbody>
     <tr>
       <th>KNeighborsClassifier</th>
-      <td>0.7554</td>
-      <td>0.7905</td>
-      <td>0.8479</td>
-      <td>0.8829</td>
-      <td>0.9022</td>
-      <td>0.8998</td>
+      <td>0.7038</td>
+      <td>0.7759</td>
+      <td>0.8035</td>
+      <td>0.8556</td>
+      <td>0.8787</td>
+      <td>0.8962</td>
     </tr>
     <tr>
       <th>SVC</th>
-      <td>0.7732</td>
-      <td>0.8053</td>
-      <td>0.8444</td>
-      <td>0.8783</td>
-      <td>0.9029</td>
-      <td>0.9164</td>
+      <td>0.7513</td>
+      <td>0.7944</td>
+      <td>0.8193</td>
+      <td>0.8551</td>
+      <td>0.8771</td>
+      <td>0.8950</td>
     </tr>
     <tr>
       <th>MLPClassifier</th>
-      <td>0.7656</td>
-      <td>0.7923</td>
-      <td>0.8395</td>
-      <td>0.8761</td>
-      <td>0.9048</td>
-      <td>0.9078</td>
+      <td>0.7266</td>
+      <td>0.7815</td>
+      <td>0.8267</td>
+      <td>0.8512</td>
+      <td>0.8809</td>
+      <td>0.8914</td>
     </tr>
     <tr>
       <th>DecisionTreeClassifier</th>
-      <td>0.7850</td>
-      <td>0.7931</td>
-      <td>0.8421</td>
-      <td>0.8675</td>
-      <td>0.8878</td>
-      <td>0.9204</td>
+      <td>0.7034</td>
+      <td>0.7952</td>
+      <td>0.8179</td>
+      <td>0.8431</td>
+      <td>0.8771</td>
+      <td>0.8719</td>
     </tr>
     <tr>
       <th>GaussianNB</th>
-      <td>0.7584</td>
-      <td>0.8048</td>
-      <td>0.8448</td>
-      <td>0.8624</td>
-      <td>0.8904</td>
-      <td>0.8827</td>
+      <td>0.7240</td>
+      <td>0.7873</td>
+      <td>0.8142</td>
+      <td>0.8456</td>
+      <td>0.8566</td>
+      <td>0.8806</td>
     </tr>
     <tr>
       <th>LogisticRegression</th>
-      <td>0.7796</td>
-      <td>0.7929</td>
-      <td>0.8471</td>
-      <td>0.8771</td>
-      <td>0.8924</td>
-      <td>0.9022</td>
+      <td>0.7319</td>
+      <td>0.7842</td>
+      <td>0.8246</td>
+      <td>0.8539</td>
+      <td>0.8755</td>
+      <td>0.8919</td>
     </tr>
     <tr>
       <th>Voting</th>
-      <td>0.7736</td>
-      <td>0.8048</td>
-      <td>0.8513</td>
-      <td>0.8788</td>
-      <td>0.9125</td>
-      <td>0.9107</td>
+      <td>0.7314</td>
+      <td>0.7851</td>
+      <td>0.8295</td>
+      <td>0.8619</td>
+      <td>0.8773</td>
+      <td>0.9013</td>
     </tr>
     <tr>
       <th>MultiCons</th>
-      <td>0.7688</td>
-      <td>0.8065</td>
-      <td>0.8460</td>
-      <td>0.8815</td>
-      <td>0.8978</td>
-      <td>0.8977</td>
+      <td>0.7373</td>
+      <td>0.7819</td>
+      <td>0.8098</td>
+      <td>0.8487</td>
+      <td>0.8717</td>
+      <td>0.8789</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -2055,7 +2121,7 @@ current results.</p>
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./notebooks"
         },
         predefinedOutput: true
@@ -2063,37 +2129,117 @@ current results.</p>
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="identifying_key_milestones.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Identifying key milestones</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="optimize_mooc_learner_pathways.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Optimize MOOC learner pathways</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preparing-train-test-data">Preparing train/test data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-features">Selecting features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing">Pre-Processing</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-nas">Handling NAs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#splitting-train-test-data-and-normalization">Splitting train / test data and Normalization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classification">Classification</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-at-different-points-in-time">Classification at different points in time</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="identifying_key_milestones.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Identifying key milestones</p>
-        </div>
-    </a>
-</div>
+          </div>
+          <footer class="bd-footer-content">
             
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By SergioSim<br/>
-    
-        &copy; Copyright 2021.<br/>
-  </p>
-</footer>
-</main>
-
-
-      </div>
-    </div>
+<div class="bd-footer-content__inner container">
   
-  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By SergioSim
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
