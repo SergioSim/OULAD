@@ -20,3 +20,5 @@ _build
 # Python virtualenv
 venv/
 
+# Notebook drafts
+src/notebooks/drafts
