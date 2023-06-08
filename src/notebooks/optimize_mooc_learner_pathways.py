@@ -12,7 +12,7 @@
 #     name: python3
 # ---
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # # Optimize MOOC learner pathways
 #
 # In this section we propose a learning item recommendation system based on
@@ -304,7 +304,7 @@ pd.DataFrame(
     {"multicons": consensus.labels_, "final_result": result_table.final_result}
 ).groupby(["multicons", "final_result"]).size()
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ## Collaborative filtering
 #
 # Next, for each consensus group we train a collaborative filtering model.
@@ -325,7 +325,6 @@ for label in np.unique(consensus.labels_):
     sub_student_vle = student_item.loc[
         student_item.id_student.isin(result_table.loc[mask].index)
     ]
-
     reader = Reader(rating_scale=(0, sub_student_vle.sum_click.max()))
     data = Dataset.load_from_df(
         sub_student_vle[["id_student", "id_site", "sum_click"]], reader
@@ -340,7 +339,7 @@ for label in np.unique(consensus.labels_):
     display(gs.best_params["rmse"])
     gs_recommenders[label] = gs
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ## Recommendation
 #
 # At this stage we generate recommedations for students that were predicted as failling.
@@ -401,7 +400,7 @@ recommendation_improvement_rate_mc_cf_df = pd.DataFrame(
 )
 display(recommendation_improvement_rate_mc_cf_df)
 
-# %% [markdown]
+# %% [markdown] user_expressions=[]
 # ## Validation
 #
 # Finally, we compare the quality of our approach witha baseline method that applies

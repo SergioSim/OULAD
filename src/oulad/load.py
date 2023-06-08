@@ -1,5 +1,6 @@
 """Loading the OULAD dataset into memory."""
 
+import os
 from dataclasses import dataclass
 
 import pandas as pd
@@ -21,9 +22,10 @@ class OULAD:
     vle: pd.DataFrame
 
 
-def get_oulad(path: str = "/app/OULAD") -> OULAD:
+def get_oulad(path: str = None) -> OULAD:
     """Returns the OULAD dataset tables in a dataclass."""
 
+    path = path if path else os.environ.get("OULAD_DEFAULT_PATH", "/app/OULAD")
     # Remove unlinked assessments (they don't have any corresponding student_assessment)
     assessments = pd.read_csv(f"{path}/assessments.csv")
     assessments.drop(
