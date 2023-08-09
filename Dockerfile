@@ -5,7 +5,7 @@ FROM python:3.10.4-slim-bullseye as base
 RUN apt update && \
     apt -y upgrade && \
     apt -y install gcc git graphviz python3-dev && \
-    pip install --upgrade pip && \
+    pip install --upgrade pip setuptools wheel && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -16,11 +16,8 @@ FROM base as development
 # Copy requirements.txt
 COPY requirements.txt /app/
 
-# Install python dependencies and jupyter extensions
-RUN pip install -r requirements.txt && \
-    jupyter contrib nbextension install --system && \
-    jupyter nbextension install jupytext --py && \
-    jupyter nbextension enable jupytext --py
+# Install python dependencies
+RUN pip install -r requirements.txt
 
 # Un-privileged user running the application
 USER ${DOCKER_USER:-1000}

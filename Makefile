@@ -51,11 +51,8 @@ build-venv: ## build the project environment (with venv)
 	@# Note: make executes each line in a separate shell.
 	@# Therefore we chain the subsequent commands.
 	@. venv/bin/activate && \
-	pip install -U pip && \
-	pip install -r requirements.txt && \
-	jupyter contrib nbextension install --user && \
-	jupyter nbextension install --user jupytext --py && \
-	jupyter nbextension enable jupytext --py
+	pip install -U pip setuptools wheel && \
+	pip install -r requirements.txt
 .PHONY: build-venv
 
 build-jupyter-book: \
@@ -65,10 +62,11 @@ build-jupyter-book: ## build the jupyter book (with docker)
 .PHONY: build-jupyter-book
 
 build-jupyter-book-venv: \
-	sync-jupyter-botebooks-venv
+	sync-jupyter-notebooks-venv
 build-jupyter-book-venv: ## build the jupyter book (with venv)	
 	@. venv/bin/activate && \
-	jupyter-book build src/jupyterbook	
+	PYTHONPATH=${PWD}/src OULAD_DEFAULT_PATH=${PWD}/OULAD jupyter-book \
+		build src/jupyterbook
 .PHONY: build-jupyter-book-venv
 
 clear: ## remove temporary project files; to keep the OULAD tables use KEEP_OULAD=true

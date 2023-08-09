@@ -1,20 +1,23 @@
 bandit==1.7.5
-black==23.3.0
+black==23.7.0
 # Note: Docutils versions 0.18 and 0.19 are known to generate invalid html for
 # citations. We should use version >=0.20 once released.
 # For more details, see https://sourceforge.net/p/docutils/patches/195/.
+# Also see https://github.com/executablebooks/jupyter-book/issues/2037.
 docutils<0.18
 theme-darcula==4.0.0
-flake8==6.0.0
+flake8==6.1.0
 ghp-import==2.1.0
 isort==5.12.0
-jupyterlab==3.6.3
-jupyterlab-myst==1.1.3
+jupyterlab==4.0.4
+jupyterlab-myst==2.0.1
 jupyter-contrib-nbextensions==0.7.0
 jupyter-book==0.15.1
-jupytext==1.14.5
-matplotlib==3.7.1
+jupytext==1.15.0
+matplotlib==3.7.2
 multicons==0.2.0
-pylint==2.17.3
-scikit-learn==1.2.2
+numpy==1.25.2
+pandas==2.0.3
+pylint==2.17.5
+scikit-learn==1.3.0
 scikit-surprise==1.1.3
