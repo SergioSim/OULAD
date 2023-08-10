@@ -676,7 +676,7 @@ should be similar, see
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e2008c9becda503e32b858ac8fc8d309717df12b0c8ce0f0f929cad8fd1c1d14.png" src="../_images/e2008c9becda503e32b858ac8fc8d309717df12b0c8ce0f0f929cad8fd1c1d14.png" />
+<img alt="../_images/9dc97a324d6c6d4e11be61ebdc35ca6648b216429e274d65a1870d2862e46e58.png" src="../_images/9dc97a324d6c6d4e11be61ebdc35ca6648b216429e274d65a1870d2862e46e58.png" />
 </div>
 </div>
 <p>We can see quite a few outliers, notably in the <code class="docutils literal notranslate"><span class="pre">Pass</span></code> student group.</p>
@@ -744,7 +744,7 @@ large (3740), we assume that the impact of the bias will be limited.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/4c9aacdda1e139aa50e3e008c2c23027f9e50beb5beffe692bd4a75e36a73c43.png" src="../_images/4c9aacdda1e139aa50e3e008c2c23027f9e50beb5beffe692bd4a75e36a73c43.png" />
+<img alt="../_images/fb47907b21c2f7d5748d64086b0fed3a748a338677d4623c0580c5e5e0c80e3b.png" src="../_images/fb47907b21c2f7d5748d64086b0fed3a748a338677d4623c0580c5e5e0c80e3b.png" />
 </div>
 </div>
 <p>We notice that the shape of the distribution (blue histogram / red density) is quite
@@ -763,7 +763,7 @@ distributions follow the normal distribution.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fa58c747996dda7b1c27e2ca6fe2d2eae0d91f52018255e5a4dc583fae23fdf6.png" src="../_images/fa58c747996dda7b1c27e2ca6fe2d2eae0d91f52018255e5a4dc583fae23fdf6.png" />
+<img alt="../_images/da0c93431199f679aef9162b2a8264d4ed392ad0c68049084b6e0b8d2b5c24f7.png" src="../_images/da0c93431199f679aef9162b2a8264d4ed392ad0c68049084b6e0b8d2b5c24f7.png" />
 </div>
 </div>
 <p>Here too, we notice that the distribution deviates from the theoretical quantiles
@@ -1168,7 +1168,7 @@ and re-label those that had succeeded exceptionally well (<strong>Distinction</s
     <span class="n">splitting_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
 <span class="n">splitting_values</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="n">splitting_values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">cumulative_weighted_assessment_score</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">splitting_values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">cumulative_weighted_assessment_score</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">splitting_values</span><span class="p">)</span>
 </pre></div>
@@ -1256,9 +1256,8 @@ For instance, in the work of Hlosta et al. the obtained splitting values were ar
 
 <span class="k">def</span> <span class="nf">fill_between_plot</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plots a matplotlib `fill_between` plot in the given axis.&quot;&quot;&quot;</span>
-
-    <span class="n">values</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">first_quartile</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">third_quartile</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">values</span><span class="o">.</span><span class="n">first_quartile</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">third_quartile</span><span class="p">]</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 
@@ -1272,7 +1271,7 @@ For instance, in the work of Hlosta et al. the obtained splitting values were ar
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/885ba7cb36ae21d8e3078bb8572f91fe6523f5e7416c35b2833f7376fa969af4.png" src="../_images/885ba7cb36ae21d8e3078bb8572f91fe6523f5e7416c35b2833f7376fa969af4.png" />
+<img alt="../_images/f5a782b20089eca46e49a1ca9c95c293819750623b4f80c4c3d19fa026acbf2e.png" src="../_images/f5a782b20089eca46e49a1ca9c95c293819750623b4f80c4c3d19fa026acbf2e.png" />
 </div>
 </div>
 <p>Here too, we get similar graphs.
@@ -1316,7 +1315,7 @@ percentiles.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/1074843b622d4d6b54dba357155c7666fa67f70eb7fcfc6fa4eccff0b231d73a.png" src="../_images/1074843b622d4d6b54dba357155c7666fa67f70eb7fcfc6fa4eccff0b231d73a.png" />
+<img alt="../_images/7e7a54e3dfab6d4e347d308a991620b464a68870b63eabd72692b4b463d1015b.png" src="../_images/7e7a54e3dfab6d4e347d308a991620b464a68870b63eabd72692b4b463d1015b.png" />
 </div>
 </div>
 <p>We note that there is much more overlapping if considering the extremes.
@@ -2281,7 +2280,7 @@ students (counting “Distinction” also as “Passing” and “Withdrawn” a
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a3e657aca1dc13ac79f7fc0d531ed3111803507c03b51ad446c609bb2f9dc785.png" src="../_images/a3e657aca1dc13ac79f7fc0d531ed3111803507c03b51ad446c609bb2f9dc785.png" />
+<img alt="../_images/5d28454bca863ef1d1f6d8e342b138c6042bed002d7da73e65d55b8fb5c2458e.png" src="../_images/5d28454bca863ef1d1f6d8e342b138c6042bed002d7da73e65d55b8fb5c2458e.png" />
 </div>
 </div>
 </section>

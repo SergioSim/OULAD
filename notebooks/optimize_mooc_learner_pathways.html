@@ -380,15 +380,15 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="optimize-mooc-learner-pathways">
 <h1>Optimize MOOC learner pathways<a class="headerlink" href="#optimize-mooc-learner-pathways" title="Permalink to this heading">#</a></h1>
-<p>In this section we propose a learning item recommendation system based on
+<p>In this section, we propose a learning item recommendation system based on
 consensus clustering (MultiCons) and collaborative filtering.</p>
 <p>The approach consists of first grouping learners into homogeneous groups based on
 their profile and learning activities in the course using consensus clustering.</p>
 <p>Then, for each student cluster, collaborative filtering is applied to recommend
 previously unexplored learning items.</p>
 <p>We measure the quality of our approach by first training a decision tree classifier
-predicting certification success and then comparing the changes in success predictions
-when students, that were previously correctly predicted as failling, follow the
+predicting certification success, then comparing changes in success predictions when
+students whose failure had previously been correctly predicted follow the
 recommendations.</p>
 <p>Finally, we compare the quality of our approach to a baseline method that applies
 collaborative filtering on the full dataset.</p>
@@ -433,7 +433,7 @@ collaborative filtering on the full dataset.</p>
 <section id="selecting-one-course-session">
 <h3>Selecting one course session<a class="headerlink" href="#selecting-one-course-session" title="Permalink to this heading">#</a></h3>
 <p>We start by selecting one OULAD course session.</p>
-<p>We choose the <code class="docutils literal notranslate"><span class="pre">AAA</span></code> course from the <code class="docutils literal notranslate"><span class="pre">2013J</span></code> session.</p>
+<p>We choose the <code class="docutils literal notranslate"><span class="pre">BBB</span></code> course from the <code class="docutils literal notranslate"><span class="pre">2013J</span></code> session.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CODE_MODULE</span> <span class="o">=</span> <span class="s2">&quot;BBB&quot;</span>
@@ -448,16 +448,17 @@ collaborative filtering on the full dataset.</p>
 session.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">student_item</span> <span class="o">=</span> <span class="n">filter_by_module_presentation</span><span class="p">(</span>
-    <span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">,</span> <span class="n">CODE_MODULE</span><span class="p">,</span> <span class="n">CODE_PRESENTATION</span>
-<span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="n">student_item</span> <span class="o">=</span> <span class="n">student_item</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;id_site&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-
-<span class="c1"># We convert the `id_site` column to string type as the values of `id_site` will be</span>
-<span class="c1"># used as column names in the `student_profile` table.</span>
-<span class="n">student_item</span><span class="o">.</span><span class="n">id_site</span> <span class="o">=</span> <span class="n">student_item</span><span class="o">.</span><span class="n">id_site</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">student_item</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">,</span> <span class="n">CODE_MODULE</span><span class="p">,</span> <span class="n">CODE_PRESENTATION</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;id_site&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="c1"># We convert the `id_site` column to string type as the values of `id_site` will</span>
+    <span class="c1"># be used as column names in the `student_profile` table.</span>
+    <span class="c1"># student_item.id_site = student_item.id_site.astype(str)</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;id_site&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">})</span>
+<span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">student_item</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -574,16 +575,15 @@ and students marked with <code class="docutils literal notranslate"><span class=
     <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;num_of_prev_attempts&quot;</span><span class="p">,</span> <span class="s2">&quot;region&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="p">)</span>
-
-<span class="n">student_registration</span> <span class="o">=</span> <span class="n">filter_by_module_presentation</span><span class="p">(</span>
-    <span class="n">oulad</span><span class="o">.</span><span class="n">student_registration</span><span class="p">,</span> <span class="n">CODE_MODULE</span><span class="p">,</span> <span class="n">CODE_PRESENTATION</span>
-<span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
-
-<span class="c1"># Remove students that unregistered before the course started</span>
-<span class="n">student_registration</span> <span class="o">=</span> <span class="n">student_registration</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-    <span class="o">~</span><span class="p">(</span><span class="n">student_registration</span><span class="o">.</span><span class="n">date_unregistration</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;date_registration&quot;</span><span class="p">]</span>
-<span class="p">]</span>
-
+<span class="n">student_registration</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filter_by_module_presentation</span><span class="p">(</span>
+        <span class="n">oulad</span><span class="o">.</span><span class="n">student_registration</span><span class="p">,</span> <span class="n">CODE_MODULE</span><span class="p">,</span> <span class="n">CODE_PRESENTATION</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="c1"># Remove students that unregistered before the course started.</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;~(date_unregistration &lt; 0)&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;date_unregistration&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
 <span class="n">student_registration_info</span> <span class="o">=</span> <span class="n">student_registration</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">student_info</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span>
 
 <span class="n">student_activity</span> <span class="o">=</span> <span class="n">student_item</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
@@ -593,7 +593,7 @@ and students marked with <code class="docutils literal notranslate"><span class=
     <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Remove students that have no interation records.</span>
+<span class="c1"># Remove students that have no interaction records.</span>
 <span class="n">student_activity</span> <span class="o">=</span> <span class="n">student_activity</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">(</span><span class="n">student_activity</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
 
 <span class="n">student_profile</span> <span class="o">=</span> <span class="n">student_registration_info</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">student_activity</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span>
@@ -1378,7 +1378,9 @@ recommendations.</p>
 
 <span class="c1"># Plot the decision tree</span>
 <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="n">plot_tree</span><span class="p">(</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">x_train</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plot_tree</span><span class="p">(</span>
+    <span class="n">gs_classifier</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">x_train</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span>
+<span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="n">failing_student_ids</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">y_test</span><span class="o">.</span><span class="n">final_result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">index</span>
@@ -1409,7 +1411,7 @@ recommendations.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&quot;best_parameters={&#39;criterion&#39;: &#39;gini&#39;, &#39;max_depth&#39;: 9, &#39;min_samples_leaf&#39;: 6, &#39;min_samples_split&#39;: 13, &#39;random_state&#39;: 0, &#39;splitter&#39;: &#39;best&#39;}&quot;
 </pre></div>
 </div>
-<img alt="../_images/806661d8ecab663f7fa6a67c67d4dea0f29adcf4878797eb7ebc72398eeb77b8.png" src="../_images/806661d8ecab663f7fa6a67c67d4dea0f29adcf4878797eb7ebc72398eeb77b8.png" />
+<img alt="../_images/845fdb3997e0a4177d57d09a423aa1d45e153f8c8a790185ed19bdf51d44fbb1.png" src="../_images/845fdb3997e0a4177d57d09a423aa1d45e153f8c8a790185ed19bdf51d44fbb1.png" />
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Out of 147 failing students, the model predicted correctly 121 students (82.31%).&#39;
 </pre></div>
 </div>
@@ -1471,7 +1473,7 @@ Consensus algorithm.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;MultiCons: selected merging_threshold=0.00 with score: 0.96&#39;
 </pre></div>
 </div>
-<img alt="../_images/d6261207adb11222b84a882e3654d9f7cf9af39c6111060067618025d88a0ffd.svg" src="../_images/d6261207adb11222b84a882e3654d9f7cf9af39c6111060067618025d88a0ffd.svg" /><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>multicons  final_result
+<img alt="../_images/997fb12f3baca31b4abf886ec9b656a7e013c908b83f95adb40c7347369a4cb8.svg" src="../_images/997fb12f3baca31b4abf886ec9b656a7e013c908b83f95adb40c7347369a4cb8.svg" /><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>multicons  final_result
 0          0.0                5
            1.0               56
 1          0.0              774
@@ -1503,7 +1505,6 @@ dtype: int64
     <span class="n">sub_student_vle</span> <span class="o">=</span> <span class="n">student_item</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
         <span class="n">student_item</span><span class="o">.</span><span class="n">id_student</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">result_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="p">]</span>
-
     <span class="n">reader</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">(</span><span class="n">rating_scale</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sub_student_vle</span><span class="o">.</span><span class="n">sum_click</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">load_from_df</span><span class="p">(</span>
         <span class="n">sub_student_vle</span><span class="p">[[</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;id_site&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_click&quot;</span><span class="p">]],</span> <span class="n">reader</span>
@@ -1524,7 +1525,7 @@ dtype: int64
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;label 0&#39;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>229.8293025221664
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>225.62478379370705
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;sim_options&#39;: {&#39;name&#39;: &#39;msd&#39;, &#39;min_support&#39;: 4, &#39;user_based&#39;: False},
@@ -1534,7 +1535,7 @@ dtype: int64
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;label 1&#39;
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>44.35872445717195
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>44.093575438025574
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;sim_options&#39;: {&#39;name&#39;: &#39;msd&#39;, &#39;min_support&#39;: 4, &#39;user_based&#39;: False},
@@ -1712,7 +1713,7 @@ collaborative filtering on the full dataset.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100.8797926730481
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100.6504517050335
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;sim_options&#39;: {&#39;name&#39;: &#39;msd&#39;, &#39;min_support&#39;: 4, &#39;user_based&#39;: False},
@@ -1885,7 +1886,7 @@ collaborative filtering on the full dataset.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5b1eb64e8b0b207084e4e7d4e5d1a9e49783206cab64fc11c31846d4d841e3e7.png" src="../_images/5b1eb64e8b0b207084e4e7d4e5d1a9e49783206cab64fc11c31846d4d841e3e7.png" />
+<img alt="../_images/157ed6524aa8853119098d2c7b1c3856f6c503845a089f7ab1ccc38f176e7c1f.png" src="../_images/157ed6524aa8853119098d2c7b1c3856f6c503845a089f7ab1ccc38f176e7c1f.png" />
 </div>
 </div>
 </section>
