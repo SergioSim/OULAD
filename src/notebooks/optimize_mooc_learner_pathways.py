@@ -5,17 +5,17 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # # Optimize MOOC learner pathways
 #
-# In this section we propose a learning item recommendation system based on
+# In this section, we propose a learning item recommendation system based on
 # consensus clustering (MultiCons) and collaborative filtering.
 #
 # The approach consists of first grouping learners into homogeneous groups based on
@@ -25,8 +25,8 @@
 # previously unexplored learning items.
 #
 # We measure the quality of our approach by first training a decision tree classifier
-# predicting certification success and then comparing the changes in success predictions
-# when students, that were previously correctly predicted as failling, follow the
+# predicting certification success, then comparing changes in success predictions when
+# students whose failure had previously been correctly predicted follow the
 # recommendations.
 #
 # Finally, we compare the quality of our approach to a baseline method that applies
@@ -48,7 +48,7 @@ from multicons import MultiCons
 
 from oulad import filter_by_module_presentation, get_oulad
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Preparing the dataset
 #
 # In this section we:
@@ -61,37 +61,38 @@ from oulad import filter_by_module_presentation, get_oulad
 # %%
 oulad = get_oulad()
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ### Selecting one course session
 #
 # We start by selecting one OULAD course session.
 #
-# We choose the `AAA` course from the `2013J` session.
+# We choose the `BBB` course from the `2013J` session.
 
 # %%
 CODE_MODULE = "BBB"
 CODE_PRESENTATION = "2013J"
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # #### The `student_item` table
 #
 # It represents all student interactions with course items of the selected course
 # session.
 
 # %%
-student_item = filter_by_module_presentation(
-    oulad.student_vle, CODE_MODULE, CODE_PRESENTATION
-).drop(["date"], axis=1)
-
-student_item = student_item.groupby(["id_site", "id_student"]).sum().reset_index()
-
-# We convert the `id_site` column to string type as the values of `id_site` will be
-# used as column names in the `student_profile` table.
-student_item.id_site = student_item.id_site.astype(str)
-
+student_item = (
+    filter_by_module_presentation(oulad.student_vle, CODE_MODULE, CODE_PRESENTATION)
+    .drop(["date"], axis=1)
+    .groupby(["id_site", "id_student"])
+    .sum()
+    .reset_index()
+    # We convert the `id_site` column to string type as the values of `id_site` will
+    # be used as column names in the `student_profile` table.
+    # student_item.id_site = student_item.id_site.astype(str)
+    .astype({"id_site": str})
+)
 display(student_item)
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # #### The `student_profile` table
 #
 # It contains student demographic data along with course registration information,
@@ -109,16 +110,15 @@ student_info = (
     .set_index("id_student")
     .drop(["num_of_prev_attempts", "region"], axis=1)
 )
-
-student_registration = filter_by_module_presentation(
-    oulad.student_registration, CODE_MODULE, CODE_PRESENTATION
-).set_index("id_student")
-
-# Remove students that unregistered before the course started
-student_registration = student_registration.loc[
-    ~(student_registration.date_unregistration.values < 0), ["date_registration"]
-]
-
+student_registration = (
+    filter_by_module_presentation(
+        oulad.student_registration, CODE_MODULE, CODE_PRESENTATION
+    )
+    .set_index("id_student")
+    # Remove students that unregistered before the course started.
+    .query("~(date_unregistration < 0)")
+    .drop(["date_unregistration"], axis=1)
+)
 student_registration_info = student_registration.join(student_info, how="inner")
 
 student_activity = student_item.pivot_table(
@@ -128,14 +128,14 @@ student_activity = student_item.pivot_table(
     fill_value=0.0,
 )
 
-# Remove students that have no interation records.
+# Remove students that have no interaction records.
 student_activity = student_activity.loc[:, (student_activity != 0).any(axis=0)]
 
 student_profile = student_registration_info.join(student_activity, how="inner")
 
 display(student_profile)
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # #### The `encoded_student_profile` table.
 #
 # Finally, we encode all ordinal categorical values from the `student_profile` table
@@ -179,7 +179,7 @@ for col, values_map in ordinal_values_maps.items():
 encoded_student_profile = encoded_student_profile.astype(float)
 display(encoded_student_profile)
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Train/Test split
 #
 # In this section we split the `encoded_student_profile` table into training and
@@ -196,7 +196,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 student_vle_train = student_item.loc[student_item.id_student.isin(y_train.index)]
 student_vle_test = student_item.loc[student_item.id_student.isin(y_test.index)]
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Final result prediction
 #
 # Next, we train a decision tree model to predict the student `final_result` outcome.
@@ -232,7 +232,9 @@ display(f"best_parameters={gs_classifier.best_params_}")
 
 # Plot the decision tree
 f, ax = plt.subplots(1, 1, figsize=(20, 10))
-plot_tree(gs_classifier.best_estimator_, feature_names=x_train.columns, ax=ax)
+plot_tree(
+    gs_classifier.best_estimator_, feature_names=x_train.columns.values.tolist(), ax=ax
+)
 plt.show()
 
 failing_student_ids = y_test.loc[y_test.final_result == 0, :].index
@@ -254,7 +256,7 @@ display(
     "%)."
 )
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Consensus clustering
 #
 # ### Base clusterings
@@ -304,7 +306,7 @@ pd.DataFrame(
     {"multicons": consensus.labels_, "final_result": result_table.final_result}
 ).groupby(["multicons", "final_result"]).size()
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Collaborative filtering
 #
 # Next, for each consensus group we train a collaborative filtering model.
@@ -339,7 +341,7 @@ for label in np.unique(consensus.labels_):
     display(gs.best_params["rmse"])
     gs_recommenders[label] = gs
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Recommendation
 #
 # At this stage we generate recommedations for students that were predicted as failling.
@@ -400,7 +402,7 @@ recommendation_improvement_rate_mc_cf_df = pd.DataFrame(
 )
 display(recommendation_improvement_rate_mc_cf_df)
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Validation
 #
 # Finally, we compare the quality of our approach witha baseline method that applies

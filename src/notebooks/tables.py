@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -22,7 +22,7 @@ from IPython.display import display
 
 from oulad import get_oulad
 
-# Load the OULAD dataset in memory
+# Load the OULAD dataset in memory.
 oulad = get_oulad()
 
 # %% [markdown]
