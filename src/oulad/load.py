@@ -2,6 +2,7 @@
 
 import os
 from dataclasses import dataclass
+from functools import lru_cache
 
 import pandas as pd
 
@@ -22,6 +23,7 @@ class OULAD:
     vle: pd.DataFrame
 
 
+@lru_cache(maxsize=1)
 def get_oulad(path: str = None) -> OULAD:
     """Returns the OULAD dataset tables in a dataclass."""
 
