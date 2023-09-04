@@ -9,3 +9,4 @@ chapters:
 - file: notebooks/identifying_key_milestones
 - file: notebooks/predicting_students_final_exam_outcome
 - file: notebooks/optimize_mooc_learner_pathways
+- file: notebooks/time_series_classification_for_dropout_prediction

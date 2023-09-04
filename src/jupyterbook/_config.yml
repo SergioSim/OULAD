@@ -10,7 +10,7 @@ logo: ""
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: force
-  timeout: 600 # 10 minutes cell execution timeout.
+  timeout: 1200 # 20 minutes cell execution timeout.
 
 parse:
   myst_heading_anchors: 4
