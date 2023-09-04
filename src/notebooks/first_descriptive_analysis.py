@@ -5,14 +5,14 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.15.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # # A first descriptive analysis
 #
 # One of the best ways to get started with the OULAD analysis might be to explore the
@@ -34,7 +34,7 @@ from oulad import get_oulad
 
 oulad = get_oulad()
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## General statistics
 
 # %%
@@ -48,7 +48,7 @@ print(
     f"  - {oulad.student_vle.shape[0]} VLE interaction entries"
 )
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ### Student registration count by module with domain information
 
 # %%
@@ -65,7 +65,7 @@ registration_count = (
 )
 oulad.domains.join(registration_count, on="code_module")
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ### Student registration count by module-presentation
 
 # %%
@@ -86,7 +86,7 @@ print(
     f"{registration_count.mean()}."
 )
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ### Student assessment count
 
 # %%
@@ -99,7 +99,7 @@ print(
     "student_assessments are Exams."
 )
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ### Student info attributes distribution for CCC module
 
 # %%
@@ -131,7 +131,7 @@ ccc_student_info.groupby(["region", "final_result"]).size().unstack().plot.bar(
 )
 plt.show()
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Notes
 #
 # - The initial total number of students in the selected modules was 38239.
