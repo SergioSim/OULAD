@@ -1,0 +1,1667 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Time series classification for dropout prediction &#8212; Analysis of the OULAD dataset</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/time_series_classification_for_dropout_prediction';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Optimize MOOC learner pathways" href="optimize_mooc_learner_pathways.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Analysis of the OULAD dataset</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tables.html">Tables of the OULAD dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="first_descriptive_analysis.html">A first descriptive analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="identifying_key_milestones.html">Identifying key milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="predicting_students_final_exam_outcome.html">Predicting students final exam outcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize_mooc_learner_pathways.html">Optimize MOOC learner pathways</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Time series classification for dropout prediction</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/SergioSim/OULAD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/SergioSim/OULAD/issues/new?title=Issue%20on%20page%20%2Fnotebooks/time_series_classification_for_dropout_prediction.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/time_series_classification_for_dropout_prediction.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Time series classification for dropout prediction</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dropout-rate-by-course-presentation">Dropout rate by course presentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-interaction-data">Prepare interaction data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dropout-prediction-by-course">Dropout prediction by course</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#early-dropout-prediction">Early dropout prediction</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="time-series-classification-for-dropout-prediction">
+<h1>Time series classification for dropout prediction<a class="headerlink" href="#time-series-classification-for-dropout-prediction" title="Permalink to this heading">#</a></h1>
+<p>We adopt the time series classification methodology presented in the work of Liu et
+al. <span id="id1">[<a class="reference internal" href="#id4" title="Liu Haiyang, Zhihai Wang, Phillip Benachour, and Philip Tubman. A time series classification method for behaviour-based dropout prediction. In 2018 IEEE 18th International Conference on Advanced Learning Technologies (ICALT), volume, 191-195. 2018. doi:10.1109/ICALT.2018.00052.">HWBT18</a>]</span> for student dropout prediction.</p>
+<p>Time-series classifiers can effectively visualize and categorize data based on
+pattern similarities, enabling them to learn distinctive series of behaviors,
+distinguishing dropout from retention.</p>
+<p>The classification approach uses student interaction data (click-stream) on
+different resource types (‘resource’, ‘content’ and ‘forumng’).
+Where ‘oucontent’ and ‘resource’ refer to a lecture video and a segment of text
+students are supposed to watch or read, and ‘forumng’ points to the forum space of
+the course.</p>
+<p>A student is considered a dropout if he withdraws from a course.
+In the OULAD dataset, this information is recorded with a <code class="docutils literal notranslate"><span class="pre">Withdrawn</span></code> value in the
+<code class="docutils literal notranslate"><span class="pre">final_result</span></code> column of the <code class="docutils literal notranslate"><span class="pre">student_info</span></code> table.</p>
+<p>The authors rearranged the OULAD interaction data and transformed it into several
+time series using the following steps:</p>
+<ol class="arabic simple">
+<li><p>Extract the number of clicks the students make on the three types of material and
+group them by course module presentation.</p></li>
+<li><p>Sum up the number of clicks each student makes on each type of material from each
+presentation daily.</p></li>
+<li><p>Align each student’s total clicks on each type of material by days.</p></li>
+<li><p>Add the dropout label, withdrawn as <code class="docutils literal notranslate"><span class="pre">1</span></code>, otherwise as <code class="docutils literal notranslate"><span class="pre">0</span></code>, to the end of each
+student instance.</p></li>
+</ol>
+<p>Thus, three time-series datasets are constructed for each course module presentation.</p>
+<p>Finally, student dropout is predicted by applying a Time series forest classifier on
+each time series by course.</p>
+<div class="docutils container" id="id2">
+<dl class="citation">
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id1">HWBT18</a></span></dt>
+<dd><p>Liu Haiyang, Zhihai Wang, Phillip Benachour, and Philip Tubman. A time series classification method for behaviour-based dropout prediction. In <em>2018 IEEE 18th International Conference on Advanced Learning Technologies (ICALT)</em>, volume, 191–195. 2018. <a class="reference external" href="https://doi.org/10.1109/ICALT.2018.00052">doi:10.1109/ICALT.2018.00052</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">pyts.classification</span> <span class="kn">import</span> <span class="n">TimeSeriesForest</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+
+<span class="kn">from</span> <span class="nn">oulad</span> <span class="kn">import</span> <span class="n">get_oulad</span>
+
+<span class="n">oulad</span> <span class="o">=</span> <span class="n">get_oulad</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="dropout-rate-by-course-presentation">
+<h2>Dropout rate by course presentation<a class="headerlink" href="#dropout-rate-by-course-presentation" title="Permalink to this heading">#</a></h2>
+<p>As we embark on the task of student dropout classification, it’s important to first
+familiarize ourselves with some basic descriptive statistics about the dataset.
+As demonstrated in the work of Lui et al., a concise summary of domain information
+and relevant statistics regarding student dropout in diverse course modules can prove
+insightful.
+We shall attempt to replicate this table in our present study.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span>
+    <span class="c1"># Add code_module, code_presentation, module_presentation_length columns.</span>
+    <span class="n">oulad</span><span class="o">.</span><span class="n">courses</span>
+    <span class="c1"># Add domain column.</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">domains</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;code_module&quot;</span><span class="p">)</span>
+    <span class="c1"># Add days column.</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">[</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="o">.</span><span class="n">date</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">])[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span>
+        <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">module_presentation_length</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">date</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Add id_student and final_result columns.</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">oulad</span><span class="o">.</span><span class="n">student_info</span><span class="p">[</span>
+            <span class="p">[</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">]</span>
+        <span class="p">],</span>
+        <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">final_result</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">final_result</span> <span class="o">==</span> <span class="s2">&quot;Withdrawn&quot;</span><span class="p">)</span>
+    <span class="c1"># Aggregate by course, rename final_result to dropout and id_student to students.</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">domain</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;domain&quot;</span><span class="p">,</span> <span class="s2">&quot;first&quot;</span><span class="p">),</span>
+        <span class="n">students</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;nunique&quot;</span><span class="p">),</span>
+        <span class="n">days</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;days&quot;</span><span class="p">,</span> <span class="s2">&quot;first&quot;</span><span class="p">),</span>
+        <span class="n">dropout</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;final_result&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="c1"># Format the dropout column using percentages.</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">dropout</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">dropout</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>domain</th>
+      <th>students</th>
+      <th>days</th>
+      <th>dropout</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AAA</td>
+      <td>2013J</td>
+      <td>Social Sciences</td>
+      <td>383</td>
+      <td>279</td>
+      <td>15.67%</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAA</td>
+      <td>2014J</td>
+      <td>Social Sciences</td>
+      <td>365</td>
+      <td>294</td>
+      <td>18.08%</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>BBB</td>
+      <td>2013B</td>
+      <td>Social Sciences</td>
+      <td>1767</td>
+      <td>250</td>
+      <td>28.58%</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>BBB</td>
+      <td>2013J</td>
+      <td>Social Sciences</td>
+      <td>2237</td>
+      <td>292</td>
+      <td>28.79%</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>BBB</td>
+      <td>2014B</td>
+      <td>Social Sciences</td>
+      <td>1613</td>
+      <td>244</td>
+      <td>30.38%</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>BBB</td>
+      <td>2014J</td>
+      <td>Social Sciences</td>
+      <td>2292</td>
+      <td>272</td>
+      <td>32.68%</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>CCC</td>
+      <td>2014B</td>
+      <td>STEM</td>
+      <td>1936</td>
+      <td>260</td>
+      <td>46.38%</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>CCC</td>
+      <td>2014J</td>
+      <td>STEM</td>
+      <td>2498</td>
+      <td>288</td>
+      <td>43.11%</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>DDD</td>
+      <td>2013B</td>
+      <td>STEM</td>
+      <td>1303</td>
+      <td>257</td>
+      <td>33.15%</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>DDD</td>
+      <td>2013J</td>
+      <td>STEM</td>
+      <td>1938</td>
+      <td>280</td>
+      <td>35.14%</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>DDD</td>
+      <td>2014B</td>
+      <td>STEM</td>
+      <td>1228</td>
+      <td>260</td>
+      <td>39.90%</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>DDD</td>
+      <td>2014J</td>
+      <td>STEM</td>
+      <td>1803</td>
+      <td>288</td>
+      <td>35.88%</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>EEE</td>
+      <td>2013J</td>
+      <td>STEM</td>
+      <td>1052</td>
+      <td>280</td>
+      <td>23.10%</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>EEE</td>
+      <td>2014B</td>
+      <td>STEM</td>
+      <td>694</td>
+      <td>260</td>
+      <td>24.93%</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>EEE</td>
+      <td>2014J</td>
+      <td>STEM</td>
+      <td>1188</td>
+      <td>288</td>
+      <td>25.76%</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>FFF</td>
+      <td>2013B</td>
+      <td>STEM</td>
+      <td>1614</td>
+      <td>259</td>
+      <td>25.46%</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>FFF</td>
+      <td>2013J</td>
+      <td>STEM</td>
+      <td>2283</td>
+      <td>287</td>
+      <td>29.57%</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>FFF</td>
+      <td>2014B</td>
+      <td>STEM</td>
+      <td>1500</td>
+      <td>260</td>
+      <td>30.80%</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>FFF</td>
+      <td>2014J</td>
+      <td>STEM</td>
+      <td>2365</td>
+      <td>288</td>
+      <td>36.15%</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>GGG</td>
+      <td>2013J</td>
+      <td>Social Sciences</td>
+      <td>952</td>
+      <td>278</td>
+      <td>6.93%</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>GGG</td>
+      <td>2014B</td>
+      <td>Social Sciences</td>
+      <td>833</td>
+      <td>250</td>
+      <td>12.00%</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>GGG</td>
+      <td>2014J</td>
+      <td>Social Sciences</td>
+      <td>749</td>
+      <td>286</td>
+      <td>16.82%</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="prepare-interaction-data">
+<h2>Prepare interaction data<a class="headerlink" href="#prepare-interaction-data" title="Permalink to this heading">#</a></h2>
+<p>In this section, we attempt to replicate the interaction data transformations
+as described in the work of Liu et al.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">click_stream</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="c1"># 1. Extract the number of clicks by students on the three types of material.</span>
+    <span class="n">oulad</span><span class="o">.</span><span class="n">vle</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;activity_type in [&#39;resource&#39;, &#39;oucontent&#39;, &#39;forumng&#39;]&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;id_site&quot;</span><span class="p">)</span>
+    <span class="c1"># 2. Sum the number of clicks each student makes on each type of material by day.</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="s2">&quot;sum&quot;</span><span class="p">})</span>
+    <span class="c1"># 3. Align each student’s total clicks on each type of material by days.</span>
+    <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+        <span class="n">values</span><span class="o">=</span><span class="s2">&quot;sum_click&quot;</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">,</span>
+        <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># 4. Add the dropout label, withdrawn as `1`, otherwise as `0`.</span>
+    <span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">oulad</span><span class="o">.</span><span class="n">student_info</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">final_result</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">final_result</span> <span class="o">==</span> <span class="s2">&quot;Withdrawn&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">])</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">click_stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>-25</th>
+      <th>-24</th>
+      <th>-23</th>
+      <th>-22</th>
+      <th>-21</th>
+      <th>-20</th>
+      <th>-19</th>
+      <th>-18</th>
+      <th>-17</th>
+      <th>-16</th>
+      <th>...</th>
+      <th>261</th>
+      <th>262</th>
+      <th>263</th>
+      <th>264</th>
+      <th>265</th>
+      <th>266</th>
+      <th>267</th>
+      <th>268</th>
+      <th>269</th>
+      <th>final_result</th>
+    </tr>
+    <tr>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>id_student</th>
+      <th>activity_type</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="5" valign="top">AAA</th>
+      <th rowspan="5" valign="top">2013J</th>
+      <th rowspan="3" valign="top">11391</th>
+      <th>forumng</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>oucontent</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>resource</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">28400</th>
+      <th>forumng</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>oucontent</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <th>...</th>
+      <th>...</th>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th rowspan="5" valign="top">GGG</th>
+      <th rowspan="5" valign="top">2014J</th>
+      <th rowspan="2" valign="top">2679821</th>
+      <th>oucontent</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>resource</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th rowspan="3" valign="top">2684003</th>
+      <th>forumng</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>oucontent</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>resource</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>80524 rows × 296 columns</p>
+</div></div></div>
+</div>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h3>
+<p>Presented below is an extract of student interactions conducted within the
+“AAA_2013J” course presentation, specifically pertaining to forum activities.
+This extract corresponds to Table 2 as illustrated in the work of Lui et al.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span>
+    <span class="n">click_stream</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;2013J&quot;</span><span class="p">,</span> <span class="mi">28400</span><span class="p">,</span> <span class="s2">&quot;forumng&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;2013J&quot;</span><span class="p">,</span> <span class="mi">30268</span><span class="p">,</span> <span class="s2">&quot;forumng&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;2013J&quot;</span><span class="p">,</span> <span class="mi">31604</span><span class="p">,</span> <span class="s2">&quot;forumng&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;2013J&quot;</span><span class="p">,</span> <span class="mi">2694424</span><span class="p">,</span> <span class="s2">&quot;forumng&quot;</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="o">-</span><span class="mi">10</span><span class="p">:</span><span class="s2">&quot;final_result&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>-10</th>
+      <th>-9</th>
+      <th>-8</th>
+      <th>-7</th>
+      <th>-6</th>
+      <th>-5</th>
+      <th>-4</th>
+      <th>-3</th>
+      <th>-2</th>
+      <th>-1</th>
+      <th>...</th>
+      <th>261</th>
+      <th>262</th>
+      <th>263</th>
+      <th>264</th>
+      <th>265</th>
+      <th>266</th>
+      <th>267</th>
+      <th>268</th>
+      <th>269</th>
+      <th>final_result</th>
+    </tr>
+    <tr>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th>id_student</th>
+      <th>activity_type</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="4" valign="top">AAA</th>
+      <th rowspan="4" valign="top">2013J</th>
+      <th>28400</th>
+      <th>forumng</th>
+      <td>14</td>
+      <td>0</td>
+      <td>4</td>
+      <td>17</td>
+      <td>8</td>
+      <td>3</td>
+      <td>4</td>
+      <td>0</td>
+      <td>23</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>30268</th>
+      <th>forumng</th>
+      <td>5</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+      <td>17</td>
+      <td>6</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>31604</th>
+      <th>forumng</th>
+      <td>0</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>18</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2694424</th>
+      <th>forumng</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>4 rows × 281 columns</p>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="dropout-prediction-by-course">
+<h2>Dropout prediction by course<a class="headerlink" href="#dropout-prediction-by-course" title="Permalink to this heading">#</a></h2>
+<p>Using the obtained <code class="docutils literal notranslate"><span class="pre">click_stream</span></code> dataset, we train a Time series Forest
+Classifier predicting students dropout for each course presentation.</p>
+<p>As in the work of Lui et al. we set the number of trees in the Time series Forest to
+500 and perform 10-fold cross-validation for each course module presentation using
+the classification accuracy as the evaluation metric.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">levels</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
+    <span class="n">level</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">]</span>
+<span class="p">):</span>
+    <span class="n">estimator</span> <span class="o">=</span> <span class="n">TimeSeriesForest</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;final_result&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;final_result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mean_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">mean_score</span><span class="p">])</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">results</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+    <span class="n">values</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">],</span>
+    <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="s2">&quot;### Dropout prediction 10-fold cross-validation accuracy by course&quot;</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<p class="rubric">Dropout prediction 10-fold cross-validation accuracy by course</p>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>activity_type</th>
+      <th>forumng</th>
+      <th>oucontent</th>
+      <th>resource</th>
+    </tr>
+    <tr>
+      <th>code_module</th>
+      <th>code_presentation</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="2" valign="top">AAA</th>
+      <th>2013J</th>
+      <td>0.895590</td>
+      <td>0.931294</td>
+      <td>0.887127</td>
+    </tr>
+    <tr>
+      <th>2014J</th>
+      <td>0.874790</td>
+      <td>0.904127</td>
+      <td>0.889916</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">BBB</th>
+      <th>2013B</th>
+      <td>0.819687</td>
+      <td>0.783118</td>
+      <td>0.810884</td>
+    </tr>
+    <tr>
+      <th>2013J</th>
+      <td>0.849123</td>
+      <td>0.876433</td>
+      <td>0.849287</td>
+    </tr>
+    <tr>
+      <th>2014B</th>
+      <td>0.843966</td>
+      <td>0.869011</td>
+      <td>0.840657</td>
+    </tr>
+    <tr>
+      <th>2014J</th>
+      <td>0.821379</td>
+      <td>0.842722</td>
+      <td>0.824451</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">CCC</th>
+      <th>2014B</th>
+      <td>0.776449</td>
+      <td>0.748441</td>
+      <td>0.827053</td>
+    </tr>
+    <tr>
+      <th>2014J</th>
+      <td>0.813092</td>
+      <td>0.781654</td>
+      <td>0.875292</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">DDD</th>
+      <th>2013B</th>
+      <td>0.824595</td>
+      <td>0.788727</td>
+      <td>0.778222</td>
+    </tr>
+    <tr>
+      <th>2013J</th>
+      <td>0.832195</td>
+      <td>0.832004</td>
+      <td>0.824136</td>
+    </tr>
+    <tr>
+      <th>2014B</th>
+      <td>0.782364</td>
+      <td>0.785555</td>
+      <td>0.794393</td>
+    </tr>
+    <tr>
+      <th>2014J</th>
+      <td>0.822462</td>
+      <td>0.870209</td>
+      <td>0.866536</td>
+    </tr>
+    <tr>
+      <th rowspan="3" valign="top">EEE</th>
+      <th>2013J</th>
+      <td>0.853933</td>
+      <td>0.840717</td>
+      <td>0.891463</td>
+    </tr>
+    <tr>
+      <th>2014B</th>
+      <td>0.832049</td>
+      <td>0.828265</td>
+      <td>0.915176</td>
+    </tr>
+    <tr>
+      <th>2014J</th>
+      <td>0.886646</td>
+      <td>0.865377</td>
+      <td>0.915055</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">FFF</th>
+      <th>2013B</th>
+      <td>0.833108</td>
+      <td>0.838854</td>
+      <td>0.841911</td>
+    </tr>
+    <tr>
+      <th>2013J</th>
+      <td>0.824278</td>
+      <td>0.835922</td>
+      <td>0.827859</td>
+    </tr>
+    <tr>
+      <th>2014B</th>
+      <td>0.800024</td>
+      <td>0.818950</td>
+      <td>0.814555</td>
+    </tr>
+    <tr>
+      <th>2014J</th>
+      <td>0.855779</td>
+      <td>0.893448</td>
+      <td>0.879242</td>
+    </tr>
+    <tr>
+      <th rowspan="3" valign="top">GGG</th>
+      <th>2013J</th>
+      <td>0.959622</td>
+      <td>0.949064</td>
+      <td>0.943182</td>
+    </tr>
+    <tr>
+      <th>2014B</th>
+      <td>0.920339</td>
+      <td>0.911369</td>
+      <td>0.925649</td>
+    </tr>
+    <tr>
+      <th>2014J</th>
+      <td>0.880195</td>
+      <td>0.889236</td>
+      <td>0.853367</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="early-dropout-prediction">
+<h2>Early dropout prediction<a class="headerlink" href="#early-dropout-prediction" title="Permalink to this heading">#</a></h2>
+<p>The earlier we can accurately forecast student dropout, the more beneficial the
+approach becomes by affording MOOC instructors extra time for intervention.
+As in the work of Lui et al., we compare the predictive accuracy of the
+TimeSeriesForest classification using incrementally larger fractions of the original
+data.
+We start with a 5 percent dataset and iteratively add 5 percent increments to assess
+how prediction accuracy evolves.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">index_slice</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;2013J&quot;</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;oucontent&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;CCC&quot;</span><span class="p">,</span> <span class="s2">&quot;2014J&quot;</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;resource&quot;</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_slice</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="n">estimator</span> <span class="o">=</span> <span class="n">TimeSeriesForest</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">click_stream</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_slice</span><span class="p">,</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="n">limit</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mean_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_score</span><span class="p">)</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="n">index_slice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">index_slice</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">index_slice</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Accuracy score by the percentage of data used for </span><span class="si">{</span><span class="n">NAME</span><span class="si">}</span><span class="s2"> course&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Percentage of data used&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Prediction accuracy&quot;</span><span class="p">,</span>
+        <span class="n">xticks</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6cc193816fd4ea301b1ba7598ffb92fb53706612a39b646af015a73dd5082b32.png" src="../_images/6cc193816fd4ea301b1ba7598ffb92fb53706612a39b646af015a73dd5082b32.png" />
+<img alt="../_images/813f8631546f7c2a0ab35a3e3b961d78a56b89d2672ea22e768739abca811959.png" src="../_images/813f8631546f7c2a0ab35a3e3b961d78a56b89d2672ea22e768739abca811959.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="optimize_mooc_learner_pathways.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Optimize MOOC learner pathways</p>
+      </div>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dropout-rate-by-course-presentation">Dropout rate by course presentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-interaction-data">Prepare interaction data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dropout-prediction-by-course">Dropout prediction by course</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#early-dropout-prediction">Early dropout prediction</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SergioSim
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
