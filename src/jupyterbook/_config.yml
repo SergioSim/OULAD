@@ -6,10 +6,10 @@ author: SergioSim
 copyright: "2023"
 logo: ""
 
-# Force re-execution of notebooks on each build.
+# Control execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: force
+  execute_notebooks: auto
   timeout: 1200 # 20 minutes cell execution timeout.
 
 parse:
