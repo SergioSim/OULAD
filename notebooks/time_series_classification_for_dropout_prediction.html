@@ -64,6 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/time_series_classification_for_dropout_prediction';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Withdrawal prediction on behavioral indicators" href="withdrawal_prediction_on_behavioral_indicators.html" />
     <link rel="prev" title="Optimize MOOC learner pathways" href="optimize_mooc_learner_pathways.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -156,6 +157,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="predicting_students_final_exam_outcome.html">Predicting students final exam outcome</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimize_mooc_learner_pathways.html">Optimize MOOC learner pathways</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Time series classification for dropout prediction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="withdrawal_prediction_on_behavioral_indicators.html">Withdrawal prediction on behavioral indicators</a></li>
 </ul>
 
     </div>
@@ -1358,141 +1360,141 @@ the classification accuracy as the evaluation metric.</p>
     <tr>
       <th rowspan="2" valign="top">AAA</th>
       <th>2013J</th>
-      <td>0.895590</td>
-      <td>0.931294</td>
-      <td>0.887127</td>
+      <td>0.898222</td>
+      <td>0.933926</td>
+      <td>0.879018</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.874790</td>
-      <td>0.904127</td>
+      <td>0.874706</td>
+      <td>0.889921</td>
       <td>0.889916</td>
     </tr>
     <tr>
       <th rowspan="4" valign="top">BBB</th>
       <th>2013B</th>
-      <td>0.819687</td>
-      <td>0.783118</td>
-      <td>0.810884</td>
+      <td>0.821709</td>
+      <td>0.780737</td>
+      <td>0.818367</td>
     </tr>
     <tr>
       <th>2013J</th>
-      <td>0.849123</td>
-      <td>0.876433</td>
-      <td>0.849287</td>
+      <td>0.847953</td>
+      <td>0.878344</td>
+      <td>0.849291</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.843966</td>
-      <td>0.869011</td>
-      <td>0.840657</td>
+      <td>0.835345</td>
+      <td>0.867168</td>
+      <td>0.843163</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.821379</td>
-      <td>0.842722</td>
-      <td>0.824451</td>
+      <td>0.824138</td>
+      <td>0.844315</td>
+      <td>0.829216</td>
     </tr>
     <tr>
       <th rowspan="2" valign="top">CCC</th>
       <th>2014B</th>
-      <td>0.776449</td>
-      <td>0.748441</td>
-      <td>0.827053</td>
+      <td>0.770689</td>
+      <td>0.753331</td>
+      <td>0.831984</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.813092</td>
-      <td>0.781654</td>
-      <td>0.875292</td>
+      <td>0.809920</td>
+      <td>0.782172</td>
+      <td>0.881119</td>
     </tr>
     <tr>
       <th rowspan="4" valign="top">DDD</th>
       <th>2013B</th>
-      <td>0.824595</td>
-      <td>0.788727</td>
-      <td>0.778222</td>
+      <td>0.816355</td>
+      <td>0.786163</td>
+      <td>0.786669</td>
     </tr>
     <tr>
       <th>2013J</th>
-      <td>0.832195</td>
-      <td>0.832004</td>
-      <td>0.824136</td>
+      <td>0.829679</td>
+      <td>0.830837</td>
+      <td>0.821120</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.782364</td>
-      <td>0.785555</td>
-      <td>0.794393</td>
+      <td>0.780364</td>
+      <td>0.786472</td>
+      <td>0.796262</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.822462</td>
-      <td>0.870209</td>
-      <td>0.866536</td>
+      <td>0.830757</td>
+      <td>0.869588</td>
+      <td>0.865903</td>
     </tr>
     <tr>
       <th rowspan="3" valign="top">EEE</th>
       <th>2013J</th>
-      <td>0.853933</td>
-      <td>0.840717</td>
-      <td>0.891463</td>
+      <td>0.856180</td>
+      <td>0.837637</td>
+      <td>0.892683</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.832049</td>
-      <td>0.828265</td>
-      <td>0.915176</td>
+      <td>0.826660</td>
+      <td>0.820254</td>
+      <td>0.915137</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.886646</td>
-      <td>0.865377</td>
-      <td>0.915055</td>
+      <td>0.882616</td>
+      <td>0.868146</td>
+      <td>0.909536</td>
     </tr>
     <tr>
       <th rowspan="4" valign="top">FFF</th>
       <th>2013B</th>
-      <td>0.833108</td>
-      <td>0.838854</td>
-      <td>0.841911</td>
+      <td>0.831757</td>
+      <td>0.834827</td>
+      <td>0.847433</td>
     </tr>
     <tr>
       <th>2013J</th>
-      <td>0.824278</td>
-      <td>0.835922</td>
-      <td>0.827859</td>
+      <td>0.826306</td>
+      <td>0.833981</td>
+      <td>0.831399</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.800024</td>
-      <td>0.818950</td>
-      <td>0.814555</td>
+      <td>0.798480</td>
+      <td>0.812200</td>
+      <td>0.812192</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.855779</td>
-      <td>0.893448</td>
-      <td>0.879242</td>
+      <td>0.851759</td>
+      <td>0.894428</td>
+      <td>0.870146</td>
     </tr>
     <tr>
       <th rowspan="3" valign="top">GGG</th>
       <th>2013J</th>
-      <td>0.959622</td>
-      <td>0.949064</td>
+      <td>0.960973</td>
+      <td>0.950227</td>
       <td>0.943182</td>
     </tr>
     <tr>
       <th>2014B</th>
       <td>0.920339</td>
-      <td>0.911369</td>
-      <td>0.925649</td>
+      <td>0.911405</td>
+      <td>0.921667</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.880195</td>
-      <td>0.889236</td>
-      <td>0.853367</td>
+      <td>0.887338</td>
+      <td>0.890796</td>
+      <td>0.856287</td>
     </tr>
   </tbody>
 </table>
@@ -1539,8 +1541,8 @@ how prediction accuracy evolves.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/6cc193816fd4ea301b1ba7598ffb92fb53706612a39b646af015a73dd5082b32.png" src="../_images/6cc193816fd4ea301b1ba7598ffb92fb53706612a39b646af015a73dd5082b32.png" />
-<img alt="../_images/813f8631546f7c2a0ab35a3e3b961d78a56b89d2672ea22e768739abca811959.png" src="../_images/813f8631546f7c2a0ab35a3e3b961d78a56b89d2672ea22e768739abca811959.png" />
+<img alt="../_images/1b3634dd758a85ebc376bb1d8e02d8f9ba61dacc91b8bd18da3455a4c41080c0.png" src="../_images/1b3634dd758a85ebc376bb1d8e02d8f9ba61dacc91b8bd18da3455a4c41080c0.png" />
+<img alt="../_images/f5766fca46b7e96b690862a3cff32af516d2f6601915da57a6538a0e1bf7dd9c.png" src="../_images/f5766fca46b7e96b690862a3cff32af516d2f6601915da57a6538a0e1bf7dd9c.png" />
 </div>
 </div>
 </section>
@@ -1585,6 +1587,15 @@ how prediction accuracy evolves.</p>
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Optimize MOOC learner pathways</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="withdrawal_prediction_on_behavioral_indicators.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Withdrawal prediction on behavioral indicators</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div></div>
   

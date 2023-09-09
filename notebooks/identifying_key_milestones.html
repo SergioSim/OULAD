@@ -157,6 +157,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="predicting_students_final_exam_outcome.html">Predicting students final exam outcome</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimize_mooc_learner_pathways.html">Optimize MOOC learner pathways</a></li>
 <li class="toctree-l1"><a class="reference internal" href="time_series_classification_for_dropout_prediction.html">Time series classification for dropout prediction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="withdrawal_prediction_on_behavioral_indicators.html">Withdrawal prediction on behavioral indicators</a></li>
 </ul>
 
     </div>
@@ -366,7 +367,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#wilcoxon-rank-sum-test">Wilcoxon rank-sum test</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Assumptions</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Assumptions</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-the-test">Applying the test</a></li>
 </ul>
 </li>
@@ -377,27 +378,27 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cumulative-number-of-clicks">Cumulative number of clicks</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Step 1: Model the metric as a time series for each student</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Step 2: Perform statistical tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Unpaired t-test</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Assumptions</a><ul class="nav section-nav flex-column">
-<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id12"><strong>Detecting extreme outliers statistically</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Step 1: Model the metric as a time series for each student</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Step 2: Perform statistical tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Unpaired t-test</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Assumptions</a><ul class="nav section-nav flex-column">
+<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id13"><strong>Detecting extreme outliers statistically</strong></a></li>
 <li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-normality"><strong>Examine normality</strong></a></li>
-<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id13"><strong>Verifying equal variances with the Levene test</strong></a></li>
-<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id14"><strong>Conclusion</strong></a></li>
+<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id14"><strong>Verifying equal variances with the Levene test</strong></a></li>
+<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id15"><strong>Conclusion</strong></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Wilcoxon rank-sum test</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Assumptions</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Applying the test</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Wilcoxon rank-sum test</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Assumptions</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Applying the test</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Step 3: Compute the splitting value</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Step 4: Plot the time-series graph</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Step 3: Compute the splitting value</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Step 4: Plot the time-series graph</a></li>
 </ul>
 </li>
 </ul>
@@ -414,7 +415,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="identifying-key-milestones">
 <h1>Identifying key milestones<a class="headerlink" href="#identifying-key-milestones" title="Permalink to this heading">#</a></h1>
 <p>This section aims to reproduce the <code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">splitting</span> <span class="pre">milestone</span> <span class="pre">identification</span></code> approach
-presented in the work of Hlosta et al. <span id="id1">[<a class="reference internal" href="#id5" title="Martin Hlosta, Jakub Kocvara, Zdenek Zdráhal, and David Beran. Visualisation of key splitting milestones to better support interventions. In 03 2019.">HKZB19</a>]</span></p>
+presented in the work of Hlosta et al. <span id="id1">[<a class="reference internal" href="#id6" title="Martin Hlosta, Jakub Kocvara, Zdenek Zdráhal, and David Beran. Visualisation of key splitting milestones to better support interventions. In 03 2019.">HKZB19</a>]</span></p>
 <p><strong>Keywords</strong>: Identifying at-risk students</p>
 <p>The approach of Hlosta et al. aims to detect points in time where the paths of
 successful and unsuccessful students start to split.</p>
@@ -436,7 +437,7 @@ significant difference was detected and the split values.</p></li>
 </ol>
 <div class="docutils container" id="id2">
 <dl class="citation">
-<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">HKZB19</a></span></dt>
+<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id1">HKZB19</a></span></dt>
 <dd><p>Martin Hlosta, Jakub Kocvara, Zdenek Zdráhal, and David Beran. Visualisation of key splitting milestones to better support interventions. In 03 2019.</p>
 </dd>
 </dl>
@@ -925,8 +926,8 @@ the other distribution”.</p>
 <p>Thus, if the p-value is <strong>less or equal</strong> to a chosen alpha level, the null
 hypothesis is <strong>rejected</strong>, and there is evidence that the distributions are
 <strong>different</strong>.</p>
-<section id="id7">
-<h5>Assumptions<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h5>
+<section id="id8">
+<h5>Assumptions<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h5>
 <ul class="contains-task-list simple">
 <li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> <strong>Independence of the observations</strong></p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> <strong>Values are at least ordinal</strong> (ordering/sorting them makes sense)</p></li>
@@ -1331,8 +1332,8 @@ students with a higher score.</p>
 performance metric.</p>
 <p>We follow the same steps as in the
 <span class="xref myst">first example</span>.</p>
-<section id="id8">
-<h3>Step 1: Model the metric as a time series for each student<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
+<section id="id9">
+<h3>Step 1: Model the metric as a time series for each student<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
 <p>As in the work of Hlosta et al. we will use the <code class="docutils literal notranslate"><span class="pre">EEE/2014J</span></code> course.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1720,15 +1721,15 @@ performance metric.</p>
 </div></div></div>
 </div>
 </section>
-<section id="id9">
-<h3>Step 2: Perform statistical tests<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
-<p>As in the first example, let’s first check whether we can use the Unpaired t-test.</p>
 <section id="id10">
-<h4>Unpaired t-test<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h4>
+<h3>Step 2: Perform statistical tests<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h3>
+<p>As in the first example, let’s first check whether we can use the Unpaired t-test.</p>
 <section id="id11">
-<h5>Assumptions<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h5>
+<h4>Unpaired t-test<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h4>
 <section id="id12">
-<h6><strong>Detecting extreme outliers statistically</strong><a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h6>
+<h5>Assumptions<a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h5>
+<section id="id13">
+<h6><strong>Detecting extreme outliers statistically</strong><a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h6>
 <p>Let’s verify whether there are any extreme outliers (above <code class="docutils literal notranslate"><span class="pre">Q3</span> <span class="pre">+</span> <span class="pre">3xIQR</span></code> or below
 <code class="docutils literal notranslate"><span class="pre">Q1</span> <span class="pre">-</span> <span class="pre">3xIQR</span></code>).</p>
 <div class="cell docutils container">
@@ -1770,8 +1771,8 @@ that the impact on the t-test will be limited.</p>
 applies.</p>
 <p>Thus, we assume here too that the normality requirement is satisfied.</p>
 </section>
-<section id="id13">
-<h6><strong>Verifying equal variances with the Levene test</strong><a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h6>
+<section id="id14">
+<h6><strong>Verifying equal variances with the Levene test</strong><a class="headerlink" href="#id14" title="Permalink to this heading">#</a></h6>
 <p>Finally, let’s test the homogeneity of variance using the Levene test.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1868,23 +1869,23 @@ applies.</p>
 </div>
 <p>The Levene test indicates that there is evidence that the variances are <strong>different</strong>.</p>
 </section>
-<section id="id14">
-<h6><strong>Conclusion</strong><a class="headerlink" href="#id14" title="Permalink to this heading">#</a></h6>
+<section id="id15">
+<h6><strong>Conclusion</strong><a class="headerlink" href="#id15" title="Permalink to this heading">#</a></h6>
 <p>As in the first example, we conclude that assumptions for an Unpaired t-test are not
 satisfied as the variances are different.</p>
 <p>Therefore, we skip to the next test.</p>
 </section>
 </section>
 </section>
-<section id="id15">
-<h4>Wilcoxon rank-sum test<a class="headerlink" href="#id15" title="Permalink to this heading">#</a></h4>
 <section id="id16">
-<h5>Assumptions<a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h5>
+<h4>Wilcoxon rank-sum test<a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h4>
+<section id="id17">
+<h5>Assumptions<a class="headerlink" href="#id17" title="Permalink to this heading">#</a></h5>
 <p>The dataset satisfies the Wilcoxon rank-sum test assumptions. We skip to the next
 step.</p>
 </section>
-<section id="id17">
-<h5>Applying the test<a class="headerlink" href="#id17" title="Permalink to this heading">#</a></h5>
+<section id="id18">
+<h5>Applying the test<a class="headerlink" href="#id18" title="Permalink to this heading">#</a></h5>
 <p>We apply the Wilcoxon rank-sum test for each combination of <code class="docutils literal notranslate"><span class="pre">final_result</span></code> (e.g.,
 Pass-Fail, Pass-Withdrawn, etc.) and for each time-slice (<code class="docutils literal notranslate"><span class="pre">date</span></code>) (-18, -17, etc.)</p>
 <div class="cell docutils container">
@@ -2108,8 +2109,8 @@ groups in the time slices, starting from the first time slice (from the day -18)
 </section>
 </section>
 </section>
-<section id="id18">
-<h3>Step 3: Compute the splitting value<a class="headerlink" href="#id18" title="Permalink to this heading">#</a></h3>
+<section id="id19">
+<h3>Step 3: Compute the splitting value<a class="headerlink" href="#id19" title="Permalink to this heading">#</a></h3>
 <p>As in the first example, in this step, we try to compute the splitting value in each
 time slice that minimizes the split error between <strong>Pass</strong>ing students and <strong>Fail</strong>ing
 students (counting “Distinction” also as “Passing” and “Withdrawn” as “Failing”)</p>
@@ -2244,8 +2245,8 @@ students (counting “Distinction” also as “Passing” and “Withdrawn” a
 </div></div></div>
 </div>
 </section>
-<section id="id19">
-<h3>Step 4: Plot the time-series graph<a class="headerlink" href="#id19" title="Permalink to this heading">#</a></h3>
+<section id="id20">
+<h3>Step 4: Plot the time-series graph<a class="headerlink" href="#id20" title="Permalink to this heading">#</a></h3>
 <p>Finally, let’s plot the results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2371,7 +2372,7 @@ students (counting “Distinction” also as “Passing” and “Withdrawn” a
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#wilcoxon-rank-sum-test">Wilcoxon rank-sum test</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Assumptions</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Assumptions</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-the-test">Applying the test</a></li>
 </ul>
 </li>
@@ -2382,27 +2383,27 @@ students (counting “Distinction” also as “Passing” and “Withdrawn” a
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cumulative-number-of-clicks">Cumulative number of clicks</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Step 1: Model the metric as a time series for each student</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Step 2: Perform statistical tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Unpaired t-test</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Assumptions</a><ul class="nav section-nav flex-column">
-<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id12"><strong>Detecting extreme outliers statistically</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Step 1: Model the metric as a time series for each student</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Step 2: Perform statistical tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Unpaired t-test</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Assumptions</a><ul class="nav section-nav flex-column">
+<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id13"><strong>Detecting extreme outliers statistically</strong></a></li>
 <li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-normality"><strong>Examine normality</strong></a></li>
-<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id13"><strong>Verifying equal variances with the Levene test</strong></a></li>
-<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id14"><strong>Conclusion</strong></a></li>
+<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id14"><strong>Verifying equal variances with the Levene test</strong></a></li>
+<li class="toc-h6 nav-item toc-entry"><a class="reference internal nav-link" href="#id15"><strong>Conclusion</strong></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Wilcoxon rank-sum test</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Assumptions</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Applying the test</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Wilcoxon rank-sum test</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Assumptions</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Applying the test</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Step 3: Compute the splitting value</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Step 4: Plot the time-series graph</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Step 3: Compute the splitting value</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Step 4: Plot the time-series graph</a></li>
 </ul>
 </li>
 </ul>

@@ -1,0 +1,2429 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Withdrawal prediction on behavioral indicators &#8212; Analysis of the OULAD dataset</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/withdrawal_prediction_on_behavioral_indicators';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Time series classification for dropout prediction" href="time_series_classification_for_dropout_prediction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">Analysis of the OULAD dataset</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tables.html">Tables of the OULAD dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="first_descriptive_analysis.html">A first descriptive analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="identifying_key_milestones.html">Identifying key milestones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="predicting_students_final_exam_outcome.html">Predicting students final exam outcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize_mooc_learner_pathways.html">Optimize MOOC learner pathways</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series_classification_for_dropout_prediction.html">Time series classification for dropout prediction</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Withdrawal prediction on behavioral indicators</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/SergioSim/OULAD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/SergioSim/OULAD/issues/new?title=Issue%20on%20page%20%2Fnotebooks/withdrawal_prediction_on_behavioral_indicators.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/withdrawal_prediction_on_behavioral_indicators.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Withdrawal prediction on behavioral indicators</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-demographics-table">Student demographics table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-assessments-table">Student assessments table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-course-interactions-table">Student course interactions table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribution-of-learners-results-in-the-course-ddd2013b">Distribution of learners’ results in the course DDD2013B</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-indicators-extraction">Behavioral indicators extraction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#autonomy">Autonomy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perseverance">Perseverance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commitment-indicators">Commitment indicators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collaborative-commitment">Collaborative commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-structure-commitment">Course structure commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-content-commitment">Course content commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-activities-commitment">Evaluation activities commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance">Performance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#k-means-based-data-discretizing">K-Means-based data discretizing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elbow-method">Elbow method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discretization">Discretization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-table">Feature table</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#withdrawal-prediction">Withdrawal prediction</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="withdrawal-prediction-on-behavioral-indicators">
+<h1>Withdrawal prediction on behavioral indicators<a class="headerlink" href="#withdrawal-prediction-on-behavioral-indicators" title="Permalink to this heading">#</a></h1>
+<p>In this section, we try to reproduce the withdrawal prediction approach based on
+behavioral indicators and Synthetic Minority Over-sampling (SMOTE) as presented in
+the work of Hlioui et al. <span id="id1">[<a class="reference internal" href="#id5" title="Fedia Hlioui, Nadia Aloui, and Faiez Gargouri. A withdrawal prediction model of at-risk learners based on behavioural indicators. International Journal of Web-Based Learning and Teaching Technologies, 16(2):32–53, 2021. doi:10.4018/ijwltt.2021030103.">HAG21</a>]</span>.</p>
+<p>Given the recurring occurrence of elevated learner withdrawal rates in Massive Open
+Online Courses (MOOCs), the implementation of early withdrawal prediction models
+could facilitate pedagogical enhancements, enable tailored intervention strategies
+and empower learners to monitor and enhance their academic performance.</p>
+<p>The approach of Hlioui et al. encloses four main phases:</p>
+<ol class="arabic simple">
+<li><p>Data preprocessing</p></li>
+<li><p>Behavioral indicators extraction (feature engineering)</p></li>
+<li><p>K-means-based Data Discretizing</p></li>
+<li><p>Withdrawal prediction</p></li>
+</ol>
+<div class="docutils container" id="id2">
+<dl class="citation">
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">HAG21</a></span></dt>
+<dd><p>Fedia Hlioui, Nadia Aloui, and Faiez Gargouri. A withdrawal prediction model of at-risk learners based on behavioural indicators. <em>International Journal of Web-Based Learning and Teaching Technologies</em>, 16(2):32–53, 2021. <a class="reference external" href="https://doi.org/10.4018/ijwltt.2021030103">doi:10.4018/ijwltt.2021030103</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">imblearn.over_sampling</span> <span class="kn">import</span> <span class="n">SMOTE</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
+<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span><span class="p">,</span> <span class="n">OrdinalEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+
+<span class="kn">from</span> <span class="nn">oulad</span> <span class="kn">import</span> <span class="n">filter_by_module_presentation</span><span class="p">,</span> <span class="n">get_oulad</span>
+
+<span class="n">oulad</span> <span class="o">=</span> <span class="n">get_oulad</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="data-preprocessing">
+<h2>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this heading">#</a></h2>
+<p>As in the work of Hlioui et al., we use the data from the <code class="docutils literal notranslate"><span class="pre">DDD</span></code> course <code class="docutils literal notranslate"><span class="pre">2013B</span></code>
+presentation.
+We start by extracting three tables containing data related to student demographics,
+student assessments and student course interactions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MODULE</span> <span class="o">=</span> <span class="s2">&quot;DDD&quot;</span>
+<span class="n">PRESENTATION</span> <span class="o">=</span> <span class="s2">&quot;2013B&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="student-demographics-table">
+<h3>Student demographics table<a class="headerlink" href="#student-demographics-table" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">student_info</span> <span class="o">=</span> <span class="n">filter_by_module_presentation</span><span class="p">(</span>
+    <span class="n">oulad</span><span class="o">.</span><span class="n">student_info</span><span class="p">,</span> <span class="n">MODULE</span><span class="p">,</span> <span class="n">PRESENTATION</span>
+<span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;studied_credits&quot;</span><span class="p">,</span> <span class="s2">&quot;imd_band&quot;</span><span class="p">])</span>
+<span class="n">display</span><span class="p">(</span><span class="n">student_info</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id_student</th>
+      <th>gender</th>
+      <th>region</th>
+      <th>highest_education</th>
+      <th>age_band</th>
+      <th>num_of_prev_attempts</th>
+      <th>disability</th>
+      <th>final_result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>13091</th>
+      <td>24213</td>
+      <td>F</td>
+      <td>East Anglian Region</td>
+      <td>A Level or Equivalent</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>N</td>
+      <td>Withdrawn</td>
+    </tr>
+    <tr>
+      <th>13092</th>
+      <td>40419</td>
+      <td>M</td>
+      <td>East Midlands Region</td>
+      <td>Lower Than A Level</td>
+      <td>35-55</td>
+      <td>0</td>
+      <td>N</td>
+      <td>Withdrawn</td>
+    </tr>
+    <tr>
+      <th>13093</th>
+      <td>41060</td>
+      <td>M</td>
+      <td>Ireland</td>
+      <td>HE Qualification</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>N</td>
+      <td>Fail</td>
+    </tr>
+    <tr>
+      <th>13094</th>
+      <td>43284</td>
+      <td>M</td>
+      <td>East Midlands Region</td>
+      <td>Lower Than A Level</td>
+      <td>0-35</td>
+      <td>2</td>
+      <td>N</td>
+      <td>Withdrawn</td>
+    </tr>
+    <tr>
+      <th>13095</th>
+      <td>45664</td>
+      <td>M</td>
+      <td>Yorkshire Region</td>
+      <td>HE Qualification</td>
+      <td>0-35</td>
+      <td>1</td>
+      <td>N</td>
+      <td>Pass</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>14389</th>
+      <td>2693243</td>
+      <td>F</td>
+      <td>Yorkshire Region</td>
+      <td>Lower Than A Level</td>
+      <td>35-55</td>
+      <td>0</td>
+      <td>N</td>
+      <td>Distinction</td>
+    </tr>
+    <tr>
+      <th>14390</th>
+      <td>2694933</td>
+      <td>F</td>
+      <td>East Midlands Region</td>
+      <td>A Level or Equivalent</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>Y</td>
+      <td>Pass</td>
+    </tr>
+    <tr>
+      <th>14391</th>
+      <td>2697773</td>
+      <td>F</td>
+      <td>East Anglian Region</td>
+      <td>A Level or Equivalent</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>N</td>
+      <td>Fail</td>
+    </tr>
+    <tr>
+      <th>14392</th>
+      <td>2707979</td>
+      <td>F</td>
+      <td>East Midlands Region</td>
+      <td>Lower Than A Level</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>N</td>
+      <td>Fail</td>
+    </tr>
+    <tr>
+      <th>14393</th>
+      <td>2710343</td>
+      <td>M</td>
+      <td>North Western Region</td>
+      <td>Lower Than A Level</td>
+      <td>0-35</td>
+      <td>0</td>
+      <td>N</td>
+      <td>Fail</td>
+    </tr>
+  </tbody>
+</table>
+<p>1303 rows × 8 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="student-assessments-table">
+<h3>Student assessments table<a class="headerlink" href="#student-assessments-table" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">assessments</span> <span class="o">=</span> <span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">assessments</span><span class="p">,</span> <span class="n">MODULE</span><span class="p">,</span> <span class="n">PRESENTATION</span><span class="p">)</span>
+<span class="n">student_assessments</span> <span class="o">=</span> <span class="n">assessments</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+    <span class="n">oulad</span><span class="o">.</span><span class="n">student_assessment</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;id_assessment&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;is_banked&quot;</span><span class="p">,</span> <span class="s2">&quot;assessment_type&quot;</span><span class="p">,</span> <span class="s2">&quot;id_assessment&quot;</span><span class="p">])</span>
+<span class="n">display</span><span class="p">(</span><span class="n">student_assessments</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>weight</th>
+      <th>id_student</th>
+      <th>date_submitted</th>
+      <th>score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>23.0</td>
+      <td>2.0</td>
+      <td>907261</td>
+      <td>25</td>
+      <td>80.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>23.0</td>
+      <td>2.0</td>
+      <td>957467</td>
+      <td>25</td>
+      <td>77.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>23.0</td>
+      <td>2.0</td>
+      <td>1018685</td>
+      <td>25</td>
+      <td>40.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.0</td>
+      <td>2.0</td>
+      <td>1044992</td>
+      <td>25</td>
+      <td>73.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>23.0</td>
+      <td>2.0</td>
+      <td>1068316</td>
+      <td>25</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>10368</th>
+      <td>240.0</td>
+      <td>100.0</td>
+      <td>2677955</td>
+      <td>230</td>
+      <td>69.0</td>
+    </tr>
+    <tr>
+      <th>10369</th>
+      <td>240.0</td>
+      <td>100.0</td>
+      <td>2683836</td>
+      <td>230</td>
+      <td>71.0</td>
+    </tr>
+    <tr>
+      <th>10370</th>
+      <td>240.0</td>
+      <td>100.0</td>
+      <td>2689536</td>
+      <td>229</td>
+      <td>58.0</td>
+    </tr>
+    <tr>
+      <th>10371</th>
+      <td>240.0</td>
+      <td>100.0</td>
+      <td>2693243</td>
+      <td>230</td>
+      <td>82.0</td>
+    </tr>
+    <tr>
+      <th>10372</th>
+      <td>240.0</td>
+      <td>100.0</td>
+      <td>2694933</td>
+      <td>230</td>
+      <td>73.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>10373 rows × 5 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="student-course-interactions-table">
+<h3>Student course interactions table<a class="headerlink" href="#student-course-interactions-table" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">student_vle</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">,</span> <span class="n">MODULE</span><span class="p">,</span> <span class="n">PRESENTATION</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">vle</span><span class="p">,</span> <span class="n">MODULE</span><span class="p">,</span> <span class="n">PRESENTATION</span><span class="p">),</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;id_site&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;id_site&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">])</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">student_vle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id_student</th>
+      <th>sum_click</th>
+      <th>activity_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>430516</td>
+      <td>3</td>
+      <td>page</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>420388</td>
+      <td>2</td>
+      <td>page</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>423386</td>
+      <td>1</td>
+      <td>page</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>409109</td>
+      <td>1</td>
+      <td>page</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>426137</td>
+      <td>1</td>
+      <td>page</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>536832</th>
+      <td>531202</td>
+      <td>1</td>
+      <td>url</td>
+    </tr>
+    <tr>
+      <th>536833</th>
+      <td>531202</td>
+      <td>1</td>
+      <td>url</td>
+    </tr>
+    <tr>
+      <th>536834</th>
+      <td>560381</td>
+      <td>1</td>
+      <td>url</td>
+    </tr>
+    <tr>
+      <th>536835</th>
+      <td>503497</td>
+      <td>1</td>
+      <td>url</td>
+    </tr>
+    <tr>
+      <th>536836</th>
+      <td>547349</td>
+      <td>1</td>
+      <td>url</td>
+    </tr>
+  </tbody>
+</table>
+<p>536837 rows × 3 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="distribution-of-learners-results-in-the-course-ddd2013b">
+<h3>Distribution of learners’ results in the course DDD2013B<a class="headerlink" href="#distribution-of-learners-results-in-the-course-ddd2013b" title="Permalink to this heading">#</a></h3>
+<p>Next, we reproduce the pie chart from the paper of Hlioui et al. (Figure 3)
+which reveals class imbalance of student final outcome in the <code class="docutils literal notranslate"><span class="pre">DDD2013B</span></code> course
+presentation.</p>
+<p>The class imbalance problem is a commonly recognized challenge in Machine Learning,
+known to hinder the development of effective classifiers. (Batista, et al., 2004)</p>
+<p>When trained on imbalanced datasets, models often exhibit a significant bias toward
+the majority class.
+This bias occurs because traditional Machine Learning algorithms are primarily
+focused on maximizing overall prediction accuracy, which can lead them to overlook or
+neglect classes with fewer instances, typically referred to as the minority class.
+(Bekkar &amp; Alitouche, 2013)</p>
+<p>To deal with the class imbalance problem, the approach of Hlioui et al. applies the
+Synthetic Minority Over-sampling method (SMOTE) on the dataset, which generates new
+observations in the minority class by interpolating the existing ones.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>At this juncture, we deviate marginally from the initial approach as we apply the
+SMOTE method subsequent to the extraction of behavioral indicators.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">student_info</span><span class="o">.</span><span class="n">final_result</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s2">&quot;Withdrawn&quot;</span><span class="p">,</span> <span class="s2">&quot;Fail&quot;</span><span class="p">,</span> <span class="s2">&quot;Pass&quot;</span><span class="p">,</span> <span class="s2">&quot;Distinction&quot;</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribution of learners&#39; results in the DDD2013B course&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">wedgeprops</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span> <span class="s2">&quot;edgecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;w&quot;</span><span class="p">},</span>
+        <span class="n">autopct</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%1.0f%%</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">pctdistance</span><span class="o">=</span><span class="mf">0.72</span><span class="p">,</span>
+        <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;firebrick&quot;</span><span class="p">,</span> <span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="s2">&quot;silver&quot;</span><span class="p">,</span> <span class="s2">&quot;darkkhaki&quot;</span><span class="p">],</span>
+        <span class="n">startangle</span><span class="o">=-</span><span class="mi">270</span><span class="p">,</span>
+        <span class="n">counterclock</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">labeldistance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">radius</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+        <span class="n">textprops</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="mf">12.5</span><span class="p">},</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/048f8b5bb7f7775a28d27effbca10a07ac925e99bbcfbdb02bfe81ac3517b65d.png" src="../_images/048f8b5bb7f7775a28d27effbca10a07ac925e99bbcfbdb02bfe81ac3517b65d.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="behavioral-indicators-extraction">
+<h2>Behavioral indicators extraction<a class="headerlink" href="#behavioral-indicators-extraction" title="Permalink to this heading">#</a></h2>
+<p>At this stage we extract behavioral indicators as described in the work of Hlioui et
+al.</p>
+<section id="autonomy">
+<h3>Autonomy<a class="headerlink" href="#autonomy" title="Permalink to this heading">#</a></h3>
+<p>The autonomy indicator refers to the navigation frequency of learners within the
+virtual learning environment (VLE).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">autonomy</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_vle</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;id_student&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="s2">&quot;autonomy&quot;</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">autonomy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>autonomy</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40419</th>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>214</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>422</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>405</td>
+    </tr>
+    <tr>
+      <th>52014</th>
+      <td>116</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2691780</th>
+      <td>156</td>
+    </tr>
+    <tr>
+      <th>2692101</th>
+      <td>151</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>1249</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>398</td>
+    </tr>
+    <tr>
+      <th>2697773</th>
+      <td>86</td>
+    </tr>
+  </tbody>
+</table>
+<p>1214 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="perseverance">
+<h3>Perseverance<a class="headerlink" href="#perseverance" title="Permalink to this heading">#</a></h3>
+<p>The perseverance indicator refers to the ratio of evaluations submitted on time by
+the learners.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">perseverance</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_assessments</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;date_submitted &lt;= date&quot;</span><span class="p">)[[</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">assessments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="s2">&quot;perseverance&quot;</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">perseverance</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>perseverance</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40419</th>
+      <td>0.071429</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>0.357143</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>0.214286</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>0.500000</td>
+    </tr>
+    <tr>
+      <th>52014</th>
+      <td>0.357143</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2689536</th>
+      <td>0.285714</td>
+    </tr>
+    <tr>
+      <th>2691780</th>
+      <td>0.214286</td>
+    </tr>
+    <tr>
+      <th>2692101</th>
+      <td>0.071429</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>0.500000</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>0.428571</td>
+    </tr>
+  </tbody>
+</table>
+<p>969 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="commitment-indicators">
+<h3>Commitment indicators<a class="headerlink" href="#commitment-indicators" title="Permalink to this heading">#</a></h3>
+<p>Commitment indicators aim to measure the level and type of involvement of learners.
+In the work of Hlioui et al. they refer to the total sum of clicks (interactions)
+made by learners on several related activity types (activity categories).</p>
+<p>Below, a barplot is presented, illustrating the frequency distribution of
+interactions by activity type within the DDD2013B course.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">student_vle</span><span class="o">.</span><span class="n">activity_type</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Activity type frequency in the DDD2013B course&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Frequency&quot;</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e5a3b506c18071a1c226ef3b9827633afab2166da309a02a3bf83308f6b6fcc4.png" src="../_images/e5a3b506c18071a1c226ef3b9827633afab2166da309a02a3bf83308f6b6fcc4.png" />
+</div>
+</div>
+</section>
+<section id="collaborative-commitment">
+<h3>Collaborative commitment<a class="headerlink" href="#collaborative-commitment" title="Permalink to this heading">#</a></h3>
+<p>The collaborative commitment indicator refers to the sum of clicks learners made on
+activities of type <code class="docutils literal notranslate"><span class="pre">forumng</span></code>, <code class="docutils literal notranslate"><span class="pre">ouwiki</span></code>, and <code class="docutils literal notranslate"><span class="pre">ouelluminate</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">collaborative_commitment</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_vle</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;activity_type in [&#39;forumng&#39;, &#39;ouwiki&#39;, &#39;ouelluminate&#39;]&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="s2">&quot;collaborative_commitment&quot;</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">collaborative_commitment</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>collaborative_commitment</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40419</th>
+      <td>69</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>46</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>176</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>181</td>
+    </tr>
+    <tr>
+      <th>52014</th>
+      <td>110</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2691780</th>
+      <td>43</td>
+    </tr>
+    <tr>
+      <th>2692101</th>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>941</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>305</td>
+    </tr>
+    <tr>
+      <th>2697773</th>
+      <td>32</td>
+    </tr>
+  </tbody>
+</table>
+<p>1106 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="course-structure-commitment">
+<h3>Course structure commitment<a class="headerlink" href="#course-structure-commitment" title="Permalink to this heading">#</a></h3>
+<p>The course structure commitment indicator refers to the sum of clicks learners made on
+activities of type <code class="docutils literal notranslate"><span class="pre">homepage</span></code> and <code class="docutils literal notranslate"><span class="pre">glossary</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">course_structure_commitment</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_vle</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;activity_type in [&#39;homepage&#39;, &#39;glossary&#39;]&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="s2">&quot;course_structure_commitment&quot;</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">course_structure_commitment</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>course_structure_commitment</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40419</th>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>80</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>293</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>287</td>
+    </tr>
+    <tr>
+      <th>52014</th>
+      <td>98</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2691780</th>
+      <td>87</td>
+    </tr>
+    <tr>
+      <th>2692101</th>
+      <td>69</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>591</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>279</td>
+    </tr>
+    <tr>
+      <th>2697773</th>
+      <td>37</td>
+    </tr>
+  </tbody>
+</table>
+<p>1211 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="course-content-commitment">
+<h3>Course content commitment<a class="headerlink" href="#course-content-commitment" title="Permalink to this heading">#</a></h3>
+<p>The course content commitment indicator refers to the sum of clicks learners made on
+activities of type <code class="docutils literal notranslate"><span class="pre">resource</span></code>, <code class="docutils literal notranslate"><span class="pre">url</span></code>, <code class="docutils literal notranslate"><span class="pre">oucontent</span></code>, <code class="docutils literal notranslate"><span class="pre">page</span></code>, and <code class="docutils literal notranslate"><span class="pre">subpage</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">course_content_commitment</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_vle</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+        <span class="s2">&quot;activity_type in [&#39;resource&#39;, &#39;url&#39;, &#39;oucontent&#39;, &#39;page&#39;, &#39;subpage&#39;]&quot;</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="s2">&quot;course_content_commitment&quot;</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">course_content_commitment</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>course_content_commitment</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40419</th>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>270</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>348</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>558</td>
+    </tr>
+    <tr>
+      <th>52014</th>
+      <td>132</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2691780</th>
+      <td>154</td>
+    </tr>
+    <tr>
+      <th>2692101</th>
+      <td>215</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>1050</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>310</td>
+    </tr>
+    <tr>
+      <th>2697773</th>
+      <td>79</td>
+    </tr>
+  </tbody>
+</table>
+<p>1206 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="evaluation-activities-commitment">
+<h3>Evaluation activities commitment<a class="headerlink" href="#evaluation-activities-commitment" title="Permalink to this heading">#</a></h3>
+<p>The evaluation activities commitment indicator refers to the sum of clicks learners
+made on activities of type <code class="docutils literal notranslate"><span class="pre">extenalquiz</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evalutation_activities_commitment</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_vle</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;activity_type == &#39;externalquiz&#39;&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="s2">&quot;evalutation_activities_commitment&quot;</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">evalutation_activities_commitment</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>evalutation_activities_commitment</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40419</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>52014</th>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2689536</th>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>2691780</th>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>2692101</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>41</td>
+    </tr>
+  </tbody>
+</table>
+<p>1103 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="motivation">
+<h3>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h3>
+<p>The motivation indicator measures whether a learners’ sum of clicks on all activities
+is above average (motivated) or below (unmotivated).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">motivation</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_vle</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">motivation</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">sum_click</span> <span class="o">&gt;=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum_click</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;sum_click&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">motivation</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>motivation</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40419</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>52014</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2691780</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2692101</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2697773</th>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>1214 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Permalink to this heading">#</a></h2>
+<p>The performance indicator refers to the sum of weighted assessment scores by learner.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">performance</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_assessments</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">performance</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">weight</span> <span class="o">*</span> <span class="n">df</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;date_submitted&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">performance</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>performance</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40419</th>
+      <td>704.0</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>6359.5</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>4020.0</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>9528.0</td>
+    </tr>
+    <tr>
+      <th>52014</th>
+      <td>4424.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2689536</th>
+      <td>10621.0</td>
+    </tr>
+    <tr>
+      <th>2691780</th>
+      <td>2703.0</td>
+    </tr>
+    <tr>
+      <th>2692101</th>
+      <td>1819.0</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>17058.0</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>14997.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>1065 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="k-means-based-data-discretizing">
+<h2>K-Means-based data discretizing<a class="headerlink" href="#k-means-based-data-discretizing" title="Permalink to this heading">#</a></h2>
+<p>At this stage, we discretize the generated indicators using the K-Means clustering
+method.
+We begin by estimating the ‘k’ parameter through the elbow method and then replace
+the indicators’ values with their corresponding clustering labels.</p>
+<section id="elbow-method">
+<h3>Elbow method<a class="headerlink" href="#elbow-method" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indicators</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Perseverance indicator&quot;</span><span class="p">:</span> <span class="n">perseverance</span><span class="p">,</span>
+    <span class="s2">&quot;Autonomy indicator&quot;</span><span class="p">:</span> <span class="n">autonomy</span><span class="p">,</span>
+    <span class="s2">&quot;Structure content commitment indicator&quot;</span><span class="p">:</span> <span class="n">course_structure_commitment</span><span class="p">,</span>
+    <span class="s2">&quot;Evaluation activities commitment indicator&quot;</span><span class="p">:</span> <span class="n">evalutation_activities_commitment</span><span class="p">,</span>
+    <span class="s2">&quot;Learning content commitment indicator&quot;</span><span class="p">:</span> <span class="n">course_content_commitment</span><span class="p">,</span>
+    <span class="s2">&quot;Collaborative commitment indicator&quot;</span><span class="p">:</span> <span class="n">collaborative_commitment</span><span class="p">,</span>
+    <span class="s2">&quot;Performance indicator&quot;</span><span class="p">:</span> <span class="n">performance</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">k_range</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">indicator</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indicators</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">inertia</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">k_range</span><span class="p">:</span>
+        <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">indicator</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="c1"># Inertia: Sum of squared distances of samples to their closest cluster center,</span>
+        <span class="c1"># weighted by the sample weights if provided.</span>
+        <span class="n">inertia</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+    <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">inertia</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">k_range</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> (Inertia/k)&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Number of clusters&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;SSE&quot;</span><span class="p">,</span>
+        <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)),</span> <span class="n">colspan</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/14502b34fbcbbef55d8eb62f9677dabb8b3f7858f575a9137ff2d7c3b84b6b61.png" src="../_images/14502b34fbcbbef55d8eb62f9677dabb8b3f7858f575a9137ff2d7c3b84b6b61.png" />
+</div>
+</div>
+</section>
+<section id="discretization">
+<h3>Discretization<a class="headerlink" href="#discretization" title="Permalink to this heading">#</a></h3>
+<p>We obtain similar graphs as in the work of Hlioui et al.
+Thus, we proceed by setting the same <code class="docutils literal notranslate"><span class="pre">k</span></code> values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_k</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Perseverance indicator&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;Autonomy indicator&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;Structure content commitment indicator&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;Evaluation activities commitment indicator&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;Learning content commitment indicator&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;Collaborative commitment indicator&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;Performance indicator&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">selected_k</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="n">indicator</span> <span class="o">=</span> <span class="n">indicators</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="n">indicator</span><span class="p">[</span><span class="n">indicator</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">indicator</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="feature-table">
+<h3>Feature table<a class="headerlink" href="#feature-table" title="Permalink to this heading">#</a></h3>
+<p>We join the student demographics table with the discretized behavioral
+indicators into a single <code class="docutils literal notranslate"><span class="pre">feature_table</span></code>.</p>
+<p>We also encode categorical columns (<code class="docutils literal notranslate"><span class="pre">age_band</span></code>, <code class="docutils literal notranslate"><span class="pre">disability</span></code>, <code class="docutils literal notranslate"><span class="pre">gender</span></code>,
+<code class="docutils literal notranslate"><span class="pre">highest_education</span></code>, <code class="docutils literal notranslate"><span class="pre">region</span></code>, and <code class="docutils literal notranslate"><span class="pre">final_result</span></code>) to numerical values and fill
+missing values with zeros.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">region_encoder</span> <span class="o">=</span> <span class="n">OrdinalEncoder</span><span class="p">()</span>
+<span class="n">feature_table</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">student_info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chain</span><span class="p">([</span><span class="n">motivation</span><span class="p">],</span> <span class="n">indicators</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;0-35&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;35-55&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;55&lt;=&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+            <span class="s2">&quot;disability&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+            <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+            <span class="s2">&quot;highest_education&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;No Formal quals&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;Lower Than A Level&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
+                <span class="s2">&quot;A Level or Equivalent&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s2">&quot;HE Qualification&quot;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
+                <span class="s2">&quot;Post Graduate Qualification&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;final_result&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;Withdrawn&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;Fail&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;Pass&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;Distinction&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">region_encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">&quot;region&quot;</span><span class="p">]]))</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>region</th>
+      <th>highest_education</th>
+      <th>age_band</th>
+      <th>num_of_prev_attempts</th>
+      <th>disability</th>
+      <th>final_result</th>
+      <th>motivation</th>
+      <th>perseverance</th>
+      <th>autonomy</th>
+      <th>course_structure_commitment</th>
+      <th>evalutation_activities_commitment</th>
+      <th>course_content_commitment</th>
+      <th>collaborative_commitment</th>
+      <th>performance</th>
+    </tr>
+    <tr>
+      <th>id_student</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>24213</th>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.50</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>40419</th>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.25</td>
+      <td>0.5</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>41060</th>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>0.75</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>43284</th>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.25</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>45664</th>
+      <td>0.0</td>
+      <td>12.0</td>
+      <td>0.75</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2693243</th>
+      <td>1.0</td>
+      <td>12.0</td>
+      <td>0.25</td>
+      <td>0.5</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>2694933</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.50</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>2697773</th>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.50</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2707979</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.25</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2710343</th>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>0.25</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>1303 rows × 15 columns</p>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="withdrawal-prediction">
+<h2>Withdrawal prediction<a class="headerlink" href="#withdrawal-prediction" title="Permalink to this heading">#</a></h2>
+<p>Prior to training the classification models, we split the <code class="docutils literal notranslate"><span class="pre">feature_table</span></code> into a
+train (75%) and test (25%) set.
+Then we scale features to values between 0 and 1 and apply the SMOTE method to
+balance the occurences of the target class (Withdrawn/Not Withdrawn).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">feature_table</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;final_result&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">.</span><span class="n">final_result</span><span class="o">.</span><span class="n">values</span>
+<span class="p">)</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+<span class="n">smote</span> <span class="o">=</span> <span class="n">SMOTE</span><span class="p">()</span>
+<span class="n">x_resampled</span><span class="p">,</span> <span class="n">y_resampled</span> <span class="o">=</span> <span class="n">smote</span><span class="o">.</span><span class="n">fit_resample</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Subsequently, we undertake a grid search across classification parameters for five
+classifiers, which have been chosen to align closely with those
+utilized in the work of Hlioui et al.
+These classifiers encompass Decision Trees, Random Forest, Support Vector Machines,
+Gaussian Naive Bayes (as a substitute for Tree Augmented Naive Bayes), and
+Multilayer Perceptron.</p>
+<p>In line with the work of Hlioui et al., we adopt a 5-fold cross-validation approach
+with stratification.
+Evaluation of classifier performance is conducted utilizing the F-measure as the
+primary metric.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We replaced the initial parameter ranges with the selected values after the first
+grid search run to speed up the process.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DecisionTreeClassifier</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;unbalanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;log_loss&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;gini&quot;, &quot;entropy&quot;, &quot;log_loss&quot;],</span>
+            <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span>  <span class="c1"># [None, *list(range(1, 20))],</span>
+            <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span>  <span class="c1"># range(1, 20),</span>
+            <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">],</span>  <span class="c1"># range(2, 20),</span>
+            <span class="s2">&quot;splitter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;random&quot;, &quot;best&quot;],</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;balanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;entropy&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;gini&quot;, &quot;entropy&quot;, &quot;log_loss&quot;],</span>
+            <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">],</span>  <span class="c1"># [None, *list(range(1, 20))],</span>
+            <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="c1"># range(1, 20),</span>
+            <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">],</span>  <span class="c1"># range(2, 20),</span>
+            <span class="s2">&quot;splitter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;random&quot;, &quot;best&quot;],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="n">RandomForestClassifier</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;unbalanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;entropy&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;gini&quot;, &quot;entropy&quot;, &quot;log_loss&quot;],</span>
+            <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">15</span><span class="p">],</span>  <span class="c1"># [None, *list(range(1, 20, 2))],</span>
+            <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span>  <span class="c1"># list(range(1, 20, 2)),</span>
+            <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>  <span class="c1"># list(range(2, 20, 2)),</span>
+            <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>  <span class="c1"># [10, 50, 100],</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;balanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;entropy&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;gini&quot;, &quot;entropy&quot;, &quot;log_loss&quot;],</span>
+            <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">17</span><span class="p">],</span>  <span class="c1"># [None, *list(range(1, 20, 2))],</span>
+            <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span>  <span class="c1"># list(range(1, 20, 2)),</span>
+            <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">14</span><span class="p">],</span>  <span class="c1"># list(range(2, 20, 2)),</span>
+            <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">],</span>  <span class="c1"># [10, 50, 100],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="n">GaussianNB</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;unbalanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;var_smoothing&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">],</span>  <span class="c1"># [1/10**x for x in range(1, 11)],</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;balanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;var_smoothing&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">],</span>  <span class="c1"># [1/10**x for x in range(1, 11)],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="n">SVC</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;unbalanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># [1.0],</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span>  <span class="c1"># [&quot;scale&quot;, &quot;auto&quot;, 0, 0.5],</span>
+            <span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;rbf&quot;, &quot;poly&quot;, &quot;sigmoid&quot;],</span>
+            <span class="s2">&quot;tol&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">],</span>  <span class="c1"># [1/10**x for x in range(2, 5)],</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;balanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># [1.0],</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span>  <span class="c1"># [&quot;scale&quot;, &quot;auto&quot;, 0, 0.5],</span>
+            <span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;rbf&quot;, &quot;poly&quot;, &quot;sigmoid&quot;],</span>
+            <span class="s2">&quot;tol&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">],</span>  <span class="c1"># [1/10**x for x in range(2, 5)],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="n">MLPClassifier</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;unbalanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;early_stopping&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">],</span>  <span class="c1"># [True, False],</span>
+            <span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">500</span><span class="p">)],</span>  <span class="c1"># 1-3 layers of 10/100/500 nodes</span>
+            <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;learning_rate_init&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">],</span>  <span class="c1"># [0.001, 0.1, 0.3],</span>
+            <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1200</span><span class="p">],</span>
+            <span class="s2">&quot;momentum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">],</span>  <span class="c1"># [0.2, 0.5, 0.9],</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sgd&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;balanced&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;early_stopping&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">],</span>  <span class="c1"># [True, False],</span>
+            <span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">)],</span>  <span class="c1"># 1-3 layers of 10/100/500 nodes</span>
+            <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;learning_rate_init&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">],</span>  <span class="c1"># [0.001, 0.1, 0.3],</span>
+            <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1200</span><span class="p">],</span>
+            <span class="s2">&quot;momentum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span>  <span class="c1"># [0.2, 0.5, 0.9],</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sgd&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+<span class="n">skf_cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">classifier_class</span><span class="p">,</span> <span class="n">type_parameters</span> <span class="ow">in</span> <span class="n">grid</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">dataset_type</span><span class="p">,</span> <span class="n">hyperparameters</span> <span class="ow">in</span> <span class="n">type_parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+            <span class="n">classifier_class</span><span class="p">(),</span>
+            <span class="n">hyperparameters</span><span class="p">,</span>
+            <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">error_score</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">,</span>
+            <span class="n">cv</span><span class="o">=</span><span class="n">skf_cv</span><span class="p">,</span>
+            <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">dataset_type</span> <span class="o">==</span> <span class="s2">&quot;unbalanced&quot;</span><span class="p">:</span>
+            <span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_resampled</span><span class="p">,</span> <span class="n">y_resampled</span><span class="p">)</span>
+        <span class="n">cv_score</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">best_score_</span>
+        <span class="n">test_score</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">classifier_class</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">dataset_type</span><span class="p">,</span> <span class="n">cv_score</span><span class="p">,</span> <span class="n">test_score</span><span class="p">))</span>
+
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">scores</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;classifier&quot;</span><span class="p">,</span> <span class="s2">&quot;dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;cv_score&quot;</span><span class="p">,</span> <span class="s2">&quot;test_score&quot;</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+        <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cv_score&quot;</span><span class="p">,</span> <span class="s2">&quot;test_score&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;classifier&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">cv_score</th>
+      <th colspan="2" halign="left">test_score</th>
+    </tr>
+    <tr>
+      <th>dataset</th>
+      <th>balanced</th>
+      <th>unbalanced</th>
+      <th>balanced</th>
+      <th>unbalanced</th>
+    </tr>
+    <tr>
+      <th>classifier</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>DecisionTreeClassifier</th>
+      <td>0.841871</td>
+      <td>0.582573</td>
+      <td>0.750958</td>
+      <td>0.679426</td>
+    </tr>
+    <tr>
+      <th>GaussianNB</th>
+      <td>0.757132</td>
+      <td>0.651994</td>
+      <td>0.657040</td>
+      <td>0.656934</td>
+    </tr>
+    <tr>
+      <th>MLPClassifier</th>
+      <td>0.835917</td>
+      <td>0.661074</td>
+      <td>0.746154</td>
+      <td>0.717703</td>
+    </tr>
+    <tr>
+      <th>RandomForestClassifier</th>
+      <td>0.833780</td>
+      <td>0.663222</td>
+      <td>0.721311</td>
+      <td>0.714976</td>
+    </tr>
+    <tr>
+      <th>SVC</th>
+      <td>0.837088</td>
+      <td>0.700278</td>
+      <td>0.727273</td>
+      <td>0.702703</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="time_series_classification_for_dropout_prediction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Time series classification for dropout prediction</p>
+      </div>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-demographics-table">Student demographics table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-assessments-table">Student assessments table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-course-interactions-table">Student course interactions table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribution-of-learners-results-in-the-course-ddd2013b">Distribution of learners’ results in the course DDD2013B</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-indicators-extraction">Behavioral indicators extraction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#autonomy">Autonomy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perseverance">Perseverance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commitment-indicators">Commitment indicators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collaborative-commitment">Collaborative commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-structure-commitment">Course structure commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-content-commitment">Course content commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-activities-commitment">Evaluation activities commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance">Performance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#k-means-based-data-discretizing">K-Means-based data discretizing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elbow-method">Elbow method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discretization">Discretization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-table">Feature table</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#withdrawal-prediction">Withdrawal prediction</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SergioSim
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
