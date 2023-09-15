@@ -64,6 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/withdrawal_prediction_on_behavioral_indicators';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Detecting at-risk students" href="detecting_at_risk_students.html" />
     <link rel="prev" title="Time series classification for dropout prediction" href="time_series_classification_for_dropout_prediction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -157,6 +158,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="optimize_mooc_learner_pathways.html">Optimize MOOC learner pathways</a></li>
 <li class="toctree-l1"><a class="reference internal" href="time_series_classification_for_dropout_prediction.html">Time series classification for dropout prediction</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Withdrawal prediction on behavioral indicators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detecting_at_risk_students.html">Detecting at-risk students</a></li>
 </ul>
 
     </div>
@@ -1732,7 +1734,7 @@ the indicators’ values with their corresponding clustering labels.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/794da25da0135afdfc75cb3b2e1f09391b75b3f60eca0906e0201ce57e5fa01f.png" src="../_images/794da25da0135afdfc75cb3b2e1f09391b75b3f60eca0906e0201ce57e5fa01f.png" />
+<img alt="../_images/d599ba6760118fee890b78206368ff9dd7f02e59829775c4d69d7d871706c313.png" src="../_images/d599ba6760118fee890b78206368ff9dd7f02e59829775c4d69d7d871706c313.png" />
 </div>
 </div>
 </section>
@@ -1884,13 +1886,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>41060</th>
@@ -1902,13 +1904,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>2.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>1.0</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>2.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>43284</th>
@@ -1920,13 +1922,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>45664</th>
@@ -1938,13 +1940,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
+      <td>2.0</td>
       <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
       <td>0.0</td>
       <td>2.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1974,13 +1976,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
+      <td>2.0</td>
       <td>2.0</td>
       <td>0.0</td>
-      <td>2.0</td>
-      <td>0.0</td>
-      <td>2.0</td>
       <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
     </tr>
     <tr>
       <th>2694933</th>
@@ -1992,13 +1994,13 @@ missing values with zeros.</p>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>2.0</td>
-      <td>1.0</td>
       <td>0.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
     </tr>
     <tr>
       <th>2697773</th>
@@ -2011,11 +2013,11 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -2249,38 +2251,38 @@ grid search run to speed up the process.</p>
   <tbody>
     <tr>
       <th>DecisionTreeClassifier</th>
-      <td>0.859885</td>
-      <td>0.755965</td>
-      <td>0.749064</td>
-      <td>0.735714</td>
+      <td>0.842065</td>
+      <td>0.676274</td>
+      <td>0.713287</td>
+      <td>0.720848</td>
     </tr>
     <tr>
       <th>GaussianNB</th>
-      <td>0.833135</td>
-      <td>0.731257</td>
-      <td>0.723881</td>
-      <td>0.728625</td>
+      <td>0.810599</td>
+      <td>0.701892</td>
+      <td>0.680412</td>
+      <td>0.668990</td>
     </tr>
     <tr>
       <th>MLPClassifier</th>
-      <td>0.804311</td>
-      <td>0.695486</td>
-      <td>0.750903</td>
-      <td>0.690000</td>
+      <td>0.833183</td>
+      <td>0.614939</td>
+      <td>0.705882</td>
+      <td>0.700787</td>
     </tr>
     <tr>
       <th>RandomForestClassifier</th>
-      <td>0.862175</td>
-      <td>0.678270</td>
-      <td>0.774908</td>
-      <td>0.778243</td>
+      <td>0.850706</td>
+      <td>0.667544</td>
+      <td>0.713235</td>
+      <td>0.604444</td>
     </tr>
     <tr>
       <th>SVC</th>
-      <td>0.860078</td>
-      <td>0.737110</td>
-      <td>0.744526</td>
-      <td>0.761538</td>
+      <td>0.841223</td>
+      <td>0.655962</td>
+      <td>0.709220</td>
+      <td>0.651982</td>
     </tr>
   </tbody>
 </table>
@@ -2328,6 +2330,15 @@ grid search run to speed up the process.</p>
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Time series classification for dropout prediction</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="detecting_at_risk_students.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Detecting at-risk students</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div></div>
   
