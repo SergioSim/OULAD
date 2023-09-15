@@ -11,3 +11,4 @@ chapters:
 - file: notebooks/optimize_mooc_learner_pathways
 - file: notebooks/time_series_classification_for_dropout_prediction
 - file: notebooks/withdrawal_prediction_on_behavioral_indicators
+- file: notebooks/detecting_at_risk_students

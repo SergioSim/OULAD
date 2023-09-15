@@ -83,14 +83,12 @@ clear-jupyter-book: ## remove the jupyter book build files
 .PHONY: clear-jupyter-book
 
 deploy-jupyter-book: \
-	clear-jupyter-book \
 	build-jupyter-book
 deploy-jupyter-book: ## deploy the jupyter book to gh-pages (with docker)
 	ghp-import -n -p -f src/jupyterbook/_build/html
 .PHONY: deploy-jupyter-book
 
 deploy-jupyter-book-venv: \
-	clear-jupyter-book \
 	build-jupyter-book-venv
 deploy-jupyter-book-venv: ## deploy the jupyter book to gh-pages (with venv)
 	@. venv/bin/activate && ghp-import -n -p -f src/jupyterbook/_build/html
