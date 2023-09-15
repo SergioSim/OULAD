@@ -43,9 +43,8 @@
 # :filter: docname in docnames
 # ```
 
-from shutil import rmtree
-
 # %%
+from shutil import rmtree
 from tempfile import mkdtemp
 
 import numpy as np
