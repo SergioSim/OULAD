@@ -35,9 +35,9 @@
 # %%
 import numpy as np
 import pandas as pd
-from IPython.display import display
+from IPython.display import Markdown, display
 from matplotlib import pyplot as plt
-from sklearn.cluster import DBSCAN, OPTICS, AgglomerativeClustering, Birch, KMeans
+from sklearn.cluster import OPTICS, AgglomerativeClustering, Birch, KMeans
 from sklearn.mixture import GaussianMixture
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 from sklearn.tree import DecisionTreeClassifier, plot_tree
@@ -47,6 +47,8 @@ from surprise.model_selection import GridSearchCV as SupGridSearchCV
 from multicons import MultiCons
 
 from oulad import filter_by_module_presentation, get_oulad
+
+# %load_ext oulad.cache
 
 # %% [markdown]
 # ## Preparing the dataset
@@ -59,6 +61,7 @@ from oulad import filter_by_module_presentation, get_oulad
 # ### Loading OULAD
 
 # %%
+# %%cache oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -79,8 +82,20 @@ CODE_PRESENTATION = "2013J"
 # session.
 
 # %%
+# %%cache -ns optimize_mooc_learner_pathways student_registration student_item
+student_registration = (
+    filter_by_module_presentation(
+        oulad.student_registration, CODE_MODULE, CODE_PRESENTATION
+    )
+    # Remove students that unregistered before the course started.
+    .query("~(date_unregistration < 0)")
+    .drop(["date_unregistration"], axis=1)
+    .set_index("id_student")
+)
+
 student_item = (
     filter_by_module_presentation(oulad.student_vle, CODE_MODULE, CODE_PRESENTATION)
+    .query("id_student in @student_registration.index")
     .drop(["date"], axis=1)
     .groupby(["id_site", "id_student"])
     .sum()
@@ -88,7 +103,9 @@ student_item = (
     # We convert the `id_site` column to string type as the values of `id_site` will
     # be used as column names in the `student_profile` table.
     # student_item.id_site = student_item.id_site.astype(str)
-    .astype({"id_site": str})
+    .astype({"id_site": str, "sum_click": float})[
+        ["id_student", "id_site", "sum_click"]
+    ]
 )
 display(student_item)
 
@@ -103,98 +120,76 @@ display(student_item)
 #
 # We consider students marked with a final result of `Withdrawn` and `Fail` as failed
 # and students marked with `Pass` or `Distinction` as succeded.
+#
+# Finally, we encode all ordinal categorical values to nummerical values.
 
 # %%
-student_info = (
-    filter_by_module_presentation(oulad.student_info, CODE_MODULE, CODE_PRESENTATION)
-    .set_index("id_student")
-    .drop(["num_of_prev_attempts", "region"], axis=1)
-)
-student_registration = (
-    filter_by_module_presentation(
-        oulad.student_registration, CODE_MODULE, CODE_PRESENTATION
-    )
-    .set_index("id_student")
-    # Remove students that unregistered before the course started.
-    .query("~(date_unregistration < 0)")
-    .drop(["date_unregistration"], axis=1)
-)
-student_registration_info = student_registration.join(student_info, how="inner")
-
 student_activity = student_item.pivot_table(
     values="sum_click",
     index="id_student",
     columns="id_site",
     fill_value=0.0,
 )
-
-# Remove students that have no interaction records.
-student_activity = student_activity.loc[:, (student_activity != 0).any(axis=0)]
-
-student_profile = student_registration_info.join(student_activity, how="inner")
-
-display(student_profile)
-
-# %% [markdown]
-# #### The `encoded_student_profile` table.
-#
-# Finally, we encode all ordinal categorical values from the `student_profile` table
-# into the `encoded_student_profile` table.
-
-# %%
-encoded_student_profile = student_profile.copy()
-
-ordinal_values_maps = {
-    "age_band": {"0-35": 0, "35-55": 0.5, "55<=": 1},
-    "disability": {"N": 0, "Y": 1},
-    "gender": {"M": 0, "F": 1},
-    "highest_education": {
-        "No Formal quals": 0,
-        "Lower Than A Level": 0.25,
-        "A Level or Equivalent": 0.5,
-        "HE Qualification": 0.75,
-        "Post Graduate Qualification": 1,
-    },
-    "imd_band": {
-        np.nan: 0,
-        "0-10%": 5,
-        "10-20": 15,
-        "20-30%": 25,
-        "30-40%": 35,
-        "40-50%": 45,
-        "50-60%": 55,
-        "60-70%": 65,
-        "70-80%": 75,
-        "80-90%": 85,
-        "90-100%": 95,
-    },
-    "final_result": {"Withdrawn": 0, "Fail": 0, "Pass": 1, "Distinction": 1},
-}
-
-for col, values_map in ordinal_values_maps.items():
-    encoded_student_profile.loc[:, col] = encoded_student_profile.loc[:, col].map(
-        values_map
+student_profile = (
+    filter_by_module_presentation(oulad.student_info, CODE_MODULE, CODE_PRESENTATION)
+    .set_index("id_student")
+    .drop(["num_of_prev_attempts", "region"], axis=1)
+    .join(student_registration, how="inner")
+    .join((student_activity > 0).astype(float), how="inner")
+    .fillna(0.0)
+    .replace(
+        {
+            "age_band": {"0-35": 0.0, "35-55": 0.5, "55<=": 1.0},
+            "disability": {"N": 0.0, "Y": 1.0},
+            "gender": {"M": 0.0, "F": 1.0},
+            "highest_education": {
+                "No Formal quals": 0.0,
+                "Lower Than A Level": 0.25,
+                "A Level or Equivalent": 0.5,
+                "HE Qualification": 0.75,
+                "Post Graduate Qualification": 1.0,
+            },
+            "imd_band": {
+                # Using 0.0 instead of np.nan as NA's have been filled with zeros.
+                0.0: 0.0,
+                "0-10%": 5.0,
+                # The OULAD data set is missing the `%` in the `10-20` imd_band.
+                "10-20": 15.0,
+                "20-30%": 25.0,
+                "30-40%": 35.0,
+                "40-50%": 45.0,
+                "50-60%": 55.0,
+                "60-70%": 65.0,
+                "70-80%": 75.0,
+                "80-90%": 85.0,
+                "90-100%": 95.0,
+            },
+            "final_result": {
+                "Withdrawn": False,
+                "Fail": False,
+                "Pass": True,
+                "Distinction": True,
+            },
+        }
     )
-
-encoded_student_profile = encoded_student_profile.astype(float)
-display(encoded_student_profile)
+)
+display(student_profile)
 
 # %% [markdown]
 # ## Train/Test split
 #
-# In this section we split the `encoded_student_profile` table into training and
-# testing sets.
+# In this section we split the `student_profile` table into training and
+# testing sets and standartize feature values.
 
 # %%
 RANDOM_STATE = 0
-feature_table = encoded_student_profile.drop(["final_result"], axis=1)
-result_table = encoded_student_profile.loc[:, ["final_result"]]
+feature_table = student_profile.drop(["final_result"], axis=1)
 x_train, x_test, y_train, y_test = train_test_split(
-    feature_table, result_table, test_size=0.2, random_state=RANDOM_STATE
+    feature_table,
+    student_profile.final_result,
+    test_size=0.2,
+    random_state=RANDOM_STATE,
 )
-
-student_vle_train = student_item.loc[student_item.id_student.isin(y_train.index)]
-student_vle_test = student_item.loc[student_item.id_student.isin(y_test.index)]
 
 # %% [markdown]
 # ## Final result prediction
@@ -204,6 +199,7 @@ student_vle_test = student_item.loc[student_item.id_student.isin(y_test.index)]
 # recommendations.
 
 # %%
+# %%cache -ns optimize_mooc_learner_pathways gs_classifier
 # Hyperparameter search space
 hyperparameters = {
     "criterion": ["gini"],  # ["gini", "entropy", "log_loss"],
@@ -214,8 +210,6 @@ hyperparameters = {
     "random_state": [RANDOM_STATE],
 }
 
-skf_cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=RANDOM_STATE)
-
 # Train Decision tree
 gs_classifier = GridSearchCV(
     DecisionTreeClassifier(),
@@ -223,37 +217,27 @@ gs_classifier = GridSearchCV(
     scoring="precision",
     n_jobs=-1,
     error_score="raise",
-    cv=skf_cv,
-)
-gs_classifier.fit(x_train, y_train)
+    cv=StratifiedKFold(n_splits=3, shuffle=True, random_state=RANDOM_STATE),
+).fit(x_train, y_train)
 
-display(f"score={gs_classifier.score(x_test, y_test):.4f}")
-display(f"best_parameters={gs_classifier.best_params_}")
-
-# Plot the decision tree
-f, ax = plt.subplots(1, 1, figsize=(20, 10))
+display(Markdown("#### Decision Tree"))
+plt.figure(figsize=(20, 10))
 plot_tree(
-    gs_classifier.best_estimator_, feature_names=x_train.columns.values.tolist(), ax=ax
+    gs_classifier.best_estimator_,
+    feature_names=x_train.columns.values.tolist(),
+    filled=True,
 )
 plt.show()
 
-failing_student_ids = y_test.loc[y_test.final_result == 0, :].index
-
-predictions = gs_classifier.best_estimator_.predict(x_test.loc[failing_student_ids, :])
-
-failing_student_predictions = pd.DataFrame(
-    predictions, index=failing_student_ids, columns=["prediction"]
-)
-
-correct_failing_student_predictions = failing_student_predictions[
-    failing_student_predictions.prediction == 0
-]
-
+display(Markdown(f"Precision: {gs_classifier.score(x_test, y_test):.4f}"))
+display(Markdown(f"Decision Tree Parameters: {gs_classifier.best_params_}"))
+predictions = gs_classifier.predict(x_test)
 display(
-    f"Out of {failing_student_ids.size} failing students, the model predicted "
-    f"correctly {correct_failing_student_predictions.size} students ("
-    f"{100 * correct_failing_student_predictions.size / failing_student_ids.size:.2f}"
-    "%)."
+    Markdown(
+        f"Out of {(~y_test).sum()} failing students, the model predicted "
+        f"correctly {(~predictions[~y_test]).sum()} failing students "
+        f"({100 * (~predictions[~y_test]).sum() / (~y_test).sum():.2f}%)"
+    )
 )
 
 # %% [markdown]
@@ -265,81 +249,83 @@ display(
 # Consensus algorithm.
 
 # %%
+# %%cache -ns optimize_mooc_learner_pathways base_clusterings consensus
 base_clusterings = [
     KMeans(
-        n_clusters=3, max_iter=4000, n_init="auto", random_state=RANDOM_STATE
+        n_clusters=18, max_iter=4000, n_init="auto", random_state=RANDOM_STATE
     ).fit_predict(feature_table),
-    AgglomerativeClustering(n_clusters=3).fit_predict(feature_table),
-    GaussianMixture(n_components=2, random_state=RANDOM_STATE).fit_predict(
+    AgglomerativeClustering(n_clusters=19).fit_predict(feature_table),
+    GaussianMixture(n_components=19, random_state=RANDOM_STATE).fit_predict(
         feature_table
     ),
-    Birch(n_clusters=2, threshold=0.3).fit_predict(np.ascontiguousarray(feature_table)),
-    DBSCAN(eps=0.7).fit_predict(feature_table),
-    OPTICS(min_samples=100).fit_predict(feature_table),
+    Birch(n_clusters=8, threshold=0.3).fit_predict(np.ascontiguousarray(feature_table)),
+    OPTICS(min_samples=11).fit_predict(feature_table),
 ]
 
-# Searching for the best merging_threshold.
-max_score = 0  # pylint: disable=invalid-name
-merging_threshold = 0  # pylint: disable=invalid-name
-# We reduce the search space for speed.
-for mt in [0]:  # np.arange(0.0, 1, 0.25):
-    recommended_consensus = MultiCons(
-        consensus_function="consensus_function_12", merging_threshold=mt
-    ).fit(base_clusterings)
-    score = recommended_consensus.ensemble_similarity[recommended_consensus.recommended]
-    if score > max_score:
-        max_score = score
-        merging_threshold = mt  # pylint: disable=invalid-name
 
+def search_best_merging_threshold(clusterings, mt_range):
+    """Loops over mt_range and returns the most similar fitted MultiCons instance."""
+    max_score = 0
+    selected_consensus = None
+    for merging_threshold in mt_range:
+        multicons = MultiCons(
+            consensus_function="consensus_function_12",
+            merging_threshold=merging_threshold,
+        ).fit(clusterings)
+        score = multicons.ensemble_similarity[multicons.recommended]
+        if score > max_score:
+            max_score = score
+            selected_consensus = multicons
+    return selected_consensus
+
+
+consensus = search_best_merging_threshold(base_clusterings, [0.5, 0.75])
 display(
-    f"MultiCons: selected merging_threshold={merging_threshold:0.2f} "
-    f"with score: {max_score:0.2f}"
+    f"MultiCons: selected merging_threshold={consensus.merging_threshold} "
+    f"with score: {consensus.ensemble_similarity[consensus.recommended]:0.2f}"
+)
+display(consensus.cons_tree())
+display(
+    pd.DataFrame(
+        {"multicons": consensus.labels_, "final_result": student_profile.final_result}
+    )
+    .groupby(["multicons", "final_result"])
+    .size()
+    .to_frame()
 )
 
-consensus = MultiCons(
-    consensus_function="consensus_function_12", merging_threshold=merging_threshold
-).fit(base_clusterings)
-
-display(consensus.cons_tree())
-
-pd.DataFrame(
-    {"multicons": consensus.labels_, "final_result": result_table.final_result}
-).groupby(["multicons", "final_result"]).size()
 
 # %% [markdown]
 # ## Collaborative filtering
 #
 # Next, for each consensus group we train a collaborative filtering model.
 
+
 # %%
+# %%cache -ns optimize_mooc_learner_pathways recommenders_mc
+def get_trained_recommenders(labels, algo, parameters) -> dict:
+    """Returns a dictionary of trained recommenders by label."""
+    recommenders = {}
+    for label in np.unique(labels):
+        mask = labels == label
+        subset = student_item[student_item.id_student.isin(feature_table.index[mask])]
+        reader = Reader(rating_scale=(0, subset.sum_click.max()))
+        data = Dataset.load_from_df(subset, reader)
+        grid_search = SupGridSearchCV(algo, parameters, cv=3, refit=True, n_jobs=-1)
+        grid_search.fit(data)
+        # display(Markdown("Label=%s RMSE=%.3f" % (label, gs.best_score["rmse"])))
+        recommenders[label] = grid_search
+    return recommenders
+
+
 sim_options = {
     "name": ["msd"],  # ["msd", "cosine"],
     "min_support": [4],  # [3, 4, 5],
     "user_based": [False],  # [False, True],
 }
 param_grid = {"sim_options": sim_options, "verbose": [False]}
+recommenders_mc = get_trained_recommenders(consensus.labels_, KNNWithMeans, param_grid)
 
-gs_recommenders = {}
-
-for label in np.unique(consensus.labels_):
-    display(f"label {label}")
-    mask = consensus.labels_ == label
-    sub_student_vle = student_item.loc[
-        student_item.id_student.isin(result_table.loc[mask].index)
-    ]
-    reader = Reader(rating_scale=(0, sub_student_vle.sum_click.max()))
-    data = Dataset.load_from_df(
-        sub_student_vle[["id_student", "id_site", "sum_click"]], reader
-    )
-
-    gs = SupGridSearchCV(
-        KNNWithMeans, param_grid, measures=["rmse", "mae"], cv=3, refit=True
-    )
-    gs.fit(data)
-
-    display(gs.best_score["rmse"])
-    display(gs.best_params["rmse"])
-    gs_recommenders[label] = gs
 
 # %% [markdown]
 # ## Recommendation
@@ -348,57 +334,52 @@ for label in np.unique(consensus.labels_):
 # We simulate students to follow N recommendations and measure whether it changes the
 # estimated success rate.
 
+
 # %%
-cluster_by_user = pd.Series(consensus.labels_, index=feature_table.index)
-recommendation_improvement_rate_mc_cf = []
-for recommendation_follow_count in range(1, 15):
-    following_recommendation_students = []
+# %%cache -ns optimize_mooc_learner_pathways results_mc
+def get_recommendation_results(labels, recommenders):
+    """Returns the percentages of succeeding students by recommendation count."""
+    final_result_predictions = []
+    student_ids = y_test[~predictions].index
+    label_by_student = pd.Series(labels, index=feature_table.index)[student_ids]
+    for student_id in student_ids:
+        algo = recommenders[label_by_student[student_id]]
+        student = x_test.loc[student_id]
 
-    for one_failing_student_id in correct_failing_student_predictions.index:
-        cluster_id = cluster_by_user.loc[one_failing_student_id]
-        gs_recommender = gs_recommenders[cluster_id]
-        site_ids = student_item.id_site.unique()
-        prediction_actual = []
-        for site_id in site_ids:
-            prediction_actual.append(
-                (
-                    site_id,
-                    int(gs_recommender.predict(one_failing_student_id, site_id).est),
-                    feature_table.loc[one_failing_student_id, site_id],
-                )
-            )
-        prediction_actual_df = pd.DataFrame(  # pylint: disable=invalid-name
-            prediction_actual, columns=["site_id", "prediction", "actual"]
-        ).set_index("site_id")
+        side_id_prediction = {"site_id": [], "prediction": []}
+        for site_id in student_activity.columns[student[student_activity.columns] == 0]:
+            prediction = algo.predict(student_id, site_id)
+            if prediction.details.get("was_impossible"):
+                continue
+            prediction = int(prediction.est)
+            if prediction:
+                side_id_prediction["site_id"].append(site_id)
+                side_id_prediction["prediction"].append(prediction)
 
-        # pylint: disable=unsubscriptable-object
-        recommendations = prediction_actual_df[
-            (prediction_actual_df.prediction != 0) & (prediction_actual_df.actual == 0)
-        ].prediction.sort_values(ascending=False)[:recommendation_follow_count]
+        recommendations = pd.Series(
+            side_id_prediction["prediction"], index=side_id_prediction["site_id"]
+        ).sort_values(ascending=False)
+        following_recommendation_students = []
+        for recommendation_follow_count in range(1, 15):
+            new_student = student.copy()
+            new_student.loc[recommendations.index[:recommendation_follow_count]] = 1
+            following_recommendation_students.append(new_student)
 
-        new_student = feature_table.loc[[one_failing_student_id], :].copy()
-        new_student.loc[:, recommendations.index] = recommendations.values
-        following_recommendation_students.append(new_student.values[0])
+        final_result_predictions.append(
+            gs_classifier.predict(pd.DataFrame(following_recommendation_students))
+        )
 
-    # following_recommendation_students[0]
-    following_recommendation_students_df = pd.DataFrame(
-        following_recommendation_students,
-        columns=feature_table.columns,
-        index=correct_failing_student_predictions.index,
+    return (
+        pd.DataFrame(final_result_predictions, columns=range(1, 15))
+        .sum()
+        .mul(100)
+        .div(len(student_ids))
     )
 
-    final_result_predictions = gs_classifier.best_estimator_.predict(
-        following_recommendation_students_df
-    )
 
-    recommendation_improvement_rate_mc_cf.append(
-        (100 * final_result_predictions.sum() / final_result_predictions.size)
-    )
-
+results_mc = get_recommendation_results(consensus.labels_, recommenders_mc)
 recommendation_improvement_rate_mc_cf_df = pd.DataFrame(
-    recommendation_improvement_rate_mc_cf,
-    columns=["multicons_collaborative_filtering"],
-    index=range(1, 15),
+    results_mc, columns=["multicons_collaborative_filtering"], index=range(1, 15)
 )
 display(recommendation_improvement_rate_mc_cf_df)
 
@@ -409,67 +390,11 @@ display(recommendation_improvement_rate_mc_cf_df)
 # collaborative filtering on the full dataset.
 
 # %%
-reader = Reader(rating_scale=(0, student_item.sum_click.max()))
-data = Dataset.load_from_df(
-    student_item[["id_student", "id_site", "sum_click"]], reader
-)
-
-gs = SupGridSearchCV(
-    KNNWithMeans, param_grid, measures=["rmse", "mae"], cv=3, refit=True
-)
-gs.fit(data)
-
-display(gs.best_score["rmse"])
-display(gs.best_params["rmse"])
-
-# %%
-cluster_by_user = pd.Series(consensus.labels_, index=feature_table.index)
-recommendation_improvement_rate_cf = []
-for recommendation_follow_count in range(1, 15):
-    following_recommendation_students = []
-
-    for one_failing_student_id in correct_failing_student_predictions.index:
-        site_ids = student_item.id_site.unique()
-        prediction_actual = []
-        for site_id in site_ids:
-            prediction_actual.append(
-                (
-                    site_id,
-                    int(gs.predict(one_failing_student_id, site_id).est),
-                    feature_table.loc[one_failing_student_id, site_id],
-                )
-            )
-        prediction_actual_df = pd.DataFrame(  # pylint: disable=invalid-name
-            prediction_actual, columns=["site_id", "prediction", "actual"]
-        ).set_index("site_id")
-
-        # pylint: disable=unsubscriptable-object
-        recommendations = prediction_actual_df[
-            (prediction_actual_df.prediction != 0) & (prediction_actual_df.actual == 0)
-        ].prediction.sort_values(ascending=False)[:recommendation_follow_count]
-
-        new_student = feature_table.loc[[one_failing_student_id], :].copy()
-        new_student.loc[:, recommendations.index] = recommendations.values
-        following_recommendation_students.append(new_student.values[0])
-
-    # following_recommendation_students[0]
-    following_recommendation_students_df = pd.DataFrame(
-        following_recommendation_students,
-        columns=feature_table.columns,
-        index=correct_failing_student_predictions.index,
-    )
-
-    final_result_predictions = gs_classifier.best_estimator_.predict(
-        following_recommendation_students_df
-    )
-
-    recommendation_improvement_rate_cf.append(
-        (100 * final_result_predictions.sum() / final_result_predictions.size)
-    )
-
-recommendation_improvement_rate_mc_cf_df[
-    "collaborative_filtering"
-] = recommendation_improvement_rate_cf
+# %%cache -ns optimize_mooc_learner_pathways recommenders_cf results_cf
+single_cluster = np.zeros(student_profile.shape[0])
+recommenders_cf = get_trained_recommenders(single_cluster, KNNWithMeans, param_grid)
+results_cf = get_recommendation_results(single_cluster, recommenders_cf)
+recommendation_improvement_rate_mc_cf_df["collaborative_filtering"] = results_cf
 display(recommendation_improvement_rate_mc_cf_df)
 
 # %%

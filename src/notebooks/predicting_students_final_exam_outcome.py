@@ -12,12 +12,12 @@
 #     name: python3
 # ---
 
-# %% [markdown] user_expressions=[]
-# # Predicting students final exam outcome
+# %% [markdown]
+# # Predicting student's final exam outcome
 #
 # This section aims to predict the `student final exam outcome`
 # (Pass (score >= 40) / Fail (score < 40)).
-# We try to replicate the machine learning analysis techinques from the work of
+# We try to replicate the machine learning analysis techniques from the work of
 # Tomasevic et al. (2020) {cite}`tomasevic_2020`.
 #
 # **Keywords**: Predicting student outcome
@@ -29,7 +29,7 @@
 # %%
 import numpy as np
 import pandas as pd
-from IPython.display import display
+from IPython.display import Markdown, display
 from sklearn.ensemble import VotingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
@@ -43,12 +43,16 @@ from sklearn.tree import DecisionTreeClassifier
 
 from multicons import MultiCons
 
-from oulad import get_oulad
+from oulad import filter_by_module_presentation, get_oulad
 
+# %load_ext oulad.cache
+
+
+# %%
+# %%cache oulad
 oulad = get_oulad()
 
-
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Preparing train/test data
 #
 # ### Selecting features
@@ -59,115 +63,105 @@ oulad = get_oulad()
 # Similarly, we try to select the same seven distinct attributes from the three distinct
 # types below:
 #
-# <table class="colwidths-auto table">
-#     <thead>
-#         <tr>
-#             <th class="text-center head"><p>DEMOGRAPHIC</p></th>
-#             <th class="text-center head"><p>ENGAGEMENT</p></th>
-#             <th class="text-center head"><p>PERFORMANCE</p></th>
-#         </tr>
-#     </thead>
-#     <tbody>
-#         <tr>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>gender</li>
-#                     <li>highest_education</li>
-#                     <li>age_band</li>
-#                 </ul>
-#             </td>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>sum of clicks per assessment</li>
-#                 </ul>
-#             </td>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>scores per assessment</li>
-#                     <li>number of attempts</li>
-#                     <li>final_exam score</li>
-#                 </ul>
-#             </td>
-#         </tr>
-#     </tbody>
-# </table>
+# | DEMOGRAPHIC         | ENGAGEMENT                     | PERFORMANCE             |
+# |---------------------|--------------------------------|-------------------------|
+# | - gender            | - sum of clicks per assessment | - scores per assessment |
+# | - highest_education |                                | - number of attempts    |
+# | - age_band          |                                | - final_exam score      |
 
 
 # %%
+# %%cache -ns predicting_students_final_exam_outcome feature_table
+
+
 def get_feature_table(max_date=500, code_presentation="2013J"):
     """Returns the feature table computed from the OULAD dataset."""
-
-    # Select all assessments from the module.
-    assessments = oulad.assessments[
-        (oulad.assessments.code_module == "DDD")
-        & (oulad.assessments.code_presentation == code_presentation)
-    ]
-
-    # Filter out assessments that are after the max_date
-    assessments = assessments[
-        (assessments.date <= max_date) | (assessments.assessment_type == "Exam")
-    ]
-
-    # Filter relevant rows and columns from the student_vle table.
-    vle = oulad.student_vle.loc[
-        (oulad.student_vle.code_module == "DDD")
-        & (oulad.student_vle.code_presentation == code_presentation),
-        ["id_student", "date", "sum_click"],
-    ]
-
-    # Categorize the date field by assessment date.
-    previous_date = None
-    for date in assessments.date:
-        if previous_date:
-            vle.loc[(vle.date > previous_date) & (vle.date < date), "date"] = date
-        else:
-            vle.loc[vle.date < date, "date"] = date
-        previous_date = date
-
-    # Sum scores by date.
-    vle = vle.groupby(["id_student", "date"]).agg(np.sum).reset_index()
-
-    # Reshape the vle table.
-    vle = vle.pivot(index="id_student", columns="date", values="sum_click")
-
-    # Rename columns
-    vle = vle.rename(
-        columns={
-            assessment.date: f"assessment_{i+1}_sum_click"
-            if assessment.assessment_type != "Exam"
-            else "final_exam_sum_click"
-            for i, (_, assessment) in enumerate(assessments.iterrows())
-        }
-    ).drop("final_exam_sum_click", axis=1)
-
+    assessments = (
+        filter_by_module_presentation(oulad.assessments, "DDD", code_presentation)
+        # Filter out assessments that are after the max_date.
+        .query(f"date <= {max_date} or assessment_type == 'Exam'").set_index(
+            "id_assessment"
+        )
+    )
+    vle = (
+        filter_by_module_presentation(oulad.student_vle, "DDD", code_presentation)
+        .loc[:, ["id_student", "date", "sum_click"]]
+        # Categorize the date field by assessment date.
+        .assign(
+            date=lambda df: pd.cut(
+                df.date,
+                [-26] + assessments.date.values.tolist(),
+                labels=assessments.date.values,
+            )
+        )
+        # Sum scores by date.
+        .groupby(["id_student", "date"])
+        .agg(np.sum)
+        .reset_index()
+        # Reshape the vle table.
+        .pivot(index="id_student", columns="date", values="sum_click")
+        # Rename columns
+        .rename(
+            columns={
+                assessment.date: f"assessment_{i+1}_sum_click"
+                if assessment.assessment_type != "Exam"
+                else "final_exam_sum_click"
+                for i, (_, assessment) in enumerate(assessments.iterrows())
+            }
+        )
+        .drop("final_exam_sum_click", axis=1)
+    )
     return (
-        oulad.student_info.loc[
-            (oulad.student_info.code_module == "DDD")
-            & (oulad.student_info.code_presentation == code_presentation),
+        filter_by_module_presentation(oulad.student_info, "DDD", code_presentation)
+        .loc[
+            :,
             [
-                "id_student",
-                "gender",
-                "highest_education",
                 "age_band",
+                "gender",
+                "id_student",
+                "highest_education",
                 "num_of_prev_attempts",
-                # The `final_result` column is only used to fill missing `final_exam`
-                # values, it should be removed from the training set.
                 "final_result",
             ],
         ]
+        # Transform gender, age_band and highest_education to numeric values.
+        .replace(
+            {
+                "age_band": {"0-35": 0.0, "35-55": 0.5, "55<=": 1.0},
+                "gender": {"M": 0.0, "F": 1.0},
+                "highest_education": {
+                    "No Formal quals": 0.0,
+                    "Lower Than A Level": 0.25,
+                    "A Level or Equivalent": 0.5,
+                    "HE Qualification": 0.75,
+                    "Post Graduate Qualification": 1.0,
+                },
+            }
+        )
         .set_index("id_student")
+        # Filter out students who have unregistered from the course before the start.
+        .join(
+            filter_by_module_presentation(
+                oulad.student_registration, "DDD", code_presentation
+            )
+            .set_index("id_student")
+            .query("not date_unregistration < 0")
+            .loc[:, []],
+            how="right",
+        )
         .join(vle)
         .join(
-            oulad.student_assessment[
-                oulad.student_assessment.id_assessment.isin(assessments.id_assessment)
-            ]
+            assessments.join(oulad.student_assessment.set_index("id_assessment"))
+            .reset_index()
             .pivot(index="id_student", columns="id_assessment", values="score")
             .rename(
                 columns={
-                    assessment.id_assessment: f"assessment_{i+1}_score"
+                    id_assessment: f"assessment_{i+1}_score"
                     if assessment.assessment_type != "Exam"
                     else "final_exam_score"
-                    for i, (_, assessment) in enumerate(assessments.iterrows())
+                    for i, (id_assessment, assessment) in enumerate(
+                        assessments.iterrows()
+                    )
                 }
             )
         )
@@ -179,7 +173,7 @@ feature_table = pd.concat(
 )
 display(feature_table)
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ### Pre-Processing
 #
 # #### Handling NAs
@@ -195,7 +189,7 @@ print(
 )
 
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # This is explained in the original OULAD paper of Kuzilek et al.
 # [\[KHZ17\]](../notebooks/first_descriptive_analysis.html#id1):
 # ```
@@ -215,163 +209,90 @@ def fill_nas(feature_table_df):
     drops the `final_result` column and fills remaining NAs with the value `-1`.
     """
 
-    final_exam_score_nas = feature_table.final_exam_score.isna()
-    feature_table_df.loc[final_exam_score_nas, "final_exam_score"] = (
-        feature_table[final_exam_score_nas].final_result.isin(["Pass", "Distinction"])
-        * 40
+    mask = feature_table_df.final_exam_score.isna()
+    feature_table_df.loc[mask, "final_exam_score"] = (
+        feature_table_df[mask].final_result.isin(["Pass", "Distinction"]) * 40
     )
-    return feature_table.drop(columns="final_result").fillna(-1)
+    return feature_table_df.drop(columns="final_result").fillna(-1)
 
 
 feature_table = fill_nas(feature_table)
 display(feature_table)
 
-# %% [markdown] user_expressions=[]
-# #### Splitting train / test data and Normalization
+# %% [markdown]
+# #### Splitting train/test data and Normalization
 #
 # Now we randomly split the feature table rows into a train (80%) and test (20%) table
-# and, as in the work of Tomasevic et al., we scale and nomalize the selected features:
+# and, as in the work of Tomasevic et al., we scale and normalize the selected
+# features:
 #
-# <table class="colwidths-auto table">
-#     <thead>
-#         <tr>
-#             <th class="text-center head"><p>Feature</p></th>
-#             <th class="text-center head"><p>Normalization</p></th>
-#         </tr>
-#     </thead>
-#     <tbody>
-#         <tr>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>gender</li>
-#                 </ul>
-#             </td>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>0 = male</li>
-#                     <li>1 = female</li>
-#                 </ul>
-#             </td>
-#         </tr>
-#         <tr>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>age_band</li>
-#                 </ul>
-#             </td>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>0.0 = 0-35</li>
-#                     <li>0.5 = 35-55</li>
-#                     <li>1.0 = 55&lt;=</li>
-#                 </ul>
-#             </td>
-#         </tr>
-#         <tr>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>highest_education</li>
-#                 </ul>
-#             </td>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>0.00 = No Formal quals</li>
-#                     <li>0.25 = Lower Than A Level</li>
-#                     <li>0.50 = A Level or Equivalent</li>
-#                     <li>0.75 = HE Qualification</li>
-#                     <li>1.00 = Post Graduate Qualification</li>
-#                 </ul>
-#             </td>
-#         </tr>
-#         <tr>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>number of attempts</li>
-#                     <li>sum of clicks per assessment</li>
-#                 </ul>
-#             </td>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>0-N scaled to [0-1]</li>
-#                 </ul>
-#             </td>
-#         </tr>
-#         <tr>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>scores per assessment</li>
-#                     <li>final_exam_score</li>
-#                 </ul>
-#             </td>
-#             <td class="text-left">
-#                 <ul>
-#                     <li>0-100 scaled to [0-1]</li>
-#                 </ul>
-#             </td>
-#         </tr>
-#     </tbody>
-# </table>
+# ```{list-table}
+# :header-rows: 1
+#
+# *   - Feature
+#     - Normalization
+#
+# *   - Gender
+#     - 0 = male
+#
+#       1 = female
+#
+# *   - Age band
+#     - 0.0 = 0-35
+#
+#       0.5 = 35-55
+#
+#       1.0 = 55<=
+#
+# *   - Highest education
+#     - 0.00 = No Formal quals
+#
+#       0.25 = Lower Than A Level
+#
+#       0.50 = A Level or Equivalent
+#
+#       0.75 = HE Qualification
+#
+#       1.00 = Post Graduate Qualification
+#
+# *   - Number of attempts
+#
+#       Sum of clicks per assessment
+#     - 0-N scaled to [0-1]
+#
+# *   - Scores per assessment
+#
+#       Final exam score
+#     - 0-100 scaled to [0-1]
+# ```
 
 # %%
 RANDOM_STATE = 0
 
 
-def normalized_train_test_split(feature_table_df, is_for_classification=True):
-    """Returns the normalized tain/test split computed form the feature table.
-
-    If `is_for_classification` is set to true (default) the final_exam_score will be
-    converted into two classes 0 (score < 40 == Fail) and 1 (score >= 40 == Pass).
-    """
-
+def normalized_train_test_split(feature_table_df):
+    """Returns the normalized tain/test split computed from the feature table."""
     x_train_, x_test_, y_train_, y_test_ = train_test_split(
         feature_table_df.drop(columns="final_exam_score"),
         feature_table_df["final_exam_score"],
         test_size=0.2,
         random_state=RANDOM_STATE,
     )
-
     # Scale scores per assessment and final_exam_score.
     assessment_score_labels = feature_table_df.columns.values[
         feature_table_df.columns.str.match(r"assessment_[0-9]+_score")
     ]
     x_train_.loc[:, assessment_score_labels] /= 100
     x_test_.loc[:, assessment_score_labels] /= 100
-    y_train_ /= 100
-    y_test_ /= 100
-    if is_for_classification:
-        y_train_ = (y_train_ >= 0.4).astype(int)
-        y_test_ = (y_test_ >= 0.4).astype(int)
+    y_train_ = (y_train_ / 100 >= 0.4).astype(int)
+    y_test_ = (y_test_ / 100 >= 0.4).astype(int)
 
-    # Transform gender, age_band and highest_education to numeric values.
-    gender_map = {"M": 0, "F": 1}
-    age_band_map = {"0-35": 0, "35-55": 0.5, "55<=": 1}
-    highest_education_map = {
-        "No Formal quals": 0,
-        "Lower Than A Level": 0.25,
-        "A Level or Equivalent": 0.5,
-        "HE Qualification": 0.75,
-        "Post Graduate Qualification": 1,
-    }
-
-    x_train_.loc[:, "gender"] = x_train_.loc[:, "gender"].map(gender_map)
-    x_test_.loc[:, "gender"] = x_test_.loc[:, "gender"].map(gender_map)
-
-    x_train_.loc[:, "age_band"] = x_train_.loc[:, "age_band"].map(age_band_map)
-    x_test_.loc[:, "age_band"] = x_test_.loc[:, "age_band"].map(age_band_map)
-
-    x_train_.loc[:, "highest_education"] = x_train_.loc[:, "highest_education"].map(
-        highest_education_map
-    )
-    x_test_.loc[:, "highest_education"] = x_test_.loc[:, "highest_education"].map(
-        highest_education_map
-    )
-
-    # Scale sum of click per assessment and number of attempts.
+    # Scale the sum of clicks per assessment and number of attempts.
     columns_slice = feature_table_df.columns.values[
         feature_table_df.columns.str.match(r"assessment_[0-9]+_sum_click")
     ].tolist() + ["num_of_prev_attempts"]
 
-    # Note: we fit the scaler only on the train data to avoid "leaking" information
+    # Note: we fit the scaler only on the train data to avoid leaking information
     # from the test data.
     scaler = MinMaxScaler().fit(x_train_.loc[:, columns_slice])
     x_train_.loc[:, columns_slice] = scaler.transform(x_train_.loc[:, columns_slice])
@@ -382,7 +303,7 @@ def normalized_train_test_split(feature_table_df, is_for_classification=True):
 x_train, x_test, y_train, y_test = normalized_train_test_split(feature_table)
 display(x_train)
 
-# %% [markdown] user_expressions=[]
+# %% [markdown]
 # ## Classification
 #
 # As in the work of Tomasevic et al., we will compare the classification performances
@@ -408,6 +329,7 @@ display(x_train)
 # search phase.
 
 # %%
+# %%cache -ns predicting_students_final_exam_outcome gs_scores
 # Hyperparameter search space
 
 classifier_hyperparameters = {
@@ -478,16 +400,26 @@ classifier_hyperparameters = {
     ],
 }
 
-for classifier, hyperparameters in classifier_hyperparameters.items():
-    gs_classifier = GridSearchCV(classifier(), hyperparameters, scoring="f1", n_jobs=-1)
-    gs_classifier.fit(x_train, y_train)
-    print(
-        f"{classifier.__name__}: score={gs_classifier.score(x_test, y_test):.4f} "
-        f"best_parameters={gs_classifier.best_params_}"
-    )
+
+def get_grid_search_scores():
+    """Returns the grid search scores."""
+    classifier_score = {"classifier": [], "score": []}
+    for classifier, hyperparameters in classifier_hyperparameters.items():
+        gs_classifier = GridSearchCV(
+            classifier(), hyperparameters, scoring="f1", n_jobs=-1
+        )
+        gs_classifier.fit(x_train, y_train)
+        classifier_score["classifier"].append(classifier.__name__)
+        classifier_score["score"].append(gs_classifier.score(x_test, y_test))
+
+    return classifier_score
 
 
-# %% [markdown] user_expressions=[]
+gs_scores = pd.DataFrame(get_grid_search_scores()).round(4)
+display(gs_scores)
+
+
+# %% [markdown]
 # ### Classification at different points in time
 #
 # Predicting student final exam outcome seems to be more valuable at an early stage of
@@ -510,7 +442,8 @@ oulad.assessments[
     )
 ].sort_values("date")
 
-# %% [markdown] user_expressions=[]
+
+# %% [markdown]
 # We note that each course module has six intermediary assessments.
 #
 # Next, we use the final submisssion `date` field to filter out assessment related
@@ -520,73 +453,72 @@ oulad.assessments[
 # We also add Voting and MultiCons ensemble methods to check whether they might improve
 # current results.
 
+
 # %%
-result = {}
-# We select the date such as both courses include the same amount of assessments
-# after the filter.
-for day in [25, 53, 88, 123, 165, 207]:
-    result[day] = []
-    feature_table = pd.concat(
-        [
-            get_feature_table(day),
-            get_feature_table(day, code_presentation="2014B"),
-        ]
+# %%cache -ns predicting_students_final_exam_outcome scores
+def get_train_test_assessments_by_day(day):
+    """Returns the train/test feature table filtered by date."""
+
+    filtered_feature_table = pd.concat(
+        [get_feature_table(day), get_feature_table(day, code_presentation="2014B")]
     )
-    feature_table = fill_nas(feature_table)
-    x_train, x_test, y_train, y_test = normalized_train_test_split(feature_table)
-    print(f"Computing classification results at day={day:.0f}...")
+    filtered_feature_table = fill_nas(filtered_feature_table)
+    return normalized_train_test_split(filtered_feature_table)
 
-    train_predictions = []
-    predictions = []
-    estimators = []
-    for classifier, hyperparameters in classifier_hyperparameters.items():
-        gs_classifier = GridSearchCV(
-            classifier(), hyperparameters, scoring="f1", n_jobs=-1
+
+def get_scores_by_assessment_date():
+    """Returns a DataFrame with f1 prediction scores for each classifier."""
+    # pylint: disable=too-many-locals
+    result = {}
+    # We select the date such that both courses include the same amount of assessments
+    # after the filter.
+    for day in [25, 53, 88, 123, 165, 207]:
+        result[day] = []
+        x_train_, x_test_, y_train_, y_test_ = get_train_test_assessments_by_day(day)
+        train_predictions = []
+        predictions = []
+        estimators = []
+        for classifier, hyperparameters in classifier_hyperparameters.items():
+            gs_classifier = GridSearchCV(
+                classifier(), hyperparameters, scoring="f1", n_jobs=-1
+            )
+            gs_classifier.fit(x_train_, y_train_)
+            estimators.append((classifier.__name__, gs_classifier))
+            predictions.append(gs_classifier.predict(x_test_))
+            train_predictions.append(gs_classifier.predict(x_train_))
+            result[day].append(round(f1_score(y_test_, predictions[-1]), 4))
+
+        # Voting Classifier
+        voting = VotingClassifier(estimators=estimators, voting="soft")
+        voting.fit(x_train_, y_train_)
+        result[day].append(round(f1_score(y_test_, voting.predict(x_test_)), 4))
+
+        # Searching for the best merging_threshold.
+        max_score = 0
+        multicons = None
+        for merging_threshold in np.arange(0, 1, 0.05):
+            consensus = MultiCons(
+                similarity_measure="JaccardIndex",
+                optimize_label_names=True,
+                consensus_function="consensus_function_12",
+                merging_threshold=merging_threshold,
+            ).fit(train_predictions)
+            score = f1_score(y_train_, consensus.labels_.astype(bool))
+            if score > max_score:
+                max_score = score
+                multicons = consensus
+
+        result[day].append(
+            round(f1_score(y_test_, multicons.fit(predictions).labels_.astype(bool)), 4)
         )
-        gs_classifier.fit(x_train, y_train)
-        estimators.append((classifier.__name__, gs_classifier))
-        predictions.append(gs_classifier.predict(x_test))
-        train_predictions.append(gs_classifier.predict(x_train))
-        result[day].append(round(f1_score(y_test, predictions[-1]), 4))
 
-    # Voting Classifier
-    voting = VotingClassifier(estimators=estimators, voting="soft")
-    voting.fit(x_train, y_train)
-    result[day].append(round(f1_score(y_test, voting.predict(x_test)), 4))
-
-    # MultiCons
-    multicons_options = {
-        "similarity_measure": "JaccardIndex",
-        "optimize_label_names": True,
-        "consensus_function": "consensus_function_12",
-    }
-    # Searching for the best merging_threshold.
-    max_score = 0  # pylint: disable=invalid-name
-    merging_threshold = -1  # pylint: disable=invalid-name
-    for mt in np.arange(0, 1, 0.05):
-        recommended_consensus = (
-            MultiCons(**multicons_options, merging_threshold=mt)
-            .fit(train_predictions)
-            .labels_.astype(bool)
-        )
-        score = f1_score(y_train, recommended_consensus)
-        if score > max_score:
-            max_score = score
-            merging_threshold = mt
-    print(f"MultiCons: selected merging_threshold={merging_threshold:0.2f}")
-
-    recommended_consensus = (
-        MultiCons(**multicons_options, merging_threshold=merging_threshold)
-        .fit(predictions)
-        .labels_.astype(bool)
+    return pd.DataFrame(
+        result,
+        index=[clf.__name__ for clf in classifier_hyperparameters]
+        + ["Voting", "MultiCons"],
     )
-    result[day].append(round(f1_score(y_test, recommended_consensus), 4))
 
 
-classifier_names = [
-    classifier.__name__ for classifier in classifier_hyperparameters
-] + ["Voting", "MultiCons"]
-
-result_df = pd.DataFrame(result, index=classifier_names)
-print("\nF1 score at different points in time:")
-display(result_df)
+scores = get_scores_by_assessment_date()
+display(Markdown("F1 score at different points in time:"))
+display(scores)

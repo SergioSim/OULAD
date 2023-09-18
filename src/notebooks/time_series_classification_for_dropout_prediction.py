@@ -39,6 +39,8 @@
 # ```
 
 # %%
+from typing import Iterator
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -48,6 +50,10 @@ from sklearn.model_selection import cross_val_score
 
 from oulad import get_oulad
 
+# %load_ext oulad.cache
+
+# %%
+# %%cache oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -103,10 +109,11 @@ display(
 # as described in the work of Liu et al.
 
 # %%
+# %%cache -ns time_series_classification_for_dropout_prediction click_stream
 click_stream = (
     # 1. Extract the number of clicks by students on the three types of material.
     oulad.vle.query("activity_type in ['resource', 'oucontent', 'forumng']")
-    .drop(["code_module", "code_presentation"], axis=1)
+    .drop(["code_module", "code_presentation", "week_from", "week_to"], axis=1)
     .merge(oulad.student_vle, on="id_site")
     # 2. Sum the number of clicks each student makes on each type of material by day.
     .groupby(
@@ -151,6 +158,7 @@ display(
     ]
 )
 
+
 # %% [markdown]
 # ## Dropout prediction by course
 #
@@ -161,20 +169,26 @@ display(
 # 500 and perform 10-fold cross-validation for each course module presentation using
 # the classification accuracy as the evaluation metric.
 
+
 # %%
-results = []
-for levels, df in click_stream.groupby(
-    level=["code_module", "code_presentation", "activity_type"]
-):
-    estimator = TimeSeriesForest(n_estimators=500)
-    X = df.drop(columns="final_result").values
-    y = df["final_result"].values
-    scores = cross_val_score(estimator, X, y, cv=10, scoring="accuracy", n_jobs=-1)
-    mean_score = np.mean(scores)
-    results.append(list(levels) + [mean_score])
+# %%cache -ns time_series_classification_for_dropout_prediction results
+def get_scores_by_activity_type() -> Iterator[list[float]]:
+    """Computes accuracy prediction scores for each course."""
+    for levels, course_df in click_stream.groupby(
+        level=["code_module", "code_presentation", "activity_type"]
+    ):
+        estimator = TimeSeriesForest(n_estimators=500)
+        X = course_df.drop(columns="final_result").values
+        y = course_df["final_result"].values
+        mean_score = np.mean(
+            cross_val_score(estimator, X, y, cv=10, scoring="accuracy", n_jobs=-1)
+        )
+        yield list(levels) + [mean_score]
+
 
 results = pd.DataFrame(
-    results, columns=["code_module", "code_presentation", "activity_type", "score"]
+    list(get_scores_by_activity_type()),
+    columns=["code_module", "code_presentation", "activity_type", "score"],
 ).pivot_table(
     values="score",
     index=["code_module", "code_presentation"],
@@ -182,6 +196,7 @@ results = pd.DataFrame(
 )
 display(Markdown("### Dropout prediction 10-fold cross-validation accuracy by course"))
 display(results)
+
 
 # %% [markdown]
 # ## Early dropout prediction
@@ -194,24 +209,32 @@ display(results)
 # We start with a 5 percent dataset and iteratively add 5 percent increments to assess
 # how prediction accuracy evolves.
 
+
 # %%
-for index_slice in [
-    ("AAA", "2013J", slice(None), "oucontent"),
-    ("CCC", "2014J", slice(None), "resource"),
-]:
-    results = []
+# %%cache -ns time_series_classification_for_dropout_prediction a_scores c_scores
+def get_score_by_slice(index_slice) -> Iterator[float]:
+    """Computes accuracy prediction scores for the given `index_slice`."""
     y = click_stream.loc[index_slice, "final_result"].values
     for i in range(5, 100, 5):
         estimator = TimeSeriesForest(n_estimators=500)
         limit = round((click_stream.columns.shape[0] - 1) * i / 100)
         X = click_stream.loc[index_slice, click_stream.columns[:limit]].values
-        scores = cross_val_score(estimator, X, y, cv=10, scoring="accuracy", n_jobs=-1)
-        mean_score = np.mean(scores)
-        results.append(mean_score)
+        yield np.mean(
+            cross_val_score(estimator, X, y, cv=10, scoring="accuracy", n_jobs=-1)
+        )
 
-    NAME = index_slice[0] + index_slice[1] + index_slice[3]
-    pd.Series(results, index=range(5, 100, 5)).plot(
-        title=f"Accuracy score by the percentage of data used for {NAME} course",
+
+a_scores = pd.Series(
+    list(get_score_by_slice(("AAA", "2013J", slice(None), "oucontent"))),
+    index=range(5, 100, 5),
+)
+c_scores = pd.Series(
+    list(get_score_by_slice(("CCC", "2014J", slice(None), "resource"))),
+    index=range(5, 100, 5),
+)
+for scores, name in [(a_scores, "AAA2013Joucontent"), (c_scores, "CCC2014Jresource")]:
+    scores.plot(
+        title=f"Accuracy score by the percentage of data used for {name} course",
         xlabel="Percentage of data used",
         ylabel="Prediction accuracy",
         xticks=range(5, 100, 5),

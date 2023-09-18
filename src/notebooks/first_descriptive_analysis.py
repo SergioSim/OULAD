@@ -32,6 +32,10 @@ import pandas as pd
 
 from oulad import get_oulad
 
+# %reload_ext oulad.cache
+
+# %%
+# %%cache oulad
 oulad = get_oulad()
 
 # %% [markdown]
