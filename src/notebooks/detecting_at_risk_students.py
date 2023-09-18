@@ -69,6 +69,10 @@ from sklearn.preprocessing import PowerTransformer
 
 from oulad import get_oulad
 
+# %load_ext oulad.cache
+
+# %%
+# %%cache oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -79,6 +83,7 @@ oulad = get_oulad()
 # Both the total sum of clicks and interaction frequency are computed.
 
 # %%
+# %%cache -ns detecting_at_risk_students feature_table
 feature_table = (
     oulad.vle.query("code_module == 'BBB' and code_presentation in ['2013B', '2013J']")
     .drop(columns=["code_module", "code_presentation"])
@@ -191,6 +196,7 @@ px.imshow(
 # In addition, the full `BBB_2013J` course dataset is employed as the validation set.
 
 # %%
+# %%cache -ns detecting_at_risk_students scores_roc_curves
 cachedir = mkdtemp()
 grid = {
     GradientBoostingClassifier: {
@@ -234,6 +240,7 @@ pipe = Pipeline(
     ],
     memory=cachedir,
 )
+mean_fpr = np.linspace(0, 1, 100)
 scores = {
     "classifier": [],
     "test_accuracy": [],
@@ -248,47 +255,54 @@ scores = {
     "validation_AUC": [],
 }
 roc_curves = {}
-mean_fpr = np.linspace(0, 1, 100)
-for classifier_class, hyper_parameters in grid.items():
-    tprs = []
-    for _ in range(5):
-        pipe.set_params(classifier=classifier_class())
-        classifier = GridSearchCV(
-            pipe,
-            hyper_parameters,
-            scoring="f1",
-            n_jobs=-1,
-            error_score="raise",
-            cv=StratifiedKFold(n_splits=10, shuffle=True),
-            refit=True,
-        )
-        x_train, x_test, y_train, y_test = train_test_split(
-            x_train_test, y_train_test, test_size=0.3
-        )
-        classifier.fit(x_train, y_train)
-        y_test_pred = classifier.predict(x_test)
-        y_validation_pred = classifier.predict(x_validation)
-        scores["classifier"].append(classifier_class.__name__)
-        for name in ["test", "validation"]:
-            y_true = y_test if name == "test" else y_validation
-            y_pred = y_test_pred if name == "test" else y_validation_pred
-            scores[f"{name}_accuracy"].append(accuracy_score(y_true, y_pred))
-            scores[f"{name}_f1"].append(f1_score(y_true, y_pred))
-            scores[f"{name}_sensitivity"].append(recall_score(y_true, y_pred))
-            scores[f"{name}_specificity"].append(
-                recall_score(y_true, y_pred, pos_label=0)
+
+
+def get_scores_and_roc_curves() -> tuple[dict]:
+    """Computes the prediction scores and ROC curves."""
+
+    for classifier_class, hyper_parameters in grid.items():
+        tprs = []
+        for _ in range(5):
+            pipe.set_params(classifier=classifier_class())
+            classifier = GridSearchCV(
+                pipe,
+                hyper_parameters,
+                scoring="f1",
+                n_jobs=-1,
+                error_score="raise",
+                cv=StratifiedKFold(n_splits=10, shuffle=True),
+                refit=True,
             )
-            scores[f"{name}_AUC"].append(roc_auc_score(y_true, y_pred))
+            x_train, x_test, y_train, y_test = train_test_split(
+                x_train_test, y_train_test, test_size=0.3
+            )
+            classifier.fit(x_train, y_train)
+            y_test_pred = classifier.predict(x_test)
+            y_validation_pred = classifier.predict(x_validation)
+            scores["classifier"].append(classifier_class.__name__)
+            for name in ["test", "validation"]:
+                y_true = y_test if name == "test" else y_validation
+                y_pred = y_test_pred if name == "test" else y_validation_pred
+                scores[f"{name}_accuracy"].append(accuracy_score(y_true, y_pred))
+                scores[f"{name}_f1"].append(f1_score(y_true, y_pred))
+                scores[f"{name}_sensitivity"].append(recall_score(y_true, y_pred))
+                scores[f"{name}_specificity"].append(
+                    recall_score(y_true, y_pred, pos_label=0)
+                )
+                scores[f"{name}_AUC"].append(roc_auc_score(y_true, y_pred))
 
-        fpr, tpr, _ = roc_curve(y_validation, y_validation_pred)
-        tprs.append(np.interp(mean_fpr, fpr, tpr))
+            fpr, tpr, _ = roc_curve(y_validation, y_validation_pred)
+            tprs.append(np.interp(mean_fpr, fpr, tpr))
 
-    roc_curves[classifier_class.__name__] = np.mean(tprs, axis=0)
+        roc_curves[classifier_class.__name__] = np.mean(tprs, axis=0)
 
-rmtree(cachedir)
-display(pd.DataFrame(scores).groupby("classifier").mean())
+    return scores, roc_curves
+
+
+scores_roc_curves = get_scores_and_roc_curves()
+display(pd.DataFrame(scores_roc_curves[0]).groupby("classifier").mean())
 px.line(
-    pd.DataFrame(roc_curves, index=mean_fpr)
+    pd.DataFrame(scores_roc_curves[1], index=mean_fpr)
     .melt(var_name="Classifier", value_name="True Positive Rate", ignore_index=False)
     .rename_axis(index="False Positive Rate")
     .reset_index(),
@@ -298,4 +312,5 @@ px.line(
     title="ROC curve for the validation set",
     width=800,
     height=600,
-)
+).show()
+rmtree(cachedir)

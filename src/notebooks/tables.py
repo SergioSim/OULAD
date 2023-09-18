@@ -22,6 +22,10 @@ from IPython.display import display
 
 from oulad import get_oulad
 
+# %load_ext oulad.cache
+
+# %%
+# %%cache oulad
 # Load the OULAD dataset in memory.
 oulad = get_oulad()
 

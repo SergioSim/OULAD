@@ -38,6 +38,10 @@ from sklearn.tree import DecisionTreeClassifier
 
 from oulad import filter_by_module_presentation, get_oulad
 
+# %load_ext oulad.cache
+
+# %%
+# %%cache oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -75,10 +79,11 @@ display(student_assessments)
 # ### Student course interactions table
 
 # %%
+# %%cache -ns withdrawal_prediction_on_behavioral_indicators student_vle
 student_vle = (
     filter_by_module_presentation(oulad.student_vle, MODULE, PRESENTATION)
     .merge(filter_by_module_presentation(oulad.vle, MODULE, PRESENTATION), on="id_site")
-    .drop(columns=["id_site", "date"])
+    .drop(columns=["id_site", "date", "week_from", "week_to"])
 )
 display(student_vle)
 
@@ -289,6 +294,7 @@ display(performance)
 # ### Elbow method
 
 # %%
+# %%cache -ns withdrawal_prediction_on_behavioral_indicators inertia
 indicators = {
     "Perseverance indicator": perseverance,
     "Autonomy indicator": autonomy,
@@ -300,15 +306,16 @@ indicators = {
 }
 k_range = list(range(2, 10))
 fig = plt.figure(figsize=(20, 20))
-for i, (name, indicator) in enumerate(indicators.items()):
-    inertia = []
-    for k in k_range:
-        kmeans = KMeans(n_clusters=k, n_init="auto").fit(indicator.values)
-        # Inertia: Sum of squared distances of samples to their closest cluster center,
-        # weighted by the sample weights if provided.
-        inertia.append(kmeans.inertia_)
-
-    pd.Series(inertia, index=k_range, name="k").plot(
+# Inertia: Sum of squared distances of samples to their closest cluster center,
+# weighted by the sample weights if provided.
+inertia = [
+    KMeans(n_clusters=k, n_init="auto").fit(indicator.values).inertia_
+    for indicator in indicators.values()
+    for k in k_range
+]
+for i, name in enumerate(indicators):
+    index = i * len(k_range)
+    pd.Series(inertia[index : index + len(k_range)], index=k_range, name="k").plot(
         title=f"{name} (Inertia/k)",
         xlabel="Number of clusters",
         ylabel="SSE",
@@ -420,6 +427,7 @@ x_resampled, y_resampled = smote.fit_resample(x_train, y_train)
 # ```
 
 # %%
+# %%cache -ns withdrawal_prediction_on_behavioral_indicators scores
 grid = {
     DecisionTreeClassifier: {
         "unbalanced": {
@@ -496,27 +504,32 @@ grid = {
         },
     },
 }
-skf_cv = StratifiedKFold(n_splits=5, shuffle=True)
-scores = []
-for classifier_class, type_parameters in grid.items():
-    for dataset_type, hyperparameters in type_parameters.items():
-        classifier = GridSearchCV(
-            classifier_class(),
-            hyperparameters,
-            scoring="f1",
-            n_jobs=-1,
-            error_score="raise",
-            cv=skf_cv,
-            refit=True,
-        )
-        if dataset_type == "unbalanced":
-            classifier.fit(x_train, y_train)
-        else:
-            classifier.fit(x_resampled, y_resampled)
-        cv_score = classifier.best_score_
-        test_score = classifier.score(x_test, y_test)
-        scores.append((classifier_class.__name__, dataset_type, cv_score, test_score))
 
+
+def get_scores():
+    """Yields scores for each classifier from the grid."""
+    skf_cv = StratifiedKFold(n_splits=5, shuffle=True)
+    for classifier_class, type_parameters in grid.items():
+        for dataset_type, hyperparameters in type_parameters.items():
+            classifier = GridSearchCV(
+                classifier_class(),
+                hyperparameters,
+                scoring="f1",
+                n_jobs=-1,
+                error_score="raise",
+                cv=skf_cv,
+                refit=True,
+            )
+            if dataset_type == "unbalanced":
+                classifier.fit(x_train, y_train)
+            else:
+                classifier.fit(x_resampled, y_resampled)
+            cv_score = classifier.best_score_
+            test_score = classifier.score(x_test, y_test)
+            yield (classifier_class.__name__, dataset_type, cv_score, test_score)
+
+
+scores = list(get_scores())
 display(
     pd.DataFrame(
         scores, columns=["classifier", "dataset", "cv_score", "test_score"]
