@@ -155,7 +155,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="tables.html">Tables of the OULAD dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="first_descriptive_analysis.html">A first descriptive analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="identifying_key_milestones.html">Identifying key milestones</a></li>
-<li class="toctree-l1"><a class="reference internal" href="predicting_students_final_exam_outcome.html">Predicting students final exam outcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="predicting_students_final_exam_outcome.html">Predicting student’s final exam outcome</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimize_mooc_learner_pathways.html">Optimize MOOC learner pathways</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Time series classification for dropout prediction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="withdrawal_prediction_on_behavioral_indicators.html">Withdrawal prediction on behavioral indicators</a></li>
@@ -409,7 +409,9 @@ each time series by course.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">display</span>
@@ -418,7 +420,15 @@ each time series by course.</p>
 
 <span class="kn">from</span> <span class="nn">oulad</span> <span class="kn">import</span> <span class="n">get_oulad</span>
 
-<span class="n">oulad</span> <span class="o">=</span> <span class="n">get_oulad</span><span class="p">()</span>
+<span class="o">%</span><span class="k">load_ext</span> oulad.cache
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> oulad
+oulad = get_oulad()
 </pre></div>
 </div>
 </div>
@@ -707,33 +717,34 @@ We shall attempt to replicate this table in our present study.</p>
 as described in the work of Liu et al.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">click_stream</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="c1"># 1. Extract the number of clicks by students on the three types of material.</span>
-    <span class="n">oulad</span><span class="o">.</span><span class="n">vle</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;activity_type in [&#39;resource&#39;, &#39;oucontent&#39;, &#39;forumng&#39;]&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;id_site&quot;</span><span class="p">)</span>
-    <span class="c1"># 2. Sum the number of clicks each student makes on each type of material by day.</span>
-    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
-        <span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">]</span>
-    <span class="p">)</span>
-    <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="s2">&quot;sum&quot;</span><span class="p">})</span>
-    <span class="c1"># 3. Align each student’s total clicks on each type of material by days.</span>
-    <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
-        <span class="n">values</span><span class="o">=</span><span class="s2">&quot;sum_click&quot;</span><span class="p">,</span>
-        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">],</span>
-        <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">,</span>
-        <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="c1"># 4. Add the dropout label, withdrawn as `1`, otherwise as `0`.</span>
-    <span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">oulad</span><span class="o">.</span><span class="n">student_info</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">final_result</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">final_result</span> <span class="o">==</span> <span class="s2">&quot;Withdrawn&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
-        <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">])</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">click_stream</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns time_series_classification_for_dropout_prediction click_stream
+click_stream = (
+    # 1. Extract the number of clicks by students on the three types of material.
+    oulad.vle.query(&quot;activity_type in [&#39;resource&#39;, &#39;oucontent&#39;, &#39;forumng&#39;]&quot;)
+    .drop([&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;week_from&quot;, &quot;week_to&quot;], axis=1)
+    .merge(oulad.student_vle, on=&quot;id_site&quot;)
+    # 2. Sum the number of clicks each student makes on each type of material by day.
+    .groupby(
+        [&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;id_student&quot;, &quot;activity_type&quot;, &quot;date&quot;]
+    )
+    .agg({&quot;sum_click&quot;: &quot;sum&quot;})
+    # 3. Align each student’s total clicks on each type of material by days.
+    .pivot_table(
+        values=&quot;sum_click&quot;,
+        index=[&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;id_student&quot;, &quot;activity_type&quot;],
+        columns=&quot;date&quot;,
+        fill_value=0.0,
+    )
+    # 4. Add the dropout label, withdrawn as `1`, otherwise as `0`.
+    .join(
+        oulad.student_info.filter(
+            [&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;id_student&quot;, &quot;final_result&quot;]
+        )
+        .assign(final_result=lambda df: (df.final_result == &quot;Withdrawn&quot;).astype(int))
+        .set_index([&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;id_student&quot;])
+    )
+)
+display(click_stream)
 </pre></div>
 </div>
 </div>
@@ -1302,26 +1313,31 @@ Classifier predicting students dropout for each course presentation.</p>
 the classification accuracy as the evaluation metric.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">levels</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
-    <span class="n">level</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">]</span>
-<span class="p">):</span>
-    <span class="n">estimator</span> <span class="o">=</span> <span class="n">TimeSeriesForest</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;final_result&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;final_result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">mean_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
-    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">mean_score</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns time_series_classification_for_dropout_prediction results
+def get_scores_by_activity_type() -&gt; Iterator[list[float]]:
+    &quot;&quot;&quot;Computes accuracy prediction scores for each course.&quot;&quot;&quot;
+    for levels, course_df in click_stream.groupby(
+        level=[&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;activity_type&quot;]
+    ):
+        estimator = TimeSeriesForest(n_estimators=500)
+        X = course_df.drop(columns=&quot;final_result&quot;).values
+        y = course_df[&quot;final_result&quot;].values
+        mean_score = np.mean(
+            cross_val_score(estimator, X, y, cv=10, scoring=&quot;accuracy&quot;, n_jobs=-1)
+        )
+        yield list(levels) + [mean_score]
 
-<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="n">results</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]</span>
-<span class="p">)</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
-    <span class="n">values</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span>
-    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">],</span>
-    <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="s2">&quot;### Dropout prediction 10-fold cross-validation accuracy by course&quot;</span><span class="p">))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+results = pd.DataFrame(
+    list(get_scores_by_activity_type()),
+    columns=[&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;activity_type&quot;, &quot;score&quot;],
+).pivot_table(
+    values=&quot;score&quot;,
+    index=[&quot;code_module&quot;, &quot;code_presentation&quot;],
+    columns=&quot;activity_type&quot;,
+)
+display(Markdown(&quot;### Dropout prediction 10-fold cross-validation accuracy by course&quot;))
+display(results)
 </pre></div>
 </div>
 </div>
@@ -1362,141 +1378,141 @@ the classification accuracy as the evaluation metric.</p>
     <tr>
       <th rowspan="2" valign="top">AAA</th>
       <th>2013J</th>
-      <td>0.895519</td>
-      <td>0.931152</td>
-      <td>0.884282</td>
+      <td>0.892817</td>
+      <td>0.933855</td>
+      <td>0.881579</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.877563</td>
-      <td>0.904127</td>
-      <td>0.886975</td>
+      <td>0.877815</td>
+      <td>0.892857</td>
+      <td>0.886891</td>
     </tr>
     <tr>
       <th rowspan="4" valign="top">BBB</th>
       <th>2013B</th>
-      <td>0.814957</td>
-      <td>0.775947</td>
-      <td>0.815646</td>
+      <td>0.817655</td>
+      <td>0.780723</td>
+      <td>0.819048</td>
     </tr>
     <tr>
       <th>2013J</th>
-      <td>0.854971</td>
-      <td>0.876433</td>
-      <td>0.845898</td>
+      <td>0.851462</td>
+      <td>0.875796</td>
+      <td>0.842498</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.836207</td>
-      <td>0.869037</td>
-      <td>0.842330</td>
+      <td>0.841379</td>
+      <td>0.864416</td>
+      <td>0.842309</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.824138</td>
-      <td>0.848038</td>
-      <td>0.828692</td>
+      <td>0.822069</td>
+      <td>0.850166</td>
+      <td>0.830789</td>
     </tr>
     <tr>
       <th rowspan="2" valign="top">CCC</th>
       <th>2014B</th>
-      <td>0.772143</td>
-      <td>0.747062</td>
-      <td>0.827674</td>
+      <td>0.772862</td>
+      <td>0.750515</td>
+      <td>0.831991</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.810978</td>
-      <td>0.778064</td>
-      <td>0.878879</td>
+      <td>0.809399</td>
+      <td>0.780123</td>
+      <td>0.876635</td>
     </tr>
     <tr>
       <th rowspan="4" valign="top">DDD</th>
       <th>2013B</th>
-      <td>0.816389</td>
-      <td>0.790421</td>
-      <td>0.775652</td>
+      <td>0.817323</td>
+      <td>0.787865</td>
+      <td>0.775687</td>
     </tr>
     <tr>
       <th>2013J</th>
-      <td>0.835355</td>
-      <td>0.836641</td>
-      <td>0.824717</td>
+      <td>0.834719</td>
+      <td>0.836645</td>
+      <td>0.821723</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.777313</td>
-      <td>0.786439</td>
-      <td>0.799065</td>
+      <td>0.774303</td>
+      <td>0.787389</td>
+      <td>0.794393</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.826619</td>
-      <td>0.870838</td>
-      <td>0.865924</td>
+      <td>0.822447</td>
+      <td>0.870201</td>
+      <td>0.865887</td>
     </tr>
     <tr>
       <th rowspan="3" valign="top">EEE</th>
       <th>2013J</th>
-      <td>0.848315</td>
-      <td>0.844972</td>
-      <td>0.889024</td>
+      <td>0.850562</td>
+      <td>0.837581</td>
+      <td>0.886585</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.835464</td>
-      <td>0.816975</td>
-      <td>0.917098</td>
+      <td>0.828352</td>
+      <td>0.818588</td>
+      <td>0.911255</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.884646</td>
-      <td>0.871867</td>
-      <td>0.913968</td>
+      <td>0.880616</td>
+      <td>0.868146</td>
+      <td>0.919475</td>
     </tr>
     <tr>
       <th rowspan="4" valign="top">FFF</th>
       <th>2013B</th>
-      <td>0.828378</td>
+      <td>0.831081</td>
       <td>0.836827</td>
-      <td>0.846034</td>
+      <td>0.846729</td>
     </tr>
     <tr>
       <th>2013J</th>
-      <td>0.824283</td>
-      <td>0.837864</td>
-      <td>0.828372</td>
+      <td>0.824786</td>
+      <td>0.838835</td>
+      <td>0.821803</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.795355</td>
-      <td>0.808502</td>
-      <td>0.820811</td>
+      <td>0.799255</td>
+      <td>0.812957</td>
+      <td>0.818455</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.852261</td>
-      <td>0.892477</td>
-      <td>0.873678</td>
+      <td>0.853769</td>
+      <td>0.894428</td>
+      <td>0.872163</td>
     </tr>
     <tr>
       <th rowspan="3" valign="top">GGG</th>
       <th>2013J</th>
       <td>0.960973</td>
-      <td>0.947915</td>
-      <td>0.943182</td>
+      <td>0.947902</td>
+      <td>0.944318</td>
     </tr>
     <tr>
       <th>2014B</th>
-      <td>0.922034</td>
-      <td>0.914090</td>
-      <td>0.925649</td>
+      <td>0.915254</td>
+      <td>0.915405</td>
+      <td>0.921649</td>
     </tr>
     <tr>
       <th>2014J</th>
-      <td>0.885552</td>
-      <td>0.893758</td>
-      <td>0.859165</td>
+      <td>0.887338</td>
+      <td>0.892243</td>
+      <td>0.848998</td>
     </tr>
   </tbody>
 </table>
@@ -1514,37 +1530,44 @@ We start with a 5 percent dataset and iteratively add 5 percent increments to as
 how prediction accuracy evolves.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">index_slice</span> <span class="ow">in</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;2013J&quot;</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;oucontent&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;CCC&quot;</span><span class="p">,</span> <span class="s2">&quot;2014J&quot;</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;resource&quot;</span><span class="p">),</span>
-<span class="p">]:</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_slice</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
-        <span class="n">estimator</span> <span class="o">=</span> <span class="n">TimeSeriesForest</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-        <span class="n">limit</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">click_stream</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_slice</span><span class="p">,</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="n">limit</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">mean_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
-        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_score</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns time_series_classification_for_dropout_prediction a_scores c_scores
+def get_score_by_slice(index_slice) -&gt; Iterator[float]:
+    &quot;&quot;&quot;Computes accuracy prediction scores for the given `index_slice`.&quot;&quot;&quot;
+    y = click_stream.loc[index_slice, &quot;final_result&quot;].values
+    for i in range(5, 100, 5):
+        estimator = TimeSeriesForest(n_estimators=500)
+        limit = round((click_stream.columns.shape[0] - 1) * i / 100)
+        X = click_stream.loc[index_slice, click_stream.columns[:limit]].values
+        yield np.mean(
+            cross_val_score(estimator, X, y, cv=10, scoring=&quot;accuracy&quot;, n_jobs=-1)
+        )
 
-    <span class="n">NAME</span> <span class="o">=</span> <span class="n">index_slice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">index_slice</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">index_slice</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Accuracy score by the percentage of data used for </span><span class="si">{</span><span class="n">NAME</span><span class="si">}</span><span class="s2"> course&quot;</span><span class="p">,</span>
-        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Percentage of data used&quot;</span><span class="p">,</span>
-        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Prediction accuracy&quot;</span><span class="p">,</span>
-        <span class="n">xticks</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
-        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
-        <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+a_scores = pd.Series(
+    list(get_score_by_slice((&quot;AAA&quot;, &quot;2013J&quot;, slice(None), &quot;oucontent&quot;))),
+    index=range(5, 100, 5),
+)
+c_scores = pd.Series(
+    list(get_score_by_slice((&quot;CCC&quot;, &quot;2014J&quot;, slice(None), &quot;resource&quot;))),
+    index=range(5, 100, 5),
+)
+for scores, name in [(a_scores, &quot;AAA2013Joucontent&quot;), (c_scores, &quot;CCC2014Jresource&quot;)]:
+    scores.plot(
+        title=f&quot;Accuracy score by the percentage of data used for {name} course&quot;,
+        xlabel=&quot;Percentage of data used&quot;,
+        ylabel=&quot;Prediction accuracy&quot;,
+        xticks=range(5, 100, 5),
+        figsize=(10, 5),
+        grid=True,
+        marker=&quot;s&quot;,
+    )
+    plt.show()
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/87969094ca6e289f07d6a98180f62ab6d9de20690ba3ae1326a4afb9d98bc304.png" src="../_images/87969094ca6e289f07d6a98180f62ab6d9de20690ba3ae1326a4afb9d98bc304.png" />
-<img alt="../_images/75409ac22a2b689a42213b9051eca6ee72f305d6626123f3165dc80056cf90e9.png" src="../_images/75409ac22a2b689a42213b9051eca6ee72f305d6626123f3165dc80056cf90e9.png" />
+<img alt="../_images/b38cdd62740fb979f468e60bd6bd8eccc5f5479e625fef1633eebc37e83b402d.png" src="../_images/b38cdd62740fb979f468e60bd6bd8eccc5f5479e625fef1633eebc37e83b402d.png" />
+<img alt="../_images/11e5958fb58ac1946c7f4a9dc4c1e69e9976426c901862136ae88865d6e502ef.png" src="../_images/11e5958fb58ac1946c7f4a9dc4c1e69e9976426c901862136ae88865d6e502ef.png" />
 </div>
 </div>
 </section>

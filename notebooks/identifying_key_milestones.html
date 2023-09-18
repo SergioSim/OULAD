@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/identifying_key_milestones';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Predicting students final exam outcome" href="predicting_students_final_exam_outcome.html" />
+    <link rel="next" title="Predicting student’s final exam outcome" href="predicting_students_final_exam_outcome.html" />
     <link rel="prev" title="A first descriptive analysis" href="first_descriptive_analysis.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -155,7 +155,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="tables.html">Tables of the OULAD dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="first_descriptive_analysis.html">A first descriptive analysis</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Identifying key milestones</a></li>
-<li class="toctree-l1"><a class="reference internal" href="predicting_students_final_exam_outcome.html">Predicting students final exam outcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="predicting_students_final_exam_outcome.html">Predicting student’s final exam outcome</a></li>
 <li class="toctree-l1"><a class="reference internal" href="optimize_mooc_learner_pathways.html">Optimize MOOC learner pathways</a></li>
 <li class="toctree-l1"><a class="reference internal" href="time_series_classification_for_dropout_prediction.html">Time series classification for dropout prediction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="withdrawal_prediction_on_behavioral_indicators.html">Withdrawal prediction on behavioral indicators</a></li>
@@ -456,7 +456,15 @@ significant difference was detected and the split values.</p></li>
 
 <span class="kn">from</span> <span class="nn">oulad</span> <span class="kn">import</span> <span class="n">get_oulad</span>
 
-<span class="n">oulad</span> <span class="o">=</span> <span class="n">get_oulad</span><span class="p">()</span>
+<span class="o">%</span><span class="k">load_ext</span> oulad.cache
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> oulad
+oulad = get_oulad()
 </pre></div>
 </div>
 </div>
@@ -2336,7 +2344,7 @@ students (counting “Distinction” also as “Passing” and “Withdrawn” a
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Predicting students final exam outcome</p>
+        <p class="prev-next-title">Predicting student’s final exam outcome</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
