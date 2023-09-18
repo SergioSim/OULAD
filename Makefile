@@ -26,6 +26,9 @@ default: help
 	mkdir -p .jupyter/.jupyter/lab/user-settings/@jupyterlab
 	cp -r config/jupyter/* .jupyter/.jupyter/lab/user-settings/@jupyterlab
 
+.env:
+	cp .env.dist .env
+
 OULAD:
 	mkdir -p OULAD
 	wget -O OULAD/dataset.zip $(OULAD_DATASET_URL)
@@ -37,6 +40,7 @@ OULAD:
 # ======================================================================================
 
 build: \
+	.env \
 	.jupyter/.jupyter/lab/user-settings/@jupyterlab \
 	OULAD
 build: ## build the project environment (with docker)
@@ -44,6 +48,7 @@ build: ## build the project environment (with docker)
 .PHONY: build
 
 build-venv: \
+	.env \
 	.jupyter/.jupyter/lab/user-settings/@jupyterlab \
 	OULAD
 build-venv: ## build the project environment (with venv)
