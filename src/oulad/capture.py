@@ -1,4 +1,4 @@
-"""Cache IPython magic implementation."""
+"""Capture cache IPython magic implementation."""
 
 import ast
 from pathlib import Path
@@ -14,8 +14,8 @@ from IPython.core.magic import (
 
 
 @magics_class
-class CacheMagic(Magics):
-    """The %%cache magic function caches variable values by name and namespace."""
+class CaptureMagic(Magics):
+    """The %%capture magic function caches variable values by name and namespace."""
 
     @magic_arguments.magic_arguments()
     @magic_arguments.argument("variables", nargs="+")
@@ -29,17 +29,22 @@ class CacheMagic(Magics):
     @needs_local_scope
     @no_var_expand
     @cell_magic
-    def cache(self, line, cell, local_ns):
-        """Cache the values of variables from the cell by namespace.
+    def capture(self, line, cell, local_ns):
+        """Capture (cache) the values of variables from the cell by namespace.
 
         Usage:
-          %%cache [-ns<N>] var1 var2 ...
+          %%capture [-ns<N>] var1 var2 ...
 
         Parameters:
           -ns<N> (str): a namespace string key to cache the values. The combination of
               the namespace and a variable name should be unique.
+
+        Note:
+            `cache` would be an more appropriate name for this method, however, IPython
+            lexer doesn't support syntax highlighting for custom magics, thus we
+            overwrite the existing `capture` magic for now.
         """
-        args = magic_arguments.parse_argstring(self.cache, line)
+        args = magic_arguments.parse_argstring(self.capture, line)
         cache_dir = Path.home() / ".cache/oulad"
         cache_dir.mkdir(parents=True, exist_ok=True)
         cell_ast = ast.parse(cell)
@@ -73,7 +78,7 @@ class CacheMagic(Magics):
 
         # pylint: disable=exec-used
         exec("import pickle", local_ns)  # nosec
-        exec(compile(cell_ast, "<magic-cache>", "exec"), local_ns)  # nosec
+        exec(compile(cell_ast, "<magic-capture>", "exec"), local_ns)  # nosec
 
 
 def load_ipython_extension(ipython):
@@ -82,4 +87,4 @@ def load_ipython_extension(ipython):
     can be loaded via `%load_ext module.path` or be configured to be
     autoloaded by IPython at startup time.
     """
-    ipython.register_magics(CacheMagic)
+    ipython.register_magics(CaptureMagic)

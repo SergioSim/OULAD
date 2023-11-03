@@ -38,10 +38,10 @@ from sklearn.tree import DecisionTreeClassifier
 
 from oulad import filter_by_module_presentation, get_oulad
 
-# %load_ext oulad.cache
+# %load_ext oulad.capture
 
 # %%
-# %%cache oulad
+# %%capture oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -79,7 +79,7 @@ display(student_assessments)
 # ### Student course interactions table
 
 # %%
-# %%cache -ns withdrawal_prediction_on_behavioral_indicators student_vle
+# %%capture -ns withdrawal_prediction_on_behavioral_indicators student_vle
 student_vle = (
     filter_by_module_presentation(oulad.student_vle, MODULE, PRESENTATION)
     .merge(filter_by_module_presentation(oulad.vle, MODULE, PRESENTATION), on="id_site")
@@ -294,7 +294,7 @@ display(performance)
 # ### Elbow method
 
 # %%
-# %%cache -ns withdrawal_prediction_on_behavioral_indicators inertia
+# %%capture -ns withdrawal_prediction_on_behavioral_indicators inertia
 indicators = {
     "Perseverance indicator": perseverance,
     "Autonomy indicator": autonomy,
@@ -427,7 +427,7 @@ x_resampled, y_resampled = smote.fit_resample(x_train, y_train)
 # ```
 
 # %%
-# %%cache -ns withdrawal_prediction_on_behavioral_indicators scores
+# %%capture -ns withdrawal_prediction_on_behavioral_indicators scores
 grid = {
     DecisionTreeClassifier: {
         "unbalanced": {

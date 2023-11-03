@@ -45,11 +45,11 @@ from multicons import MultiCons
 
 from oulad import filter_by_module_presentation, get_oulad
 
-# %load_ext oulad.cache
+# %load_ext oulad.capture
 
 
 # %%
-# %%cache oulad
+# %%capture oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -71,7 +71,7 @@ oulad = get_oulad()
 
 
 # %%
-# %%cache -ns predicting_students_final_exam_outcome feature_table
+# %%capture -ns predicting_students_final_exam_outcome feature_table
 
 
 def get_feature_table(max_date=500, code_presentation="2013J"):
@@ -329,7 +329,7 @@ display(x_train)
 # search phase.
 
 # %%
-# %%cache -ns predicting_students_final_exam_outcome gs_scores
+# %%capture -ns predicting_students_final_exam_outcome gs_scores
 # Hyperparameter search space
 
 classifier_hyperparameters = {
@@ -455,7 +455,7 @@ oulad.assessments[
 
 
 # %%
-# %%cache -ns predicting_students_final_exam_outcome scores
+# %%capture -ns predicting_students_final_exam_outcome scores
 def get_train_test_assessments_by_day(day):
     """Returns the train/test feature table filtered by date."""
 

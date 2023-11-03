@@ -50,10 +50,10 @@ from sklearn.model_selection import cross_val_score
 
 from oulad import get_oulad
 
-# %load_ext oulad.cache
+# %load_ext oulad.capture
 
 # %%
-# %%cache oulad
+# %%capture oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -109,7 +109,7 @@ display(
 # as described in the work of Liu et al.
 
 # %%
-# %%cache -ns time_series_classification_for_dropout_prediction click_stream
+# %%capture -ns time_series_classification_for_dropout_prediction click_stream
 click_stream = (
     # 1. Extract the number of clicks by students on the three types of material.
     oulad.vle.query("activity_type in ['resource', 'oucontent', 'forumng']")
@@ -171,7 +171,7 @@ display(
 
 
 # %%
-# %%cache -ns time_series_classification_for_dropout_prediction results
+# %%capture -ns time_series_classification_for_dropout_prediction results
 def get_scores_by_activity_type() -> Iterator[list[float]]:
     """Computes accuracy prediction scores for each course."""
     for levels, course_df in click_stream.groupby(
@@ -211,7 +211,7 @@ display(results)
 
 
 # %%
-# %%cache -ns time_series_classification_for_dropout_prediction a_scores c_scores
+# %%capture -ns time_series_classification_for_dropout_prediction a_scores c_scores
 def get_score_by_slice(index_slice) -> Iterator[float]:
     """Computes accuracy prediction scores for the given `index_slice`."""
     y = click_stream.loc[index_slice, "final_result"].values

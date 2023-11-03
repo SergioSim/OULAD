@@ -69,10 +69,10 @@ from sklearn.preprocessing import PowerTransformer
 
 from oulad import get_oulad
 
-# %load_ext oulad.cache
+# %load_ext oulad.capture
 
 # %%
-# %%cache oulad
+# %%capture oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -83,7 +83,7 @@ oulad = get_oulad()
 # Both the total sum of clicks and interaction frequency are computed.
 
 # %%
-# %%cache -ns detecting_at_risk_students feature_table
+# %%capture -ns detecting_at_risk_students feature_table
 feature_table = (
     oulad.vle.query("code_module == 'BBB' and code_presentation in ['2013B', '2013J']")
     .drop(columns=["code_module", "code_presentation"])
@@ -196,7 +196,7 @@ px.imshow(
 # In addition, the full `BBB_2013J` course dataset is employed as the validation set.
 
 # %%
-# %%cache -ns detecting_at_risk_students scores_roc_curves
+# %%capture -ns detecting_at_risk_students scores_roc_curves
 cachedir = mkdtemp()
 grid = {
     GradientBoostingClassifier: {
