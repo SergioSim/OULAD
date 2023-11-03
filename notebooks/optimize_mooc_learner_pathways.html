@@ -413,7 +413,7 @@ collaborative filtering on the full dataset.</p>
 
 <span class="kn">from</span> <span class="nn">oulad</span> <span class="kn">import</span> <span class="n">filter_by_module_presentation</span><span class="p">,</span> <span class="n">get_oulad</span>
 
-<span class="o">%</span><span class="k">load_ext</span> oulad.cache
+<span class="o">%</span><span class="k">load_ext</span> oulad.capture
 </pre></div>
 </div>
 </div>
@@ -430,8 +430,8 @@ collaborative filtering on the full dataset.</p>
 <h3>Loading OULAD<a class="headerlink" href="#loading-oulad" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> oulad
-oulad = get_oulad()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> oulad
+<span class="n">oulad</span> <span class="o">=</span> <span class="n">get_oulad</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -455,32 +455,32 @@ oulad = get_oulad()
 session.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns optimize_mooc_learner_pathways student_registration student_item
-student_registration = (
-    filter_by_module_presentation(
-        oulad.student_registration, CODE_MODULE, CODE_PRESENTATION
-    )
-    # Remove students that unregistered before the course started.
-    .query(&quot;~(date_unregistration &lt; 0)&quot;)
-    .drop([&quot;date_unregistration&quot;], axis=1)
-    .set_index(&quot;id_student&quot;)
-)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns optimize_mooc_learner_pathways student_registration student_item
+<span class="n">student_registration</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filter_by_module_presentation</span><span class="p">(</span>
+        <span class="n">oulad</span><span class="o">.</span><span class="n">student_registration</span><span class="p">,</span> <span class="n">CODE_MODULE</span><span class="p">,</span> <span class="n">CODE_PRESENTATION</span>
+    <span class="p">)</span>
+    <span class="c1"># Remove students that unregistered before the course started.</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;~(date_unregistration &lt; 0)&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;date_unregistration&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 
-student_item = (
-    filter_by_module_presentation(oulad.student_vle, CODE_MODULE, CODE_PRESENTATION)
-    .query(&quot;id_student in @student_registration.index&quot;)
-    .drop([&quot;date&quot;], axis=1)
-    .groupby([&quot;id_site&quot;, &quot;id_student&quot;])
-    .sum()
-    .reset_index()
-    # We convert the `id_site` column to string type as the values of `id_site` will
-    # be used as column names in the `student_profile` table.
-    # student_item.id_site = student_item.id_site.astype(str)
-    .astype({&quot;id_site&quot;: str, &quot;sum_click&quot;: float})[
-        [&quot;id_student&quot;, &quot;id_site&quot;, &quot;sum_click&quot;]
-    ]
-)
-display(student_item)
+<span class="n">student_item</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">,</span> <span class="n">CODE_MODULE</span><span class="p">,</span> <span class="n">CODE_PRESENTATION</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;id_student in @student_registration.index&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;id_site&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="c1"># We convert the `id_site` column to string type as the values of `id_site` will</span>
+    <span class="c1"># be used as column names in the `student_profile` table.</span>
+    <span class="c1"># student_item.id_site = student_item.id_site.astype(str)</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;id_site&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">})[</span>
+        <span class="p">[</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;id_site&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_click&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">student_item</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1010,46 +1010,46 @@ The model will be used at the final step to evaluate the quality of the
 recommendations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns optimize_mooc_learner_pathways gs_classifier
-# Hyperparameter search space
-hyperparameters = {
-    &quot;criterion&quot;: [&quot;gini&quot;],  # [&quot;gini&quot;, &quot;entropy&quot;, &quot;log_loss&quot;],
-    &quot;splitter&quot;: [&quot;best&quot;],  # [&quot;random&quot;, &quot;best&quot;],
-    &quot;max_depth&quot;: [9],  # [None, *list(range(1, 20))],
-    &quot;min_samples_split&quot;: [13],  # range(2, 20),
-    &quot;min_samples_leaf&quot;: [6],  # range(1, 20),
-    &quot;random_state&quot;: [RANDOM_STATE],
-}
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns optimize_mooc_learner_pathways gs_classifier
+<span class="c1"># Hyperparameter search space</span>
+<span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;gini&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;gini&quot;, &quot;entropy&quot;, &quot;log_loss&quot;],</span>
+    <span class="s2">&quot;splitter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;best&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;random&quot;, &quot;best&quot;],</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">],</span>  <span class="c1"># [None, *list(range(1, 20))],</span>
+    <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">13</span><span class="p">],</span>  <span class="c1"># range(2, 20),</span>
+    <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span>  <span class="c1"># range(1, 20),</span>
+    <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
+<span class="p">}</span>
 
-# Train Decision tree
-gs_classifier = GridSearchCV(
-    DecisionTreeClassifier(),
-    hyperparameters,
-    scoring=&quot;precision&quot;,
-    n_jobs=-1,
-    error_score=&quot;raise&quot;,
-    cv=StratifiedKFold(n_splits=3, shuffle=True, random_state=RANDOM_STATE),
-).fit(x_train, y_train)
+<span class="c1"># Train Decision tree</span>
+<span class="n">gs_classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">DecisionTreeClassifier</span><span class="p">(),</span>
+    <span class="n">hyperparameters</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;precision&quot;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">error_score</span><span class="o">=</span><span class="s2">&quot;raise&quot;</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">RANDOM_STATE</span><span class="p">),</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-display(Markdown(&quot;#### Decision Tree&quot;))
-plt.figure(figsize=(20, 10))
-plot_tree(
-    gs_classifier.best_estimator_,
-    feature_names=x_train.columns.values.tolist(),
-    filled=True,
-)
-plt.show()
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="s2">&quot;#### Decision Tree&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plot_tree</span><span class="p">(</span>
+    <span class="n">gs_classifier</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="n">x_train</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+    <span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-display(Markdown(f&quot;Precision: {gs_classifier.score(x_test, y_test):.4f}&quot;))
-display(Markdown(f&quot;Decision Tree Parameters: {gs_classifier.best_params_}&quot;))
-predictions = gs_classifier.predict(x_test)
-display(
-    Markdown(
-        f&quot;Out of {(~y_test).sum()} failing students, the model predicted &quot;
-        f&quot;correctly {(~predictions[~y_test]).sum()} failing students &quot;
-        f&quot;({100 * (~predictions[~y_test]).sum() / (~y_test).sum():.2f}%)&quot;
-    )
-)
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Precision: </span><span class="si">{</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decision Tree Parameters: </span><span class="si">{</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">best_params_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">gs_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">Markdown</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Out of </span><span class="si">{</span><span class="p">(</span><span class="o">~</span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> failing students, the model predicted &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;correctly </span><span class="si">{</span><span class="p">(</span><span class="o">~</span><span class="n">predictions</span><span class="p">[</span><span class="o">~</span><span class="n">y_test</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> failing students &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="o">~</span><span class="n">predictions</span><span class="p">[</span><span class="o">~</span><span class="n">y_test</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="o">~</span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%)&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1070,50 +1070,50 @@ display(
 Consensus algorithm.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns optimize_mooc_learner_pathways base_clusterings consensus
-base_clusterings = [
-    KMeans(
-        n_clusters=18, max_iter=4000, n_init=&quot;auto&quot;, random_state=RANDOM_STATE
-    ).fit_predict(feature_table),
-    AgglomerativeClustering(n_clusters=19).fit_predict(feature_table),
-    GaussianMixture(n_components=19, random_state=RANDOM_STATE).fit_predict(
-        feature_table
-    ),
-    Birch(n_clusters=8, threshold=0.3).fit_predict(np.ascontiguousarray(feature_table)),
-    OPTICS(min_samples=11).fit_predict(feature_table),
-]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns optimize_mooc_learner_pathways base_clusterings consensus
+<span class="n">base_clusterings</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">KMeans</span><span class="p">(</span>
+        <span class="n">n_clusters</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">RANDOM_STATE</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">feature_table</span><span class="p">),</span>
+    <span class="n">AgglomerativeClustering</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">feature_table</span><span class="p">),</span>
+    <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">RANDOM_STATE</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span>
+        <span class="n">feature_table</span>
+    <span class="p">),</span>
+    <span class="n">Birch</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)),</span>
+    <span class="n">OPTICS</span><span class="p">(</span><span class="n">min_samples</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">feature_table</span><span class="p">),</span>
+<span class="p">]</span>
 
 
-def search_best_merging_threshold(clusterings, mt_range):
-    &quot;&quot;&quot;Loops over mt_range and returns the most similar fitted MultiCons instance.&quot;&quot;&quot;
-    max_score = 0
-    selected_consensus = None
-    for merging_threshold in mt_range:
-        multicons = MultiCons(
-            consensus_function=&quot;consensus_function_12&quot;,
-            merging_threshold=merging_threshold,
-        ).fit(clusterings)
-        score = multicons.ensemble_similarity[multicons.recommended]
-        if score &gt; max_score:
-            max_score = score
-            selected_consensus = multicons
-    return selected_consensus
+<span class="k">def</span> <span class="nf">search_best_merging_threshold</span><span class="p">(</span><span class="n">clusterings</span><span class="p">,</span> <span class="n">mt_range</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loops over mt_range and returns the most similar fitted MultiCons instance.&quot;&quot;&quot;</span>
+    <span class="n">max_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">selected_consensus</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">merging_threshold</span> <span class="ow">in</span> <span class="n">mt_range</span><span class="p">:</span>
+        <span class="n">multicons</span> <span class="o">=</span> <span class="n">MultiCons</span><span class="p">(</span>
+            <span class="n">consensus_function</span><span class="o">=</span><span class="s2">&quot;consensus_function_12&quot;</span><span class="p">,</span>
+            <span class="n">merging_threshold</span><span class="o">=</span><span class="n">merging_threshold</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">clusterings</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">multicons</span><span class="o">.</span><span class="n">ensemble_similarity</span><span class="p">[</span><span class="n">multicons</span><span class="o">.</span><span class="n">recommended</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">max_score</span><span class="p">:</span>
+            <span class="n">max_score</span> <span class="o">=</span> <span class="n">score</span>
+            <span class="n">selected_consensus</span> <span class="o">=</span> <span class="n">multicons</span>
+    <span class="k">return</span> <span class="n">selected_consensus</span>
 
 
-consensus = search_best_merging_threshold(base_clusterings, [0.5, 0.75])
-display(
-    f&quot;MultiCons: selected merging_threshold={consensus.merging_threshold} &quot;
-    f&quot;with score: {consensus.ensemble_similarity[consensus.recommended]:0.2f}&quot;
-)
-display(consensus.cons_tree())
-display(
-    pd.DataFrame(
-        {&quot;multicons&quot;: consensus.labels_, &quot;final_result&quot;: student_profile.final_result}
-    )
-    .groupby([&quot;multicons&quot;, &quot;final_result&quot;])
-    .size()
-    .to_frame()
-)
+<span class="n">consensus</span> <span class="o">=</span> <span class="n">search_best_merging_threshold</span><span class="p">(</span><span class="n">base_clusterings</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;MultiCons: selected merging_threshold=</span><span class="si">{</span><span class="n">consensus</span><span class="o">.</span><span class="n">merging_threshold</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;with score: </span><span class="si">{</span><span class="n">consensus</span><span class="o">.</span><span class="n">ensemble_similarity</span><span class="p">[</span><span class="n">consensus</span><span class="o">.</span><span class="n">recommended</span><span class="p">]</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">consensus</span><span class="o">.</span><span class="n">cons_tree</span><span class="p">())</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;multicons&quot;</span><span class="p">:</span> <span class="n">consensus</span><span class="o">.</span><span class="n">labels_</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">:</span> <span class="n">student_profile</span><span class="o">.</span><span class="n">final_result</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;multicons&quot;</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1331,29 +1331,29 @@ display(
 <p>Next, for each consensus group we train a collaborative filtering model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns optimize_mooc_learner_pathways recommenders_mc
-def get_trained_recommenders(labels, algo, parameters) -&gt; dict:
-    &quot;&quot;&quot;Returns a dictionary of trained recommenders by label.&quot;&quot;&quot;
-    recommenders = {}
-    for label in np.unique(labels):
-        mask = labels == label
-        subset = student_item[student_item.id_student.isin(feature_table.index[mask])]
-        reader = Reader(rating_scale=(0, subset.sum_click.max()))
-        data = Dataset.load_from_df(subset, reader)
-        grid_search = SupGridSearchCV(algo, parameters, cv=3, refit=True, n_jobs=-1)
-        grid_search.fit(data)
-        # display(Markdown(&quot;Label=%s RMSE=%.3f&quot; % (label, gs.best_score[&quot;rmse&quot;])))
-        recommenders[label] = grid_search
-    return recommenders
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns optimize_mooc_learner_pathways recommenders_mc
+<span class="k">def</span> <span class="nf">get_trained_recommenders</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">algo</span><span class="p">,</span> <span class="n">parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a dictionary of trained recommenders by label.&quot;&quot;&quot;</span>
+    <span class="n">recommenders</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">label</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">student_item</span><span class="p">[</span><span class="n">student_item</span><span class="o">.</span><span class="n">id_student</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">feature_table</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">mask</span><span class="p">])]</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">(</span><span class="n">rating_scale</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">subset</span><span class="o">.</span><span class="n">sum_click</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">load_from_df</span><span class="p">(</span><span class="n">subset</span><span class="p">,</span> <span class="n">reader</span><span class="p">)</span>
+        <span class="n">grid_search</span> <span class="o">=</span> <span class="n">SupGridSearchCV</span><span class="p">(</span><span class="n">algo</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="c1"># display(Markdown(&quot;Label=%s RMSE=%.3f&quot; % (label, gs.best_score[&quot;rmse&quot;])))</span>
+        <span class="n">recommenders</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_search</span>
+    <span class="k">return</span> <span class="n">recommenders</span>
 
 
-sim_options = {
-    &quot;name&quot;: [&quot;msd&quot;],  # [&quot;msd&quot;, &quot;cosine&quot;],
-    &quot;min_support&quot;: [4],  # [3, 4, 5],
-    &quot;user_based&quot;: [False],  # [False, True],
-}
-param_grid = {&quot;sim_options&quot;: sim_options, &quot;verbose&quot;: [False]}
-recommenders_mc = get_trained_recommenders(consensus.labels_, KNNWithMeans, param_grid)
+<span class="n">sim_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;msd&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;msd&quot;, &quot;cosine&quot;],</span>
+    <span class="s2">&quot;min_support&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>  <span class="c1"># [3, 4, 5],</span>
+    <span class="s2">&quot;user_based&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">],</span>  <span class="c1"># [False, True],</span>
+<span class="p">}</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sim_options&quot;</span><span class="p">:</span> <span class="n">sim_options</span><span class="p">,</span> <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">]}</span>
+<span class="n">recommenders_mc</span> <span class="o">=</span> <span class="n">get_trained_recommenders</span><span class="p">(</span><span class="n">consensus</span><span class="o">.</span><span class="n">labels_</span><span class="p">,</span> <span class="n">KNNWithMeans</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1366,52 +1366,52 @@ We simulate students to follow N recommendations and measure whether it changes 
 estimated success rate.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns optimize_mooc_learner_pathways results_mc
-def get_recommendation_results(labels, recommenders):
-    &quot;&quot;&quot;Returns the percentages of succeeding students by recommendation count.&quot;&quot;&quot;
-    final_result_predictions = []
-    student_ids = y_test[~predictions].index
-    label_by_student = pd.Series(labels, index=feature_table.index)[student_ids]
-    for student_id in student_ids:
-        algo = recommenders[label_by_student[student_id]]
-        student = x_test.loc[student_id]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns optimize_mooc_learner_pathways results_mc
+<span class="k">def</span> <span class="nf">get_recommendation_results</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">recommenders</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the percentages of succeeding students by recommendation count.&quot;&quot;&quot;</span>
+    <span class="n">final_result_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">student_ids</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">[</span><span class="o">~</span><span class="n">predictions</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">label_by_student</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">feature_table</span><span class="o">.</span><span class="n">index</span><span class="p">)[</span><span class="n">student_ids</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">student_id</span> <span class="ow">in</span> <span class="n">student_ids</span><span class="p">:</span>
+        <span class="n">algo</span> <span class="o">=</span> <span class="n">recommenders</span><span class="p">[</span><span class="n">label_by_student</span><span class="p">[</span><span class="n">student_id</span><span class="p">]]</span>
+        <span class="n">student</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">student_id</span><span class="p">]</span>
 
-        side_id_prediction = {&quot;site_id&quot;: [], &quot;prediction&quot;: []}
-        for site_id in student_activity.columns[student[student_activity.columns] == 0]:
-            prediction = algo.predict(student_id, site_id)
-            if prediction.details.get(&quot;was_impossible&quot;):
-                continue
-            prediction = int(prediction.est)
-            if prediction:
-                side_id_prediction[&quot;site_id&quot;].append(site_id)
-                side_id_prediction[&quot;prediction&quot;].append(prediction)
+        <span class="n">side_id_prediction</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;site_id&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;prediction&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="k">for</span> <span class="n">site_id</span> <span class="ow">in</span> <span class="n">student_activity</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">student</span><span class="p">[</span><span class="n">student_activity</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]:</span>
+            <span class="n">prediction</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="n">site_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">prediction</span><span class="o">.</span><span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;was_impossible&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">prediction</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">prediction</span><span class="o">.</span><span class="n">est</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">prediction</span><span class="p">:</span>
+                <span class="n">side_id_prediction</span><span class="p">[</span><span class="s2">&quot;site_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">site_id</span><span class="p">)</span>
+                <span class="n">side_id_prediction</span><span class="p">[</span><span class="s2">&quot;prediction&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
 
-        recommendations = pd.Series(
-            side_id_prediction[&quot;prediction&quot;], index=side_id_prediction[&quot;site_id&quot;]
-        ).sort_values(ascending=False)
-        following_recommendation_students = []
-        for recommendation_follow_count in range(1, 15):
-            new_student = student.copy()
-            new_student.loc[recommendations.index[:recommendation_follow_count]] = 1
-            following_recommendation_students.append(new_student)
+        <span class="n">recommendations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+            <span class="n">side_id_prediction</span><span class="p">[</span><span class="s2">&quot;prediction&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">side_id_prediction</span><span class="p">[</span><span class="s2">&quot;site_id&quot;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">following_recommendation_students</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">recommendation_follow_count</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span>
+            <span class="n">new_student</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">new_student</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">recommendations</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="n">recommendation_follow_count</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">following_recommendation_students</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_student</span><span class="p">)</span>
 
-        final_result_predictions.append(
-            gs_classifier.predict(pd.DataFrame(following_recommendation_students))
-        )
+        <span class="n">final_result_predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">gs_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">following_recommendation_students</span><span class="p">))</span>
+        <span class="p">)</span>
 
-    return (
-        pd.DataFrame(final_result_predictions, columns=range(1, 15))
-        .sum()
-        .mul(100)
-        .div(len(student_ids))
-    )
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">final_result_predictions</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">student_ids</span><span class="p">))</span>
+    <span class="p">)</span>
 
 
-results_mc = get_recommendation_results(consensus.labels_, recommenders_mc)
-recommendation_improvement_rate_mc_cf_df = pd.DataFrame(
-    results_mc, columns=[&quot;multicons_collaborative_filtering&quot;], index=range(1, 15)
-)
-display(recommendation_improvement_rate_mc_cf_df)
+<span class="n">results_mc</span> <span class="o">=</span> <span class="n">get_recommendation_results</span><span class="p">(</span><span class="n">consensus</span><span class="o">.</span><span class="n">labels_</span><span class="p">,</span> <span class="n">recommenders_mc</span><span class="p">)</span>
+<span class="n">recommendation_improvement_rate_mc_cf_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">results_mc</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;multicons_collaborative_filtering&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">recommendation_improvement_rate_mc_cf_df</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1505,12 +1505,12 @@ display(recommendation_improvement_rate_mc_cf_df)
 collaborative filtering on the full dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns optimize_mooc_learner_pathways recommenders_cf results_cf
-single_cluster = np.zeros(student_profile.shape[0])
-recommenders_cf = get_trained_recommenders(single_cluster, KNNWithMeans, param_grid)
-results_cf = get_recommendation_results(single_cluster, recommenders_cf)
-recommendation_improvement_rate_mc_cf_df[&quot;collaborative_filtering&quot;] = results_cf
-display(recommendation_improvement_rate_mc_cf_df)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns optimize_mooc_learner_pathways recommenders_cf results_cf
+<span class="n">single_cluster</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">student_profile</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">recommenders_cf</span> <span class="o">=</span> <span class="n">get_trained_recommenders</span><span class="p">(</span><span class="n">single_cluster</span><span class="p">,</span> <span class="n">KNNWithMeans</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">)</span>
+<span class="n">results_cf</span> <span class="o">=</span> <span class="n">get_recommendation_results</span><span class="p">(</span><span class="n">single_cluster</span><span class="p">,</span> <span class="n">recommenders_cf</span><span class="p">)</span>
+<span class="n">recommendation_improvement_rate_mc_cf_df</span><span class="p">[</span><span class="s2">&quot;collaborative_filtering&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_cf</span>
+<span class="n">display</span><span class="p">(</span><span class="n">recommendation_improvement_rate_mc_cf_df</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

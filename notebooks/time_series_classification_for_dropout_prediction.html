@@ -420,15 +420,15 @@ each time series by course.</p>
 
 <span class="kn">from</span> <span class="nn">oulad</span> <span class="kn">import</span> <span class="n">get_oulad</span>
 
-<span class="o">%</span><span class="k">load_ext</span> oulad.cache
+<span class="o">%</span><span class="k">load_ext</span> oulad.capture
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> oulad
-oulad = get_oulad()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> oulad
+<span class="n">oulad</span> <span class="o">=</span> <span class="n">get_oulad</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -717,34 +717,34 @@ We shall attempt to replicate this table in our present study.</p>
 as described in the work of Liu et al.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns time_series_classification_for_dropout_prediction click_stream
-click_stream = (
-    # 1. Extract the number of clicks by students on the three types of material.
-    oulad.vle.query(&quot;activity_type in [&#39;resource&#39;, &#39;oucontent&#39;, &#39;forumng&#39;]&quot;)
-    .drop([&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;week_from&quot;, &quot;week_to&quot;], axis=1)
-    .merge(oulad.student_vle, on=&quot;id_site&quot;)
-    # 2. Sum the number of clicks each student makes on each type of material by day.
-    .groupby(
-        [&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;id_student&quot;, &quot;activity_type&quot;, &quot;date&quot;]
-    )
-    .agg({&quot;sum_click&quot;: &quot;sum&quot;})
-    # 3. Align each student’s total clicks on each type of material by days.
-    .pivot_table(
-        values=&quot;sum_click&quot;,
-        index=[&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;id_student&quot;, &quot;activity_type&quot;],
-        columns=&quot;date&quot;,
-        fill_value=0.0,
-    )
-    # 4. Add the dropout label, withdrawn as `1`, otherwise as `0`.
-    .join(
-        oulad.student_info.filter(
-            [&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;id_student&quot;, &quot;final_result&quot;]
-        )
-        .assign(final_result=lambda df: (df.final_result == &quot;Withdrawn&quot;).astype(int))
-        .set_index([&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;id_student&quot;])
-    )
-)
-display(click_stream)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns time_series_classification_for_dropout_prediction click_stream
+<span class="n">click_stream</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="c1"># 1. Extract the number of clicks by students on the three types of material.</span>
+    <span class="n">oulad</span><span class="o">.</span><span class="n">vle</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;activity_type in [&#39;resource&#39;, &#39;oucontent&#39;, &#39;forumng&#39;]&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;week_from&quot;</span><span class="p">,</span> <span class="s2">&quot;week_to&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;id_site&quot;</span><span class="p">)</span>
+    <span class="c1"># 2. Sum the number of clicks each student makes on each type of material by day.</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;sum_click&quot;</span><span class="p">:</span> <span class="s2">&quot;sum&quot;</span><span class="p">})</span>
+    <span class="c1"># 3. Align each student’s total clicks on each type of material by days.</span>
+    <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+        <span class="n">values</span><span class="o">=</span><span class="s2">&quot;sum_click&quot;</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">,</span>
+        <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># 4. Add the dropout label, withdrawn as `1`, otherwise as `0`.</span>
+    <span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">oulad</span><span class="o">.</span><span class="n">student_info</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">final_result</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">final_result</span> <span class="o">==</span> <span class="s2">&quot;Withdrawn&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;id_student&quot;</span><span class="p">])</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">click_stream</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1313,31 +1313,31 @@ Classifier predicting students dropout for each course presentation.</p>
 the classification accuracy as the evaluation metric.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns time_series_classification_for_dropout_prediction results
-def get_scores_by_activity_type() -&gt; Iterator[list[float]]:
-    &quot;&quot;&quot;Computes accuracy prediction scores for each course.&quot;&quot;&quot;
-    for levels, course_df in click_stream.groupby(
-        level=[&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;activity_type&quot;]
-    ):
-        estimator = TimeSeriesForest(n_estimators=500)
-        X = course_df.drop(columns=&quot;final_result&quot;).values
-        y = course_df[&quot;final_result&quot;].values
-        mean_score = np.mean(
-            cross_val_score(estimator, X, y, cv=10, scoring=&quot;accuracy&quot;, n_jobs=-1)
-        )
-        yield list(levels) + [mean_score]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns time_series_classification_for_dropout_prediction results
+<span class="k">def</span> <span class="nf">get_scores_by_activity_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes accuracy prediction scores for each course.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">levels</span><span class="p">,</span> <span class="n">course_df</span> <span class="ow">in</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
+        <span class="n">level</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="n">estimator</span> <span class="o">=</span> <span class="n">TimeSeriesForest</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">course_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;final_result&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">course_df</span><span class="p">[</span><span class="s2">&quot;final_result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">mean_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+            <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">yield</span> <span class="nb">list</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">mean_score</span><span class="p">]</span>
 
 
-results = pd.DataFrame(
-    list(get_scores_by_activity_type()),
-    columns=[&quot;code_module&quot;, &quot;code_presentation&quot;, &quot;activity_type&quot;, &quot;score&quot;],
-).pivot_table(
-    values=&quot;score&quot;,
-    index=[&quot;code_module&quot;, &quot;code_presentation&quot;],
-    columns=&quot;activity_type&quot;,
-)
-display(Markdown(&quot;### Dropout prediction 10-fold cross-validation accuracy by course&quot;))
-display(results)
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">get_scores_by_activity_type</span><span class="p">()),</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_type&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">],</span>
+<span class="p">)</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+    <span class="n">values</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;code_module&quot;</span><span class="p">,</span> <span class="s2">&quot;code_presentation&quot;</span><span class="p">],</span>
+    <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="s2">&quot;### Dropout prediction 10-fold cross-validation accuracy by course&quot;</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1530,38 +1530,38 @@ We start with a 5 percent dataset and iteratively add 5 percent increments to as
 how prediction accuracy evolves.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns time_series_classification_for_dropout_prediction a_scores c_scores
-def get_score_by_slice(index_slice) -&gt; Iterator[float]:
-    &quot;&quot;&quot;Computes accuracy prediction scores for the given `index_slice`.&quot;&quot;&quot;
-    y = click_stream.loc[index_slice, &quot;final_result&quot;].values
-    for i in range(5, 100, 5):
-        estimator = TimeSeriesForest(n_estimators=500)
-        limit = round((click_stream.columns.shape[0] - 1) * i / 100)
-        X = click_stream.loc[index_slice, click_stream.columns[:limit]].values
-        yield np.mean(
-            cross_val_score(estimator, X, y, cv=10, scoring=&quot;accuracy&quot;, n_jobs=-1)
-        )
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns time_series_classification_for_dropout_prediction a_scores c_scores
+<span class="k">def</span> <span class="nf">get_score_by_slice</span><span class="p">(</span><span class="n">index_slice</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes accuracy prediction scores for the given `index_slice`.&quot;&quot;&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_slice</span><span class="p">,</span> <span class="s2">&quot;final_result&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="n">estimator</span> <span class="o">=</span> <span class="n">TimeSeriesForest</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">click_stream</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_slice</span><span class="p">,</span> <span class="n">click_stream</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="n">limit</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">yield</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+            <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
 
 
-a_scores = pd.Series(
-    list(get_score_by_slice((&quot;AAA&quot;, &quot;2013J&quot;, slice(None), &quot;oucontent&quot;))),
-    index=range(5, 100, 5),
-)
-c_scores = pd.Series(
-    list(get_score_by_slice((&quot;CCC&quot;, &quot;2014J&quot;, slice(None), &quot;resource&quot;))),
-    index=range(5, 100, 5),
-)
-for scores, name in [(a_scores, &quot;AAA2013Joucontent&quot;), (c_scores, &quot;CCC2014Jresource&quot;)]:
-    scores.plot(
-        title=f&quot;Accuracy score by the percentage of data used for {name} course&quot;,
-        xlabel=&quot;Percentage of data used&quot;,
-        ylabel=&quot;Prediction accuracy&quot;,
-        xticks=range(5, 100, 5),
-        figsize=(10, 5),
-        grid=True,
-        marker=&quot;s&quot;,
-    )
-    plt.show()
+<span class="n">a_scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">get_score_by_slice</span><span class="p">((</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;2013J&quot;</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;oucontent&quot;</span><span class="p">))),</span>
+    <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">c_scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">get_score_by_slice</span><span class="p">((</span><span class="s2">&quot;CCC&quot;</span><span class="p">,</span> <span class="s2">&quot;2014J&quot;</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;resource&quot;</span><span class="p">))),</span>
+    <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">scores</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">a_scores</span><span class="p">,</span> <span class="s2">&quot;AAA2013Joucontent&quot;</span><span class="p">),</span> <span class="p">(</span><span class="n">c_scores</span><span class="p">,</span> <span class="s2">&quot;CCC2014Jresource&quot;</span><span class="p">)]:</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Accuracy score by the percentage of data used for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> course&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Percentage of data used&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Prediction accuracy&quot;</span><span class="p">,</span>
+        <span class="n">xticks</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

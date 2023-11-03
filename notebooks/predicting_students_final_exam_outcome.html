@@ -411,15 +411,15 @@ Tomasevic et al. (2020) <span id="id1">[<a class="reference internal" href="#id8
 
 <span class="kn">from</span> <span class="nn">oulad</span> <span class="kn">import</span> <span class="n">filter_by_module_presentation</span><span class="p">,</span> <span class="n">get_oulad</span>
 
-<span class="o">%</span><span class="k">load_ext</span> oulad.cache
+<span class="o">%</span><span class="k">load_ext</span> oulad.capture
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> oulad
-oulad = get_oulad()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> oulad
+<span class="n">oulad</span> <span class="o">=</span> <span class="n">get_oulad</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -456,107 +456,107 @@ types below:</p>
 </table>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns predicting_students_final_exam_outcome feature_table
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns predicting_students_final_exam_outcome feature_table
 
 
-def get_feature_table(max_date=500, code_presentation=&quot;2013J&quot;):
-    &quot;&quot;&quot;Returns the feature table computed from the OULAD dataset.&quot;&quot;&quot;
-    assessments = (
-        filter_by_module_presentation(oulad.assessments, &quot;DDD&quot;, code_presentation)
-        # Filter out assessments that are after the max_date.
-        .query(f&quot;date &lt;= {max_date} or assessment_type == &#39;Exam&#39;&quot;).set_index(
-            &quot;id_assessment&quot;
-        )
-    )
-    vle = (
-        filter_by_module_presentation(oulad.student_vle, &quot;DDD&quot;, code_presentation)
-        .loc[:, [&quot;id_student&quot;, &quot;date&quot;, &quot;sum_click&quot;]]
-        # Categorize the date field by assessment date.
-        .assign(
-            date=lambda df: pd.cut(
-                df.date,
-                [-26] + assessments.date.values.tolist(),
-                labels=assessments.date.values,
-            )
-        )
-        # Sum scores by date.
-        .groupby([&quot;id_student&quot;, &quot;date&quot;])
-        .agg(np.sum)
-        .reset_index()
-        # Reshape the vle table.
-        .pivot(index=&quot;id_student&quot;, columns=&quot;date&quot;, values=&quot;sum_click&quot;)
-        # Rename columns
-        .rename(
-            columns={
-                assessment.date: f&quot;assessment_{i+1}_sum_click&quot;
-                if assessment.assessment_type != &quot;Exam&quot;
-                else &quot;final_exam_sum_click&quot;
-                for i, (_, assessment) in enumerate(assessments.iterrows())
-            }
-        )
-        .drop(&quot;final_exam_sum_click&quot;, axis=1)
-    )
-    return (
-        filter_by_module_presentation(oulad.student_info, &quot;DDD&quot;, code_presentation)
-        .loc[
-            :,
-            [
-                &quot;age_band&quot;,
-                &quot;gender&quot;,
-                &quot;id_student&quot;,
-                &quot;highest_education&quot;,
-                &quot;num_of_prev_attempts&quot;,
-                &quot;final_result&quot;,
-            ],
-        ]
-        # Transform gender, age_band and highest_education to numeric values.
-        .replace(
-            {
-                &quot;age_band&quot;: {&quot;0-35&quot;: 0.0, &quot;35-55&quot;: 0.5, &quot;55&lt;=&quot;: 1.0},
-                &quot;gender&quot;: {&quot;M&quot;: 0.0, &quot;F&quot;: 1.0},
-                &quot;highest_education&quot;: {
-                    &quot;No Formal quals&quot;: 0.0,
-                    &quot;Lower Than A Level&quot;: 0.25,
-                    &quot;A Level or Equivalent&quot;: 0.5,
-                    &quot;HE Qualification&quot;: 0.75,
-                    &quot;Post Graduate Qualification&quot;: 1.0,
-                },
-            }
-        )
-        .set_index(&quot;id_student&quot;)
-        # Filter out students who have unregistered from the course before the start.
-        .join(
-            filter_by_module_presentation(
-                oulad.student_registration, &quot;DDD&quot;, code_presentation
-            )
-            .set_index(&quot;id_student&quot;)
-            .query(&quot;not date_unregistration &lt; 0&quot;)
-            .loc[:, []],
-            how=&quot;right&quot;,
-        )
-        .join(vle)
-        .join(
-            assessments.join(oulad.student_assessment.set_index(&quot;id_assessment&quot;))
-            .reset_index()
-            .pivot(index=&quot;id_student&quot;, columns=&quot;id_assessment&quot;, values=&quot;score&quot;)
-            .rename(
-                columns={
-                    id_assessment: f&quot;assessment_{i+1}_score&quot;
-                    if assessment.assessment_type != &quot;Exam&quot;
-                    else &quot;final_exam_score&quot;
-                    for i, (id_assessment, assessment) in enumerate(
-                        assessments.iterrows()
-                    )
-                }
-            )
-        )
-    )
+<span class="k">def</span> <span class="nf">get_feature_table</span><span class="p">(</span><span class="n">max_date</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">code_presentation</span><span class="o">=</span><span class="s2">&quot;2013J&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the feature table computed from the OULAD dataset.&quot;&quot;&quot;</span>
+    <span class="n">assessments</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">assessments</span><span class="p">,</span> <span class="s2">&quot;DDD&quot;</span><span class="p">,</span> <span class="n">code_presentation</span><span class="p">)</span>
+        <span class="c1"># Filter out assessments that are after the max_date.</span>
+        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;date &lt;= </span><span class="si">{</span><span class="n">max_date</span><span class="si">}</span><span class="s2"> or assessment_type == &#39;Exam&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span>
+            <span class="s2">&quot;id_assessment&quot;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">vle</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_vle</span><span class="p">,</span> <span class="s2">&quot;DDD&quot;</span><span class="p">,</span> <span class="n">code_presentation</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_click&quot;</span><span class="p">]]</span>
+        <span class="c1"># Categorize the date field by assessment date.</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+            <span class="n">date</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
+                <span class="p">[</span><span class="o">-</span><span class="mi">26</span><span class="p">]</span> <span class="o">+</span> <span class="n">assessments</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                <span class="n">labels</span><span class="o">=</span><span class="n">assessments</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># Sum scores by date.</span>
+        <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="c1"># Reshape the vle table.</span>
+        <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;sum_click&quot;</span><span class="p">)</span>
+        <span class="c1"># Rename columns</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">assessment</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;assessment_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_sum_click&quot;</span>
+                <span class="k">if</span> <span class="n">assessment</span><span class="o">.</span><span class="n">assessment_type</span> <span class="o">!=</span> <span class="s2">&quot;Exam&quot;</span>
+                <span class="k">else</span> <span class="s2">&quot;final_exam_sum_click&quot;</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">assessment</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">assessments</span><span class="o">.</span><span class="n">iterrows</span><span class="p">())</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;final_exam_sum_click&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_info</span><span class="p">,</span> <span class="s2">&quot;DDD&quot;</span><span class="p">,</span> <span class="n">code_presentation</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+            <span class="p">:,</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;age_band&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;gender&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;id_student&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;highest_education&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;num_of_prev_attempts&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;final_result&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">]</span>
+        <span class="c1"># Transform gender, age_band and highest_education to numeric values.</span>
+        <span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;0-35&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;35-55&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;55&lt;=&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+                <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+                <span class="s2">&quot;highest_education&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;No Formal quals&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                    <span class="s2">&quot;Lower Than A Level&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
+                    <span class="s2">&quot;A Level or Equivalent&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                    <span class="s2">&quot;HE Qualification&quot;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
+                    <span class="s2">&quot;Post Graduate Qualification&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+        <span class="c1"># Filter out students who have unregistered from the course before the start.</span>
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">filter_by_module_presentation</span><span class="p">(</span>
+                <span class="n">oulad</span><span class="o">.</span><span class="n">student_registration</span><span class="p">,</span> <span class="s2">&quot;DDD&quot;</span><span class="p">,</span> <span class="n">code_presentation</span>
+            <span class="p">)</span>
+            <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;not date_unregistration &lt; 0&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[]],</span>
+            <span class="n">how</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">vle</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">assessments</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">student_assessment</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_assessment&quot;</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;id_assessment&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+                    <span class="n">id_assessment</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;assessment_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_score&quot;</span>
+                    <span class="k">if</span> <span class="n">assessment</span><span class="o">.</span><span class="n">assessment_type</span> <span class="o">!=</span> <span class="s2">&quot;Exam&quot;</span>
+                    <span class="k">else</span> <span class="s2">&quot;final_exam_score&quot;</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">id_assessment</span><span class="p">,</span> <span class="n">assessment</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                        <span class="n">assessments</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
+                    <span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
 
 
-feature_table = pd.concat(
-    [get_feature_table(), get_feature_table(code_presentation=&quot;2014B&quot;)]
-)
-display(feature_table)
+<span class="n">feature_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">get_feature_table</span><span class="p">(),</span> <span class="n">get_feature_table</span><span class="p">(</span><span class="n">code_presentation</span><span class="o">=</span><span class="s2">&quot;2014B&quot;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1576,94 +1576,94 @@ ranges if these were specified in the paper:</p>
 search phase.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns predicting_students_final_exam_outcome gs_scores
-# Hyperparameter search space
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns predicting_students_final_exam_outcome gs_scores
+<span class="c1"># Hyperparameter search space</span>
 
-classifier_hyperparameters = {
-    # K-Nearest Neighbours
-    KNeighborsClassifier: [
-        # {&quot;n_neighbors&quot;: range(1, 51), &quot;weights&quot;:[&quot;uniform&quot;, &quot;distance&quot;]}
-        # We reduce search space for speed
-        {
-            &quot;n_neighbors&quot;: [24],
-            &quot;weights&quot;: [&quot;distance&quot;],
-        }
-    ],
-    # Support Vector Machines
-    SVC: [
-        # {
-        #     &quot;kernel&quot;: [&quot;linear&quot;],
-        #     &quot;C&quot;: [0.1, 1.0, 10],
-        #     &quot;probability&quot;: [True],
-        #     &quot;random_state&quot;: [RANDOM_STATE],
-        # },
-        {
-            &quot;kernel&quot;: [&quot;rbf&quot;],
-            &quot;C&quot;: [10],  # [0.1, 1.0, 10],
-            &quot;gamma&quot;: [&quot;scale&quot;],  # [&quot;scale&quot;, &quot;auto&quot;, 0.0001, 0.01, 0.1],
-            &quot;probability&quot;: [True],
-            &quot;random_state&quot;: [RANDOM_STATE],
-        },
-    ],
-    # Artificial Neural Networks
-    MLPClassifier: [
-        {
-            &quot;max_iter&quot;: [1000],
-            &quot;validation_fraction&quot;: [0.2],
-            &quot;hidden_layer_sizes&quot;: [(10,)],  # [(10,), (20,), (52, 10)],
-            &quot;random_state&quot;: [RANDOM_STATE],
-            # [(i,) for i in range(2, 100, 10)] + [
-            #     (i, j) for i in range(2, 100, 10) for j in range(2, 100, 10)
-            # ],
-            # As we do not notice any improvement by varying `activation` and `alpha`,
-            # we choose to keep the default values for these parameters.
-            # &quot;activation&quot;: [&quot;logistic&quot;, &quot;tanh&quot;, &quot;relu&quot;],
-            # &quot;alpha&quot;: 10.0 ** (- np.arange(-1,6))
-        },
-    ],
-    # Decision Tree
-    DecisionTreeClassifier: [
-        {
-            &quot;criterion&quot;: [&quot;entropy&quot;],  # [&quot;gini&quot;, &quot;entropy&quot;],
-            &quot;splitter&quot;: [&quot;best&quot;],  # [&quot;best&quot;, &quot;random&quot;],
-            &quot;max_depth&quot;: [6],  # [None, *list(range(1, 11))],
-            &quot;min_samples_split&quot;: [2],  # range(2, 11, 2),
-            &quot;min_samples_leaf&quot;: [10],  # range(2, 11, 2),
-            &quot;random_state&quot;: [RANDOM_STATE],
-        },
-    ],
-    # Naive Bayes
-    GaussianNB: [
-        {
-            &quot;var_smoothing&quot;: [1e-9],  # [1e-9, 1e-8, 1e-7, 1e-6]
-        }
-    ],
-    # Logistic Regression
-    LogisticRegression: [
-        {
-            &quot;solver&quot;: [&quot;lbfgs&quot;],  # [&quot;lbfgs&quot;, &quot;saga&quot;],
-            &quot;random_state&quot;: [RANDOM_STATE],
-        }
-    ],
-}
-
-
-def get_grid_search_scores():
-    &quot;&quot;&quot;Returns the grid search scores.&quot;&quot;&quot;
-    classifier_score = {&quot;classifier&quot;: [], &quot;score&quot;: []}
-    for classifier, hyperparameters in classifier_hyperparameters.items():
-        gs_classifier = GridSearchCV(
-            classifier(), hyperparameters, scoring=&quot;f1&quot;, n_jobs=-1
-        )
-        gs_classifier.fit(x_train, y_train)
-        classifier_score[&quot;classifier&quot;].append(classifier.__name__)
-        classifier_score[&quot;score&quot;].append(gs_classifier.score(x_test, y_test))
-
-    return classifier_score
+<span class="n">classifier_hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># K-Nearest Neighbours</span>
+    <span class="n">KNeighborsClassifier</span><span class="p">:</span> <span class="p">[</span>
+        <span class="c1"># {&quot;n_neighbors&quot;: range(1, 51), &quot;weights&quot;:[&quot;uniform&quot;, &quot;distance&quot;]}</span>
+        <span class="c1"># We reduce search space for speed</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;n_neighbors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">24</span><span class="p">],</span>
+            <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="c1"># Support Vector Machines</span>
+    <span class="n">SVC</span><span class="p">:</span> <span class="p">[</span>
+        <span class="c1"># {</span>
+        <span class="c1">#     &quot;kernel&quot;: [&quot;linear&quot;],</span>
+        <span class="c1">#     &quot;C&quot;: [0.1, 1.0, 10],</span>
+        <span class="c1">#     &quot;probability&quot;: [True],</span>
+        <span class="c1">#     &quot;random_state&quot;: [RANDOM_STATE],</span>
+        <span class="c1"># },</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;rbf&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>  <span class="c1"># [0.1, 1.0, 10],</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;scale&quot;, &quot;auto&quot;, 0.0001, 0.01, 0.1],</span>
+            <span class="s2">&quot;probability&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">],</span>
+            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+    <span class="c1"># Artificial Neural Networks</span>
+    <span class="n">MLPClassifier</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">],</span>
+            <span class="s2">&quot;validation_fraction&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">],</span>
+            <span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">10</span><span class="p">,)],</span>  <span class="c1"># [(10,), (20,), (52, 10)],</span>
+            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
+            <span class="c1"># [(i,) for i in range(2, 100, 10)] + [</span>
+            <span class="c1">#     (i, j) for i in range(2, 100, 10) for j in range(2, 100, 10)</span>
+            <span class="c1"># ],</span>
+            <span class="c1"># As we do not notice any improvement by varying `activation` and `alpha`,</span>
+            <span class="c1"># we choose to keep the default values for these parameters.</span>
+            <span class="c1"># &quot;activation&quot;: [&quot;logistic&quot;, &quot;tanh&quot;, &quot;relu&quot;],</span>
+            <span class="c1"># &quot;alpha&quot;: 10.0 ** (- np.arange(-1,6))</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+    <span class="c1"># Decision Tree</span>
+    <span class="n">DecisionTreeClassifier</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;entropy&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;gini&quot;, &quot;entropy&quot;],</span>
+            <span class="s2">&quot;splitter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;best&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;best&quot;, &quot;random&quot;],</span>
+            <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span>  <span class="c1"># [None, *list(range(1, 11))],</span>
+            <span class="s2">&quot;min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>  <span class="c1"># range(2, 11, 2),</span>
+            <span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>  <span class="c1"># range(2, 11, 2),</span>
+            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+    <span class="c1"># Naive Bayes</span>
+    <span class="n">GaussianNB</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;var_smoothing&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-9</span><span class="p">],</span>  <span class="c1"># [1e-9, 1e-8, 1e-7, 1e-6]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="c1"># Logistic Regression</span>
+    <span class="n">LogisticRegression</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">],</span>  <span class="c1"># [&quot;lbfgs&quot;, &quot;saga&quot;],</span>
+            <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">RANDOM_STATE</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+<span class="p">}</span>
 
 
-gs_scores = pd.DataFrame(get_grid_search_scores()).round(4)
-display(gs_scores)
+<span class="k">def</span> <span class="nf">get_grid_search_scores</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the grid search scores.&quot;&quot;&quot;</span>
+    <span class="n">classifier_score</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;classifier&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="k">for</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">hyperparameters</span> <span class="ow">in</span> <span class="n">classifier_hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">gs_classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+            <span class="n">classifier</span><span class="p">(),</span> <span class="n">hyperparameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">gs_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">classifier_score</span><span class="p">[</span><span class="s2">&quot;classifier&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classifier</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">classifier_score</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">classifier_score</span>
+
+
+<span class="n">gs_scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">get_grid_search_scores</span><span class="p">())</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">gs_scores</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1895,73 +1895,73 @@ classification process as done previously.</p>
 current results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">cache</span> -ns predicting_students_final_exam_outcome scores
-def get_train_test_assessments_by_day(day):
-    &quot;&quot;&quot;Returns the train/test feature table filtered by date.&quot;&quot;&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns predicting_students_final_exam_outcome scores
+<span class="k">def</span> <span class="nf">get_train_test_assessments_by_day</span><span class="p">(</span><span class="n">day</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the train/test feature table filtered by date.&quot;&quot;&quot;</span>
 
-    filtered_feature_table = pd.concat(
-        [get_feature_table(day), get_feature_table(day, code_presentation=&quot;2014B&quot;)]
-    )
-    filtered_feature_table = fill_nas(filtered_feature_table)
-    return normalized_train_test_split(filtered_feature_table)
-
-
-def get_scores_by_assessment_date():
-    &quot;&quot;&quot;Returns a DataFrame with f1 prediction scores for each classifier.&quot;&quot;&quot;
-    # pylint: disable=too-many-locals
-    result = {}
-    # We select the date such that both courses include the same amount of assessments
-    # after the filter.
-    for day in [25, 53, 88, 123, 165, 207]:
-        result[day] = []
-        x_train_, x_test_, y_train_, y_test_ = get_train_test_assessments_by_day(day)
-        train_predictions = []
-        predictions = []
-        estimators = []
-        for classifier, hyperparameters in classifier_hyperparameters.items():
-            gs_classifier = GridSearchCV(
-                classifier(), hyperparameters, scoring=&quot;f1&quot;, n_jobs=-1
-            )
-            gs_classifier.fit(x_train_, y_train_)
-            estimators.append((classifier.__name__, gs_classifier))
-            predictions.append(gs_classifier.predict(x_test_))
-            train_predictions.append(gs_classifier.predict(x_train_))
-            result[day].append(round(f1_score(y_test_, predictions[-1]), 4))
-
-        # Voting Classifier
-        voting = VotingClassifier(estimators=estimators, voting=&quot;soft&quot;)
-        voting.fit(x_train_, y_train_)
-        result[day].append(round(f1_score(y_test_, voting.predict(x_test_)), 4))
-
-        # Searching for the best merging_threshold.
-        max_score = 0
-        multicons = None
-        for merging_threshold in np.arange(0, 1, 0.05):
-            consensus = MultiCons(
-                similarity_measure=&quot;JaccardIndex&quot;,
-                optimize_label_names=True,
-                consensus_function=&quot;consensus_function_12&quot;,
-                merging_threshold=merging_threshold,
-            ).fit(train_predictions)
-            score = f1_score(y_train_, consensus.labels_.astype(bool))
-            if score &gt; max_score:
-                max_score = score
-                multicons = consensus
-
-        result[day].append(
-            round(f1_score(y_test_, multicons.fit(predictions).labels_.astype(bool)), 4)
-        )
-
-    return pd.DataFrame(
-        result,
-        index=[clf.__name__ for clf in classifier_hyperparameters]
-        + [&quot;Voting&quot;, &quot;MultiCons&quot;],
-    )
+    <span class="n">filtered_feature_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">get_feature_table</span><span class="p">(</span><span class="n">day</span><span class="p">),</span> <span class="n">get_feature_table</span><span class="p">(</span><span class="n">day</span><span class="p">,</span> <span class="n">code_presentation</span><span class="o">=</span><span class="s2">&quot;2014B&quot;</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">filtered_feature_table</span> <span class="o">=</span> <span class="n">fill_nas</span><span class="p">(</span><span class="n">filtered_feature_table</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">normalized_train_test_split</span><span class="p">(</span><span class="n">filtered_feature_table</span><span class="p">)</span>
 
 
-scores = get_scores_by_assessment_date()
-display(Markdown(&quot;F1 score at different points in time:&quot;))
-display(scores)
+<span class="k">def</span> <span class="nf">get_scores_by_assessment_date</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a DataFrame with f1 prediction scores for each classifier.&quot;&quot;&quot;</span>
+    <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># We select the date such that both courses include the same amount of assessments</span>
+    <span class="c1"># after the filter.</span>
+    <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">207</span><span class="p">]:</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">day</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">x_train_</span><span class="p">,</span> <span class="n">x_test_</span><span class="p">,</span> <span class="n">y_train_</span><span class="p">,</span> <span class="n">y_test_</span> <span class="o">=</span> <span class="n">get_train_test_assessments_by_day</span><span class="p">(</span><span class="n">day</span><span class="p">)</span>
+        <span class="n">train_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">estimators</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">hyperparameters</span> <span class="ow">in</span> <span class="n">classifier_hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">gs_classifier</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+                <span class="n">classifier</span><span class="p">(),</span> <span class="n">hyperparameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="n">gs_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train_</span><span class="p">,</span> <span class="n">y_train_</span><span class="p">)</span>
+            <span class="n">estimators</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">classifier</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">gs_classifier</span><span class="p">))</span>
+            <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test_</span><span class="p">))</span>
+            <span class="n">train_predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gs_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train_</span><span class="p">))</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">day</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">f1_score</span><span class="p">(</span><span class="n">y_test_</span><span class="p">,</span> <span class="n">predictions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+
+        <span class="c1"># Voting Classifier</span>
+        <span class="n">voting</span> <span class="o">=</span> <span class="n">VotingClassifier</span><span class="p">(</span><span class="n">estimators</span><span class="o">=</span><span class="n">estimators</span><span class="p">,</span> <span class="n">voting</span><span class="o">=</span><span class="s2">&quot;soft&quot;</span><span class="p">)</span>
+        <span class="n">voting</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train_</span><span class="p">,</span> <span class="n">y_train_</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">day</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">f1_score</span><span class="p">(</span><span class="n">y_test_</span><span class="p">,</span> <span class="n">voting</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test_</span><span class="p">)),</span> <span class="mi">4</span><span class="p">))</span>
+
+        <span class="c1"># Searching for the best merging_threshold.</span>
+        <span class="n">max_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">multicons</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">merging_threshold</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">):</span>
+            <span class="n">consensus</span> <span class="o">=</span> <span class="n">MultiCons</span><span class="p">(</span>
+                <span class="n">similarity_measure</span><span class="o">=</span><span class="s2">&quot;JaccardIndex&quot;</span><span class="p">,</span>
+                <span class="n">optimize_label_names</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">consensus_function</span><span class="o">=</span><span class="s2">&quot;consensus_function_12&quot;</span><span class="p">,</span>
+                <span class="n">merging_threshold</span><span class="o">=</span><span class="n">merging_threshold</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_predictions</span><span class="p">)</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_train_</span><span class="p">,</span> <span class="n">consensus</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">max_score</span><span class="p">:</span>
+                <span class="n">max_score</span> <span class="o">=</span> <span class="n">score</span>
+                <span class="n">multicons</span> <span class="o">=</span> <span class="n">consensus</span>
+
+        <span class="n">result</span><span class="p">[</span><span class="n">day</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="nb">round</span><span class="p">(</span><span class="n">f1_score</span><span class="p">(</span><span class="n">y_test_</span><span class="p">,</span> <span class="n">multicons</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)),</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">result</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">clf</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">clf</span> <span class="ow">in</span> <span class="n">classifier_hyperparameters</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Voting&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiCons&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">get_scores_by_assessment_date</span><span class="p">()</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="s2">&quot;F1 score at different points in time:&quot;</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
