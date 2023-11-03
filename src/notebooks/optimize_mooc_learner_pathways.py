@@ -48,7 +48,7 @@ from multicons import MultiCons
 
 from oulad import filter_by_module_presentation, get_oulad
 
-# %load_ext oulad.cache
+# %load_ext oulad.capture
 
 # %% [markdown]
 # ## Preparing the dataset
@@ -61,7 +61,7 @@ from oulad import filter_by_module_presentation, get_oulad
 # ### Loading OULAD
 
 # %%
-# %%cache oulad
+# %%capture oulad
 oulad = get_oulad()
 
 # %% [markdown]
@@ -82,7 +82,7 @@ CODE_PRESENTATION = "2013J"
 # session.
 
 # %%
-# %%cache -ns optimize_mooc_learner_pathways student_registration student_item
+# %%capture -ns optimize_mooc_learner_pathways student_registration student_item
 student_registration = (
     filter_by_module_presentation(
         oulad.student_registration, CODE_MODULE, CODE_PRESENTATION
@@ -199,7 +199,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 # recommendations.
 
 # %%
-# %%cache -ns optimize_mooc_learner_pathways gs_classifier
+# %%capture -ns optimize_mooc_learner_pathways gs_classifier
 # Hyperparameter search space
 hyperparameters = {
     "criterion": ["gini"],  # ["gini", "entropy", "log_loss"],
@@ -249,7 +249,7 @@ display(
 # Consensus algorithm.
 
 # %%
-# %%cache -ns optimize_mooc_learner_pathways base_clusterings consensus
+# %%capture -ns optimize_mooc_learner_pathways base_clusterings consensus
 base_clusterings = [
     KMeans(
         n_clusters=18, max_iter=4000, n_init="auto", random_state=RANDOM_STATE
@@ -302,7 +302,7 @@ display(
 
 
 # %%
-# %%cache -ns optimize_mooc_learner_pathways recommenders_mc
+# %%capture -ns optimize_mooc_learner_pathways recommenders_mc
 def get_trained_recommenders(labels, algo, parameters) -> dict:
     """Returns a dictionary of trained recommenders by label."""
     recommenders = {}
@@ -336,7 +336,7 @@ recommenders_mc = get_trained_recommenders(consensus.labels_, KNNWithMeans, para
 
 
 # %%
-# %%cache -ns optimize_mooc_learner_pathways results_mc
+# %%capture -ns optimize_mooc_learner_pathways results_mc
 def get_recommendation_results(labels, recommenders):
     """Returns the percentages of succeeding students by recommendation count."""
     final_result_predictions = []
@@ -390,7 +390,7 @@ display(recommendation_improvement_rate_mc_cf_df)
 # collaborative filtering on the full dataset.
 
 # %%
-# %%cache -ns optimize_mooc_learner_pathways recommenders_cf results_cf
+# %%capture -ns optimize_mooc_learner_pathways recommenders_cf results_cf
 single_cluster = np.zeros(student_profile.shape[0])
 recommenders_cf = get_trained_recommenders(single_cluster, KNNWithMeans, param_grid)
 results_cf = get_recommendation_results(single_cluster, recommenders_cf)

@@ -54,10 +54,10 @@ from scipy.stats import levene, norm, probplot, ranksums, shapiro
 
 from oulad import get_oulad
 
-# %load_ext oulad.cache
+# %load_ext oulad.capture
 
 # %%
-# %%cache oulad
+# %%capture oulad
 oulad = get_oulad()
 
 # %% [markdown]
