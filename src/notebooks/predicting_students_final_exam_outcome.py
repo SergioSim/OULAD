@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.1
+#       jupytext_version: 1.15.2
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -96,7 +96,7 @@ def get_feature_table(max_date=500, code_presentation="2013J"):
         )
         # Sum scores by date.
         .groupby(["id_student", "date"])
-        .agg(np.sum)
+        .agg("sum")
         .reset_index()
         # Reshape the vle table.
         .pivot(index="id_student", columns="date", values="sum_click")
