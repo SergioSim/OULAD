@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.1
+#       jupytext_version: 1.15.2
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -194,10 +194,10 @@ for arr in cumulative_weighted_assessment_score.hist(figsize=(12, 6)):
         scores = cumulative_weighted_assessment_score[float(ax.title.get_text())]
         ax = ax.twinx()
         scores.plot(kind="kde", legend=False, ax=ax, color="red")
-        ax.set_xlim(*scores.agg([np.min, np.max]).values)
+        ax.set_xlim(*scores.agg(["min", "max"]).values)
         x = np.linspace(*ax.get_xlim(), 100)
         y = norm.pdf(
-            x, **scores.agg([np.mean, np.std]).set_axis(["loc", "scale"]).to_dict()
+            x, **scores.agg(["mean", "std"]).set_axis(["loc", "scale"]).to_dict()
         )
         ax.plot(x, y, color="green")
 
@@ -407,7 +407,7 @@ mean_and_quartiles = (
     cumulative_weighted_assessment_score.groupby("final_result")
     .agg(
         [
-            ("mean", np.mean),
+            ("mean", "mean"),
             ("first_quartile", lambda x: np.percentile(x, 25)),
             ("third_quartile", lambda x: np.percentile(x, 75)),
         ]
@@ -456,7 +456,7 @@ mean_and_quartiles = (
     cumulative_weighted_assessment_score.groupby("final_result")
     .agg(
         [
-            ("mean", np.mean),
+            ("mean", "mean"),
             ("first_quartile", lambda x: np.percentile(x, 0)),
             ("third_quartile", lambda x: np.percentile(x, 100)),
         ]
@@ -509,7 +509,7 @@ cumulative_click_count = (
         on="id_student",
     )
     .groupby(["id_student", "date"])
-    .agg(np.sum)
+    .agg("sum")
     .join(
         oulad.student_info[
             (oulad.student_info.code_module == "EEE")
@@ -700,7 +700,7 @@ mean_and_quartiles = (
     cumulative_click_count.groupby("final_result")
     .agg(
         [
-            ("mean", np.mean),
+            ("mean", "mean"),
             ("first_quartile", lambda x: np.percentile(x, 25)),
             ("third_quartile", lambda x: np.percentile(x, 75)),
         ]
