@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Withdrawal prediction on behavioral indicators &#8212; Analysis of the OULAD dataset</title>
   
@@ -15,60 +14,61 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/withdrawal_prediction_on_behavioral_indicators';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Detecting at-risk students" href="detecting_at_risk_students.html" />
     <link rel="prev" title="Time series classification for dropout prediction" href="time_series_classification_for_dropout_prediction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -76,23 +76,16 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+  <div id="pst-scroll-pixel-helper"></div>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
   
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -100,7 +93,6 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -108,16 +100,25 @@ const thebe_selector_output = ".output, .cell_output"
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -130,6 +131,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
+  
+    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -138,10 +142,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     <p class="title logo__title">Analysis of the OULAD dataset</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -175,7 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -184,14 +196,14 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -313,26 +325,20 @@ const thebe_selector_output = ".output, .cell_output"
 </button>
 
 
-<script>
-document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
-  </button>
-`);
-</script>
 
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -388,10 +394,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="withdrawal-prediction-on-behavioral-indicators">
-<h1>Withdrawal prediction on behavioral indicators<a class="headerlink" href="#withdrawal-prediction-on-behavioral-indicators" title="Permalink to this heading">#</a></h1>
+<h1>Withdrawal prediction on behavioral indicators<a class="headerlink" href="#withdrawal-prediction-on-behavioral-indicators" title="Link to this heading">#</a></h1>
 <p>In this section, we try to reproduce the withdrawal prediction approach based on
 behavioral indicators and Synthetic Minority Over-sampling (SMOTE) as presented in
 the work of Hlioui et al. <span id="id1">[<a class="reference internal" href="#id6" title="Fedia Hlioui, Nadia Aloui, and Faiez Gargouri. A withdrawal prediction model of at-risk learners based on behavioural indicators. International Journal of Web-Based Learning and Teaching Technologies, 16(2):32–53, 2021. doi:10.4018/ijwltt.2021030103.">HAG21</a>]</span>.</p>
@@ -407,11 +413,12 @@ and empower learners to monitor and enhance their academic performance.</p>
 <li><p>Withdrawal prediction</p></li>
 </ol>
 <div class="docutils container" id="id2">
-<dl class="citation">
-<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id1">HAG21</a></span></dt>
-<dd><p>Fedia Hlioui, Nadia Aloui, and Faiez Gargouri. A withdrawal prediction model of at-risk learners based on behavioural indicators. <em>International Journal of Web-Based Learning and Teaching Technologies</em>, 16(2):32–53, 2021. <a class="reference external" href="https://doi.org/10.4018/ijwltt.2021030103">doi:10.4018/ijwltt.2021030103</a>.</p>
-</dd>
-</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="id6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">HAG21</a><span class="fn-bracket">]</span></span>
+<p>Fedia Hlioui, Nadia Aloui, and Faiez Gargouri. A withdrawal prediction model of at-risk learners based on behavioural indicators. <em>International Journal of Web-Based Learning and Teaching Technologies</em>, 16(2):32–53, 2021. <a class="reference external" href="https://doi.org/10.4018/ijwltt.2021030103">doi:10.4018/ijwltt.2021030103</a>.</p>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -446,7 +453,7 @@ and empower learners to monitor and enhance their academic performance.</p>
 </div>
 </div>
 <section id="data-preprocessing">
-<h2>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this heading">#</a></h2>
+<h2>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h2>
 <p>As in the work of Hlioui et al., we use the data from the <code class="docutils literal notranslate"><span class="pre">DDD</span></code> course <code class="docutils literal notranslate"><span class="pre">2013B</span></code>
 presentation.
 We start by extracting three tables containing data related to student demographics,
@@ -460,7 +467,7 @@ student assessments and student course interactions.</p>
 </div>
 </div>
 <section id="student-demographics-table">
-<h3>Student demographics table<a class="headerlink" href="#student-demographics-table" title="Permalink to this heading">#</a></h3>
+<h3>Student demographics table<a class="headerlink" href="#student-demographics-table" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">student_info</span> <span class="o">=</span> <span class="n">filter_by_module_presentation</span><span class="p">(</span>
@@ -628,7 +635,7 @@ student assessments and student course interactions.</p>
 </div>
 </section>
 <section id="student-assessments-table">
-<h3>Student assessments table<a class="headerlink" href="#student-assessments-table" title="Permalink to this heading">#</a></h3>
+<h3>Student assessments table<a class="headerlink" href="#student-assessments-table" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">assessments</span> <span class="o">=</span> <span class="n">filter_by_module_presentation</span><span class="p">(</span><span class="n">oulad</span><span class="o">.</span><span class="n">assessments</span><span class="p">,</span> <span class="n">MODULE</span><span class="p">,</span> <span class="n">PRESENTATION</span><span class="p">)</span>
@@ -761,7 +768,7 @@ student assessments and student course interactions.</p>
 </div>
 </section>
 <section id="student-course-interactions-table">
-<h3>Student course interactions table<a class="headerlink" href="#student-course-interactions-table" title="Permalink to this heading">#</a></h3>
+<h3>Student course interactions table<a class="headerlink" href="#student-course-interactions-table" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns withdrawal_prediction_on_behavioral_indicators student_vle
@@ -807,27 +814,27 @@ student assessments and student course interactions.</p>
     </tr>
     <tr>
       <th>1</th>
-      <td>420388</td>
-      <td>2</td>
-      <td>page</td>
+      <td>430516</td>
+      <td>6</td>
+      <td>homepage</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>423386</td>
-      <td>1</td>
-      <td>page</td>
+      <td>430516</td>
+      <td>2</td>
+      <td>url</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>409109</td>
+      <td>420388</td>
       <td>1</td>
-      <td>page</td>
+      <td>url</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>426137</td>
-      <td>1</td>
-      <td>page</td>
+      <td>420388</td>
+      <td>3</td>
+      <td>homepage</td>
     </tr>
     <tr>
       <th>...</th>
@@ -837,33 +844,33 @@ student assessments and student course interactions.</p>
     </tr>
     <tr>
       <th>536832</th>
-      <td>531202</td>
-      <td>1</td>
-      <td>url</td>
+      <td>536170</td>
+      <td>2</td>
+      <td>resource</td>
     </tr>
     <tr>
       <th>536833</th>
-      <td>531202</td>
+      <td>536926</td>
       <td>1</td>
-      <td>url</td>
+      <td>homepage</td>
     </tr>
     <tr>
       <th>536834</th>
-      <td>560381</td>
-      <td>1</td>
-      <td>url</td>
+      <td>556295</td>
+      <td>3</td>
+      <td>homepage</td>
     </tr>
     <tr>
       <th>536835</th>
-      <td>503497</td>
+      <td>556780</td>
       <td>1</td>
-      <td>url</td>
+      <td>homepage</td>
     </tr>
     <tr>
       <th>536836</th>
-      <td>547349</td>
-      <td>1</td>
-      <td>url</td>
+      <td>556918</td>
+      <td>2</td>
+      <td>homepage</td>
     </tr>
   </tbody>
 </table>
@@ -872,7 +879,7 @@ student assessments and student course interactions.</p>
 </div>
 </section>
 <section id="distribution-of-learners-results-in-the-course-ddd2013b">
-<h3>Distribution of learners’ results in the course DDD2013B<a class="headerlink" href="#distribution-of-learners-results-in-the-course-ddd2013b" title="Permalink to this heading">#</a></h3>
+<h3>Distribution of learners’ results in the course DDD2013B<a class="headerlink" href="#distribution-of-learners-results-in-the-course-ddd2013b" title="Link to this heading">#</a></h3>
 <p>Next, we reproduce the pie chart from the paper of Hlioui et al. (Figure 3)
 which reveals class imbalance of student final outcome in the <code class="docutils literal notranslate"><span class="pre">DDD2013B</span></code> course
 presentation.</p>
@@ -917,17 +924,17 @@ SMOTE method subsequent to the extraction of behavioral indicators.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/048f8b5bb7f7775a28d27effbca10a07ac925e99bbcfbdb02bfe81ac3517b65d.png" src="../_images/048f8b5bb7f7775a28d27effbca10a07ac925e99bbcfbdb02bfe81ac3517b65d.png" />
+<img alt="../_images/5b98b98eacba621b9cfa74191764374066ce2ea4bb3b3d76830d836f88f5c7c9.png" src="../_images/5b98b98eacba621b9cfa74191764374066ce2ea4bb3b3d76830d836f88f5c7c9.png" />
 </div>
 </div>
 </section>
 </section>
 <section id="behavioral-indicators-extraction">
-<h2>Behavioral indicators extraction<a class="headerlink" href="#behavioral-indicators-extraction" title="Permalink to this heading">#</a></h2>
+<h2>Behavioral indicators extraction<a class="headerlink" href="#behavioral-indicators-extraction" title="Link to this heading">#</a></h2>
 <p>At this stage we extract behavioral indicators as described in the work of Hlioui et
 al.</p>
 <section id="autonomy">
-<h3>Autonomy<a class="headerlink" href="#autonomy" title="Permalink to this heading">#</a></h3>
+<h3>Autonomy<a class="headerlink" href="#autonomy" title="Link to this heading">#</a></h3>
 <p>The autonomy indicator refers to the navigation frequency of learners within the
 virtual learning environment (VLE).</p>
 <div class="cell docutils container">
@@ -1020,7 +1027,7 @@ virtual learning environment (VLE).</p>
 </div>
 </section>
 <section id="perseverance">
-<h3>Perseverance<a class="headerlink" href="#perseverance" title="Permalink to this heading">#</a></h3>
+<h3>Perseverance<a class="headerlink" href="#perseverance" title="Link to this heading">#</a></h3>
 <p>The perseverance indicator refers to the ratio of evaluations submitted on time by
 the learners.</p>
 <div class="cell docutils container">
@@ -1114,7 +1121,7 @@ the learners.</p>
 </div>
 </section>
 <section id="commitment-indicators">
-<h3>Commitment indicators<a class="headerlink" href="#commitment-indicators" title="Permalink to this heading">#</a></h3>
+<h3>Commitment indicators<a class="headerlink" href="#commitment-indicators" title="Link to this heading">#</a></h3>
 <p>Commitment indicators aim to measure the level and type of involvement of learners.
 In the work of Hlioui et al. they refer to the total sum of clicks (interactions)
 made by learners on several related activity types (activity categories).</p>
@@ -1130,12 +1137,12 @@ interactions by activity type within the DDD2013B course.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e5a3b506c18071a1c226ef3b9827633afab2166da309a02a3bf83308f6b6fcc4.png" src="../_images/e5a3b506c18071a1c226ef3b9827633afab2166da309a02a3bf83308f6b6fcc4.png" />
+<img alt="../_images/6ec0c18da25634a0da1a3fd1f7d5dfb8b4c96e5032cfadb31521c548fc0388c0.png" src="../_images/6ec0c18da25634a0da1a3fd1f7d5dfb8b4c96e5032cfadb31521c548fc0388c0.png" />
 </div>
 </div>
 </section>
 <section id="collaborative-commitment">
-<h3>Collaborative commitment<a class="headerlink" href="#collaborative-commitment" title="Permalink to this heading">#</a></h3>
+<h3>Collaborative commitment<a class="headerlink" href="#collaborative-commitment" title="Link to this heading">#</a></h3>
 <p>The collaborative commitment indicator refers to the sum of clicks learners made on
 activities of type <code class="docutils literal notranslate"><span class="pre">forumng</span></code>, <code class="docutils literal notranslate"><span class="pre">ouwiki</span></code>, and <code class="docutils literal notranslate"><span class="pre">ouelluminate</span></code>.</p>
 <div class="cell docutils container">
@@ -1229,7 +1236,7 @@ activities of type <code class="docutils literal notranslate"><span class="pre">
 </div>
 </section>
 <section id="course-structure-commitment">
-<h3>Course structure commitment<a class="headerlink" href="#course-structure-commitment" title="Permalink to this heading">#</a></h3>
+<h3>Course structure commitment<a class="headerlink" href="#course-structure-commitment" title="Link to this heading">#</a></h3>
 <p>The course structure commitment indicator refers to the sum of clicks learners made on
 activities of type <code class="docutils literal notranslate"><span class="pre">homepage</span></code> and <code class="docutils literal notranslate"><span class="pre">glossary</span></code>.</p>
 <div class="cell docutils container">
@@ -1323,7 +1330,7 @@ activities of type <code class="docutils literal notranslate"><span class="pre">
 </div>
 </section>
 <section id="course-content-commitment">
-<h3>Course content commitment<a class="headerlink" href="#course-content-commitment" title="Permalink to this heading">#</a></h3>
+<h3>Course content commitment<a class="headerlink" href="#course-content-commitment" title="Link to this heading">#</a></h3>
 <p>The course content commitment indicator refers to the sum of clicks learners made on
 activities of type <code class="docutils literal notranslate"><span class="pre">resource</span></code>, <code class="docutils literal notranslate"><span class="pre">url</span></code>, <code class="docutils literal notranslate"><span class="pre">oucontent</span></code>, <code class="docutils literal notranslate"><span class="pre">page</span></code>, and <code class="docutils literal notranslate"><span class="pre">subpage</span></code>.</p>
 <div class="cell docutils container">
@@ -1419,7 +1426,7 @@ activities of type <code class="docutils literal notranslate"><span class="pre">
 </div>
 </section>
 <section id="evaluation-activities-commitment">
-<h3>Evaluation activities commitment<a class="headerlink" href="#evaluation-activities-commitment" title="Permalink to this heading">#</a></h3>
+<h3>Evaluation activities commitment<a class="headerlink" href="#evaluation-activities-commitment" title="Link to this heading">#</a></h3>
 <p>The evaluation activities commitment indicator refers to the sum of clicks learners
 made on activities of type <code class="docutils literal notranslate"><span class="pre">extenalquiz</span></code>.</p>
 <div class="cell docutils container">
@@ -1513,7 +1520,7 @@ made on activities of type <code class="docutils literal notranslate"><span clas
 </div>
 </section>
 <section id="motivation">
-<h3>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h3>
+<h3>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h3>
 <p>The motivation indicator measures whether a learners’ sum of clicks on all activities
 is above average (motivated) or below (unmotivated).</p>
 <div class="cell docutils container">
@@ -1609,7 +1616,7 @@ is above average (motivated) or below (unmotivated).</p>
 </section>
 </section>
 <section id="performance">
-<h2>Performance<a class="headerlink" href="#performance" title="Permalink to this heading">#</a></h2>
+<h2>Performance<a class="headerlink" href="#performance" title="Link to this heading">#</a></h2>
 <p>The performance indicator refers to the sum of weighted assessment scores by learner.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1701,13 +1708,13 @@ is above average (motivated) or below (unmotivated).</p>
 </div>
 </section>
 <section id="k-means-based-data-discretizing">
-<h2>K-Means-based data discretizing<a class="headerlink" href="#k-means-based-data-discretizing" title="Permalink to this heading">#</a></h2>
+<h2>K-Means-based data discretizing<a class="headerlink" href="#k-means-based-data-discretizing" title="Link to this heading">#</a></h2>
 <p>At this stage, we discretize the generated indicators using the K-Means clustering
 method.
 We begin by estimating the ‘k’ parameter through the elbow method and then replace
 the indicators’ values with their corresponding clustering labels.</p>
 <section id="elbow-method">
-<h3>Elbow method<a class="headerlink" href="#elbow-method" title="Permalink to this heading">#</a></h3>
+<h3>Elbow method<a class="headerlink" href="#elbow-method" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns withdrawal_prediction_on_behavioral_indicators inertia
@@ -1746,12 +1753,12 @@ the indicators’ values with their corresponding clustering labels.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/53a60054ed3f4fd7d802f8fa66d07e48db02ad2303a69c7f8a03c181e60dede8.png" src="../_images/53a60054ed3f4fd7d802f8fa66d07e48db02ad2303a69c7f8a03c181e60dede8.png" />
+<img alt="../_images/8625d8ddfb2ef6f169fd5dcac527f85b227db139d4221180f7ad88e34d88179a.png" src="../_images/8625d8ddfb2ef6f169fd5dcac527f85b227db139d4221180f7ad88e34d88179a.png" />
 </div>
 </div>
 </section>
 <section id="discretization">
-<h3>Discretization<a class="headerlink" href="#discretization" title="Permalink to this heading">#</a></h3>
+<h3>Discretization<a class="headerlink" href="#discretization" title="Link to this heading">#</a></h3>
 <p>We obtain similar graphs as in the work of Hlioui et al.
 Thus, we proceed by setting the same <code class="docutils literal notranslate"><span class="pre">k</span></code> values.</p>
 <div class="cell docutils container">
@@ -1775,7 +1782,7 @@ Thus, we proceed by setting the same <code class="docutils literal notranslate">
 </div>
 </section>
 <section id="feature-table">
-<h3>Feature table<a class="headerlink" href="#feature-table" title="Permalink to this heading">#</a></h3>
+<h3>Feature table<a class="headerlink" href="#feature-table" title="Link to this heading">#</a></h3>
 <p>We join the student demographics table with the discretized behavioral
 indicators into a single <code class="docutils literal notranslate"><span class="pre">feature_table</span></code>.</p>
 <p>We also encode categorical columns (<code class="docutils literal notranslate"><span class="pre">age_band</span></code>, <code class="docutils literal notranslate"><span class="pre">disability</span></code>, <code class="docutils literal notranslate"><span class="pre">gender</span></code>,
@@ -1790,21 +1797,21 @@ missing values with zeros.</p>
     <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="o">.</span><span class="n">replace</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;0-35&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;35-55&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;55&lt;=&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
-            <span class="s2">&quot;disability&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
-            <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+            <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;0-35&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;35-55&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span> <span class="s2">&quot;55&lt;=&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;disability&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
             <span class="s2">&quot;highest_education&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;No Formal quals&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;Lower Than A Level&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
-                <span class="s2">&quot;A Level or Equivalent&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                <span class="s2">&quot;HE Qualification&quot;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
-                <span class="s2">&quot;Post Graduate Qualification&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;No Formal quals&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Lower Than A Level&quot;</span><span class="p">:</span> <span class="s2">&quot;0.25&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;A Level or Equivalent&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;HE Qualification&quot;</span><span class="p">:</span> <span class="s2">&quot;0.75&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Post Graduate Qualification&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="s2">&quot;final_result&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;Withdrawn&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-                <span class="s2">&quot;Fail&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;Pass&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;Distinction&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;Withdrawn&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Fail&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Pass&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Distinction&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">}</span>
     <span class="p">)</span>
@@ -1898,13 +1905,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>41060</th>
@@ -1922,7 +1929,7 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>2.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>43284</th>
@@ -1934,13 +1941,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>2.0</td>
-      <td>0.0</td>
-      <td>2.0</td>
+      <td>1.0</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>45664</th>
@@ -1952,13 +1959,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.0</td>
-      <td>2.0</td>
       <td>0.0</td>
-      <td>2.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1988,13 +1995,13 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
+      <td>2.0</td>
     </tr>
     <tr>
       <th>2694933</th>
@@ -2007,12 +2014,12 @@ missing values with zeros.</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>2.0</td>
-      <td>2.0</td>
-      <td>0.0</td>
-      <td>2.0</td>
       <td>1.0</td>
       <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
       <td>0.0</td>
+      <td>2.0</td>
     </tr>
     <tr>
       <th>2697773</th>
@@ -2076,7 +2083,7 @@ missing values with zeros.</p>
 </section>
 </section>
 <section id="withdrawal-prediction">
-<h2>Withdrawal prediction<a class="headerlink" href="#withdrawal-prediction" title="Permalink to this heading">#</a></h2>
+<h2>Withdrawal prediction<a class="headerlink" href="#withdrawal-prediction" title="Link to this heading">#</a></h2>
 <p>Prior to training the classification models, we split the <code class="docutils literal notranslate"><span class="pre">feature_table</span></code> into a
 train (75%) and test (25%) set.
 Then we scale features to values between 0 and 1 and apply the SMOTE method to
@@ -2269,38 +2276,38 @@ grid search run to speed up the process.</p>
   <tbody>
     <tr>
       <th>DecisionTreeClassifier</th>
-      <td>0.856478</td>
-      <td>0.692858</td>
-      <td>0.752542</td>
-      <td>0.739130</td>
+      <td>0.839965</td>
+      <td>0.705460</td>
+      <td>0.740458</td>
+      <td>0.726531</td>
     </tr>
     <tr>
       <th>GaussianNB</th>
-      <td>0.823078</td>
-      <td>0.720245</td>
-      <td>0.725275</td>
-      <td>0.722628</td>
+      <td>0.800166</td>
+      <td>0.690658</td>
+      <td>0.683453</td>
+      <td>0.693431</td>
     </tr>
     <tr>
       <th>MLPClassifier</th>
-      <td>0.773464</td>
-      <td>0.638507</td>
-      <td>0.736059</td>
-      <td>0.692641</td>
+      <td>0.833515</td>
+      <td>0.708588</td>
+      <td>0.794007</td>
+      <td>0.737288</td>
     </tr>
     <tr>
       <th>RandomForestClassifier</th>
-      <td>0.856919</td>
-      <td>0.679183</td>
-      <td>0.727941</td>
-      <td>0.689362</td>
+      <td>0.850020</td>
+      <td>0.659298</td>
+      <td>0.733871</td>
+      <td>0.681416</td>
     </tr>
     <tr>
       <th>SVC</th>
-      <td>0.857900</td>
-      <td>0.693843</td>
-      <td>0.756757</td>
-      <td>0.695279</td>
+      <td>0.853157</td>
+      <td>0.698794</td>
+      <td>0.750000</td>
+      <td>0.726531</td>
     </tr>
   </tbody>
 </table>
@@ -2334,11 +2341,10 @@ grid search run to speed up the process.</p>
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer d-print-none">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="time_series_classification_for_dropout_prediction.html"
@@ -2358,17 +2364,16 @@ grid search run to speed up the process.</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -2423,9 +2428,10 @@ By SergioSim
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2024.
       <br/>
     
   </p>
@@ -2449,8 +2455,8 @@ By SergioSim
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>

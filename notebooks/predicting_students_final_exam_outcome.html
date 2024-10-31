@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Predicting student’s final exam outcome &#8212; Analysis of the OULAD dataset</title>
   
@@ -15,60 +14,61 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
-  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/predicting_students_final_exam_outcome';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Optimize MOOC learner pathways" href="optimize_mooc_learner_pathways.html" />
     <link rel="prev" title="Identifying key milestones" href="identifying_key_milestones.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -76,23 +76,16 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+  <div id="pst-scroll-pixel-helper"></div>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
   
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -100,7 +93,6 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -108,16 +100,25 @@ const thebe_selector_output = ".output, .cell_output"
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -130,6 +131,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
+  
+    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -138,10 +142,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     <p class="title logo__title">Analysis of the OULAD dataset</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -175,7 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -184,14 +196,14 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -313,26 +325,20 @@ const thebe_selector_output = ".output, .cell_output"
 </button>
 
 
-<script>
-document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
-  </button>
-`);
-</script>
 
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -375,21 +381,22 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="predicting-student-s-final-exam-outcome">
-<h1>Predicting student’s final exam outcome<a class="headerlink" href="#predicting-student-s-final-exam-outcome" title="Permalink to this heading">#</a></h1>
+<h1>Predicting student’s final exam outcome<a class="headerlink" href="#predicting-student-s-final-exam-outcome" title="Link to this heading">#</a></h1>
 <p>This section aims to predict the <code class="docutils literal notranslate"><span class="pre">student</span> <span class="pre">final</span> <span class="pre">exam</span> <span class="pre">outcome</span></code>
 (Pass (score &gt;= 40) / Fail (score &lt; 40)).
 We try to replicate the machine learning analysis techniques from the work of
 Tomasevic et al. (2020) <span id="id1">[<a class="reference internal" href="#id8" title="Nikola Tomasevic, Nikola Gvozdenovic, and Sanja Vranes. An overview and comparison of supervised data mining techniques for student exam performance prediction. Computers &amp; Education, 143:103676, 2020. URL: https://www.sciencedirect.com/science/article/pii/S0360131519302295, doi:https://doi.org/10.1016/j.compedu.2019.103676.">TGV20</a>]</span>.</p>
 <p><strong>Keywords</strong>: Predicting student outcome</p>
 <div class="docutils container" id="id2">
-<dl class="citation">
-<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id1">TGV20</a></span></dt>
-<dd><p>Nikola Tomasevic, Nikola Gvozdenovic, and Sanja Vranes. An overview and comparison of supervised data mining techniques for student exam performance prediction. <em>Computers &amp; Education</em>, 143:103676, 2020. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0360131519302295">https://www.sciencedirect.com/science/article/pii/S0360131519302295</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.compedu.2019.103676">doi:https://doi.org/10.1016/j.compedu.2019.103676</a>.</p>
-</dd>
-</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="id8" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">TGV20</a><span class="fn-bracket">]</span></span>
+<p>Nikola Tomasevic, Nikola Gvozdenovic, and Sanja Vranes. An overview and comparison of supervised data mining techniques for student exam performance prediction. <em>Computers &amp; Education</em>, 143:103676, 2020. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0360131519302295">https://www.sciencedirect.com/science/article/pii/S0360131519302295</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.compedu.2019.103676">doi:https://doi.org/10.1016/j.compedu.2019.103676</a>.</p>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -425,14 +432,14 @@ Tomasevic et al. (2020) <span id="id1">[<a class="reference internal" href="#id8
 </div>
 </div>
 <section id="preparing-train-test-data">
-<h2>Preparing train/test data<a class="headerlink" href="#preparing-train-test-data" title="Permalink to this heading">#</a></h2>
+<h2>Preparing train/test data<a class="headerlink" href="#preparing-train-test-data" title="Link to this heading">#</a></h2>
 <section id="selecting-features">
-<h3>Selecting features<a class="headerlink" href="#selecting-features" title="Permalink to this heading">#</a></h3>
+<h3>Selecting features<a class="headerlink" href="#selecting-features" title="Link to this heading">#</a></h3>
 <p>In the work of Tomasevic et al. the student data from the <code class="docutils literal notranslate"><span class="pre">DDD</span></code> module of the
 <code class="docutils literal notranslate"><span class="pre">2013J</span></code> and <code class="docutils literal notranslate"><span class="pre">2014B</span></code> presentations combined is used.</p>
 <p>Similarly, we try to select the same seven distinct attributes from the three distinct
 types below:</p>
-<table class="colwidths-auto table">
+<div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>DEMOGRAPHIC</p></th>
 <th class="head"><p>ENGAGEMENT</p></th>
@@ -454,6 +461,7 @@ types below:</p>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> -ns predicting_students_final_exam_outcome feature_table
@@ -480,17 +488,19 @@ types below:</p>
             <span class="p">)</span>
         <span class="p">)</span>
         <span class="c1"># Sum scores by date.</span>
-        <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="s2">&quot;sum&quot;</span><span class="p">)</span>
         <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="c1"># Reshape the vle table.</span>
         <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;sum_click&quot;</span><span class="p">)</span>
         <span class="c1"># Rename columns</span>
         <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
             <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
-                <span class="n">assessment</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;assessment_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_sum_click&quot;</span>
-                <span class="k">if</span> <span class="n">assessment</span><span class="o">.</span><span class="n">assessment_type</span> <span class="o">!=</span> <span class="s2">&quot;Exam&quot;</span>
-                <span class="k">else</span> <span class="s2">&quot;final_exam_sum_click&quot;</span>
+                <span class="n">assessment</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;assessment_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_sum_click&quot;</span>
+                    <span class="k">if</span> <span class="n">assessment</span><span class="o">.</span><span class="n">assessment_type</span> <span class="o">!=</span> <span class="s2">&quot;Exam&quot;</span>
+                    <span class="k">else</span> <span class="s2">&quot;final_exam_sum_click&quot;</span>
+                <span class="p">)</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">assessment</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">assessments</span><span class="o">.</span><span class="n">iterrows</span><span class="p">())</span>
             <span class="p">}</span>
         <span class="p">)</span>
@@ -512,15 +522,23 @@ types below:</p>
         <span class="c1"># Transform gender, age_band and highest_education to numeric values.</span>
         <span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;0-35&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;35-55&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;55&lt;=&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
-                <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+                <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;0-35&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;35-55&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span> <span class="s2">&quot;55&lt;=&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
+                <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
                 <span class="s2">&quot;highest_education&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;No Formal quals&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                    <span class="s2">&quot;Lower Than A Level&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
-                    <span class="s2">&quot;A Level or Equivalent&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                    <span class="s2">&quot;HE Qualification&quot;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
-                    <span class="s2">&quot;Post Graduate Qualification&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                    <span class="s2">&quot;No Formal quals&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Lower Than A Level&quot;</span><span class="p">:</span> <span class="s2">&quot;0.25&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;A Level or Equivalent&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;HE Qualification&quot;</span><span class="p">:</span> <span class="s2">&quot;0.75&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Post Graduate Qualification&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
                 <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="s2">&quot;highest_education&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="s2">&quot;num_of_prev_attempts&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
         <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id_student&quot;</span><span class="p">)</span>
@@ -541,9 +559,11 @@ types below:</p>
             <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;id_student&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;id_assessment&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
             <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
                 <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
-                    <span class="n">id_assessment</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;assessment_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_score&quot;</span>
-                    <span class="k">if</span> <span class="n">assessment</span><span class="o">.</span><span class="n">assessment_type</span> <span class="o">!=</span> <span class="s2">&quot;Exam&quot;</span>
-                    <span class="k">else</span> <span class="s2">&quot;final_exam_score&quot;</span>
+                    <span class="n">id_assessment</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;assessment_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_score&quot;</span>
+                        <span class="k">if</span> <span class="n">assessment</span><span class="o">.</span><span class="n">assessment_type</span> <span class="o">!=</span> <span class="s2">&quot;Exam&quot;</span>
+                        <span class="k">else</span> <span class="s2">&quot;final_exam_score&quot;</span>
+                    <span class="p">)</span>
                     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">id_assessment</span><span class="p">,</span> <span class="n">assessment</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
                         <span class="n">assessments</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
                     <span class="p">)</span>
@@ -626,14 +646,14 @@ types below:</p>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.75</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>Withdrawn</td>
       <td>340.0</td>
       <td>176.0</td>
       <td>90.0</td>
       <td>40.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>93.0</td>
       <td>83.0</td>
       <td>87.0</td>
@@ -647,7 +667,7 @@ types below:</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.25</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>Withdrawn</td>
       <td>43.0</td>
       <td>180.0</td>
@@ -668,14 +688,14 @@ types below:</p>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.25</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>Fail</td>
       <td>301.0</td>
       <td>286.0</td>
       <td>61.0</td>
       <td>118.0</td>
       <td>47.0</td>
-      <td>0.0</td>
+      <td>NaN</td>
       <td>75.0</td>
       <td>73.0</td>
       <td>90.0</td>
@@ -689,7 +709,7 @@ types below:</p>
       <td>0.5</td>
       <td>1.0</td>
       <td>0.75</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>Fail</td>
       <td>127.0</td>
       <td>131.0</td>
@@ -710,7 +730,7 @@ types below:</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.50</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>Pass</td>
       <td>134.0</td>
       <td>78.0</td>
@@ -752,7 +772,7 @@ types below:</p>
       <td>0.5</td>
       <td>1.0</td>
       <td>0.25</td>
-      <td>1</td>
+      <td>1.0</td>
       <td>Pass</td>
       <td>2.0</td>
       <td>28.0</td>
@@ -773,7 +793,7 @@ types below:</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.75</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>Pass</td>
       <td>210.0</td>
       <td>125.0</td>
@@ -794,9 +814,9 @@ types below:</p>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.25</td>
-      <td>3</td>
+      <td>3.0</td>
       <td>Fail</td>
-      <td>0.0</td>
+      <td>NaN</td>
       <td>40.0</td>
       <td>87.0</td>
       <td>1.0</td>
@@ -815,7 +835,7 @@ types below:</p>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.50</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>Fail</td>
       <td>447.0</td>
       <td>158.0</td>
@@ -836,7 +856,7 @@ types below:</p>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.25</td>
-      <td>1</td>
+      <td>1.0</td>
       <td>Fail</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -859,9 +879,9 @@ types below:</p>
 </div>
 </section>
 <section id="pre-processing">
-<h3>Pre-Processing<a class="headerlink" href="#pre-processing" title="Permalink to this heading">#</a></h3>
+<h3>Pre-Processing<a class="headerlink" href="#pre-processing" title="Link to this heading">#</a></h3>
 <section id="handling-nas">
-<h4>Handling NAs<a class="headerlink" href="#handling-nas" title="Permalink to this heading">#</a></h4>
+<h4>Handling NAs<a class="headerlink" href="#handling-nas" title="Link to this heading">#</a></h4>
 <p>We notice many missing values from the <code class="docutils literal notranslate"><span class="pre">final_exam_score</span></code> column in the selected
 feature table.</p>
 <div class="cell docutils container">
@@ -881,14 +901,14 @@ feature table.</p>
 </div>
 </div>
 <p>This is explained in the original OULAD paper of Kuzilek et al.
-<span class="xref myst">[KHZ17]</span>:</p>
+[<a class="reference internal" href="first_descriptive_analysis.html"><span class="doc std std-doc">KHZ17</span></a>]:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Results</span> <span class="n">of</span> <span class="n">the</span> <span class="n">final</span> <span class="n">exam</span> <span class="n">are</span> <span class="n">usually</span> <span class="n">missing</span> <span class="p">(</span><span class="n">since</span> <span class="n">they</span> <span class="n">are</span> <span class="n">scored</span> <span class="ow">and</span> <span class="n">used</span> <span class="k">for</span> <span class="n">the</span>
 <span class="n">final</span> <span class="n">marking</span> <span class="n">immediately</span> <span class="n">at</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">module</span><span class="p">)</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>Therefore we use the <code class="docutils literal notranslate"><span class="pre">final_results</span></code> column to fill the missing final exam
+<p>Therefore, we use the <code class="docutils literal notranslate"><span class="pre">final_results</span></code> column to fill in the missing final exam
 values and then remove the <code class="docutils literal notranslate"><span class="pre">final_results</span></code> column.</p>
-<p>Other columns containing missing values we fill with the value <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
+<p>Other columns containing missing values we fill out with the value <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fill_nas</span><span class="p">(</span><span class="n">feature_table_df</span><span class="p">):</span>
@@ -972,13 +992,13 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>1.0</td>
       <td>0.0</td>
       <td>0.75</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>340.0</td>
       <td>176.0</td>
       <td>90.0</td>
       <td>40.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>-1.0</td>
+      <td>-1.0</td>
       <td>93.0</td>
       <td>83.0</td>
       <td>87.0</td>
@@ -992,7 +1012,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.0</td>
       <td>0.0</td>
       <td>0.25</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>43.0</td>
       <td>180.0</td>
       <td>103.0</td>
@@ -1012,13 +1032,13 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.0</td>
       <td>1.0</td>
       <td>0.25</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>301.0</td>
       <td>286.0</td>
       <td>61.0</td>
       <td>118.0</td>
       <td>47.0</td>
-      <td>0.0</td>
+      <td>-1.0</td>
       <td>75.0</td>
       <td>73.0</td>
       <td>90.0</td>
@@ -1032,7 +1052,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.5</td>
       <td>1.0</td>
       <td>0.75</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>127.0</td>
       <td>131.0</td>
       <td>20.0</td>
@@ -1052,7 +1072,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.0</td>
       <td>0.0</td>
       <td>0.50</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>134.0</td>
       <td>78.0</td>
       <td>40.0</td>
@@ -1092,7 +1112,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.5</td>
       <td>1.0</td>
       <td>0.25</td>
-      <td>1</td>
+      <td>1.0</td>
       <td>2.0</td>
       <td>28.0</td>
       <td>107.0</td>
@@ -1112,7 +1132,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.0</td>
       <td>0.0</td>
       <td>0.75</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>210.0</td>
       <td>125.0</td>
       <td>43.0</td>
@@ -1132,8 +1152,8 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.0</td>
       <td>1.0</td>
       <td>0.25</td>
-      <td>3</td>
-      <td>0.0</td>
+      <td>3.0</td>
+      <td>-1.0</td>
       <td>40.0</td>
       <td>87.0</td>
       <td>1.0</td>
@@ -1152,7 +1172,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.0</td>
       <td>1.0</td>
       <td>0.50</td>
-      <td>0</td>
+      <td>0.0</td>
       <td>447.0</td>
       <td>158.0</td>
       <td>59.0</td>
@@ -1172,7 +1192,7 @@ values and then remove the <code class="docutils literal notranslate"><span clas
       <td>0.0</td>
       <td>0.0</td>
       <td>0.25</td>
-      <td>1</td>
+      <td>1.0</td>
       <td>-1.0</td>
       <td>-1.0</td>
       <td>-1.0</td>
@@ -1194,15 +1214,11 @@ values and then remove the <code class="docutils literal notranslate"><span clas
 </div>
 </section>
 <section id="splitting-train-test-data-and-normalization">
-<h4>Splitting train/test data and Normalization<a class="headerlink" href="#splitting-train-test-data-and-normalization" title="Permalink to this heading">#</a></h4>
+<h4>Splitting train/test data and Normalization<a class="headerlink" href="#splitting-train-test-data-and-normalization" title="Link to this heading">#</a></h4>
 <p>Now we randomly split the feature table rows into a train (80%) and test (20%) table
 and, as in the work of Tomasevic et al., we scale and normalize the selected
 features:</p>
-<table class="table">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
+<div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Feature</p></th>
 <th class="head"><p>Normalization</p></th>
@@ -1240,13 +1256,14 @@ features:</p>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RANDOM_STATE</span> <span class="o">=</span> <span class="mi">0</span>
 
 
 <span class="k">def</span> <span class="nf">normalized_train_test_split</span><span class="p">(</span><span class="n">feature_table_df</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the normalized tain/test split computed from the feature table.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the normalized train/test split computed from the feature table.&quot;&quot;&quot;</span>
     <span class="n">x_train_</span><span class="p">,</span> <span class="n">x_test_</span><span class="p">,</span> <span class="n">y_train_</span><span class="p">,</span> <span class="n">y_test_</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
         <span class="n">feature_table_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;final_exam_score&quot;</span><span class="p">),</span>
         <span class="n">feature_table_df</span><span class="p">[</span><span class="s2">&quot;final_exam_score&quot;</span><span class="p">],</span>
@@ -1423,8 +1440,8 @@ features:</p>
       <td>0.005389</td>
       <td>0.018868</td>
       <td>0.062937</td>
-      <td>0.000363</td>
-      <td>0.000355</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.79</td>
       <td>0.43</td>
       <td>0.66</td>
@@ -1555,7 +1572,7 @@ features:</p>
 </section>
 </section>
 <section id="classification">
-<h2>Classification<a class="headerlink" href="#classification" title="Permalink to this heading">#</a></h2>
+<h2>Classification<a class="headerlink" href="#classification" title="Link to this heading">#</a></h2>
 <p>As in the work of Tomasevic et al., we will compare the classification performances
 for the student final exam pass prediction (score &gt;= 40).</p>
 <p>We use the same models and try to perform a grid search over the same Hyper-parameter
@@ -1704,12 +1721,12 @@ search phase.</p>
     <tr>
       <th>2</th>
       <td>MLPClassifier</td>
-      <td>0.9011</td>
+      <td>0.9014</td>
     </tr>
     <tr>
       <th>3</th>
       <td>DecisionTreeClassifier</td>
-      <td>0.9138</td>
+      <td>0.9154</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1726,7 +1743,7 @@ search phase.</p>
 </div></div></div>
 </div>
 <section id="classification-at-different-points-in-time">
-<h3>Classification at different points in time<a class="headerlink" href="#classification-at-different-points-in-time" title="Permalink to this heading">#</a></h3>
+<h3>Classification at different points in time<a class="headerlink" href="#classification-at-different-points-in-time" title="Link to this heading">#</a></h3>
 <p>Predicting student final exam outcome seems to be more valuable at an early stage of
 the course as it might give instuctors more time to help the students at risk.
 However, predicting early is more challenging as less data is available for the
@@ -1794,19 +1811,19 @@ different moments of the course based on the number of assessments passed.</p>
       <td>10.0</td>
     </tr>
     <tr>
-      <th>89</th>
+      <th>96</th>
       <td>DDD</td>
-      <td>2013J</td>
-      <td>25349</td>
+      <td>2014B</td>
+      <td>25356</td>
       <td>TMA</td>
       <td>53.0</td>
       <td>12.5</td>
     </tr>
     <tr>
-      <th>96</th>
+      <th>89</th>
       <td>DDD</td>
-      <td>2014B</td>
-      <td>25356</td>
+      <td>2013J</td>
+      <td>25349</td>
       <td>TMA</td>
       <td>53.0</td>
       <td>12.5</td>
@@ -2018,8 +2035,8 @@ current results.</p>
       <td>0.7927</td>
       <td>0.8358</td>
       <td>0.8711</td>
-      <td>0.8924</td>
-      <td>0.9011</td>
+      <td>0.8838</td>
+      <td>0.9014</td>
     </tr>
     <tr>
       <th>DecisionTreeClassifier</th>
@@ -2028,43 +2045,43 @@ current results.</p>
       <td>0.8285</td>
       <td>0.8547</td>
       <td>0.8889</td>
-      <td>0.9138</td>
+      <td>0.9154</td>
     </tr>
     <tr>
       <th>GaussianNB</th>
       <td>0.7220</td>
       <td>0.7981</td>
       <td>0.8180</td>
-      <td>0.8591</td>
+      <td>0.8611</td>
       <td>0.8657</td>
       <td>0.8865</td>
     </tr>
     <tr>
       <th>LogisticRegression</th>
       <td>0.7347</td>
-      <td>0.7928</td>
+      <td>0.7941</td>
       <td>0.8319</td>
       <td>0.8746</td>
-      <td>0.8901</td>
+      <td>0.8881</td>
       <td>0.8917</td>
     </tr>
     <tr>
       <th>Voting</th>
-      <td>0.7334</td>
+      <td>0.7313</td>
       <td>0.8000</td>
       <td>0.8295</td>
       <td>0.8709</td>
-      <td>0.8962</td>
-      <td>0.9126</td>
+      <td>0.8977</td>
+      <td>0.9139</td>
     </tr>
     <tr>
       <th>MultiCons</th>
-      <td>0.7452</td>
+      <td>0.7322</td>
       <td>0.7909</td>
-      <td>0.8348</td>
-      <td>0.8814</td>
-      <td>0.8967</td>
-      <td>0.9011</td>
+      <td>0.8262</td>
+      <td>0.8741</td>
+      <td>0.8951</td>
+      <td>0.9033</td>
     </tr>
   </tbody>
 </table>
@@ -2099,11 +2116,10 @@ current results.</p>
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer d-print-none">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="identifying_key_milestones.html"
@@ -2123,17 +2139,16 @@ current results.</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -2175,9 +2190,10 @@ By SergioSim
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2024.
       <br/>
     
   </p>
@@ -2201,8 +2217,8 @@ By SergioSim
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>

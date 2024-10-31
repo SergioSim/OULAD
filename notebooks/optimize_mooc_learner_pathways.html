@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Optimize MOOC learner pathways &#8212; Analysis of the OULAD dataset</title>
   
@@ -15,60 +14,61 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/optimize_mooc_learner_pathways';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Time series classification for dropout prediction" href="time_series_classification_for_dropout_prediction.html" />
     <link rel="prev" title="Predicting student’s final exam outcome" href="predicting_students_final_exam_outcome.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -76,23 +76,16 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+  <div id="pst-scroll-pixel-helper"></div>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
   
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -100,7 +93,6 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -108,16 +100,25 @@ const thebe_selector_output = ".output, .cell_output"
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -130,6 +131,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
+  
+    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -138,10 +142,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     <p class="title logo__title">Analysis of the OULAD dataset</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -175,7 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -184,14 +196,14 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -313,26 +325,20 @@ const thebe_selector_output = ".output, .cell_output"
 </button>
 
 
-<script>
-document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
-  </button>
-`);
-</script>
 
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -380,10 +386,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="optimize-mooc-learner-pathways">
-<h1>Optimize MOOC learner pathways<a class="headerlink" href="#optimize-mooc-learner-pathways" title="Permalink to this heading">#</a></h1>
+<h1>Optimize MOOC learner pathways<a class="headerlink" href="#optimize-mooc-learner-pathways" title="Link to this heading">#</a></h1>
 <p>In this section, we propose a learning item recommendation system based on
 consensus clustering (MultiCons) and collaborative filtering.</p>
 <p>The approach consists of first grouping learners into homogeneous groups based on
@@ -419,7 +425,7 @@ collaborative filtering on the full dataset.</p>
 </div>
 </div>
 <section id="preparing-the-dataset">
-<h2>Preparing the dataset<a class="headerlink" href="#preparing-the-dataset" title="Permalink to this heading">#</a></h2>
+<h2>Preparing the dataset<a class="headerlink" href="#preparing-the-dataset" title="Link to this heading">#</a></h2>
 <p>In this section we:</p>
 <ul class="simple">
 <li><p>Load the OULAD dataset</p></li>
@@ -427,7 +433,7 @@ collaborative filtering on the full dataset.</p>
 <li><p>Prepare the student interaction and student profile feature tables</p></li>
 </ul>
 <section id="loading-oulad">
-<h3>Loading OULAD<a class="headerlink" href="#loading-oulad" title="Permalink to this heading">#</a></h3>
+<h3>Loading OULAD<a class="headerlink" href="#loading-oulad" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> oulad
@@ -438,7 +444,7 @@ collaborative filtering on the full dataset.</p>
 </div>
 </section>
 <section id="selecting-one-course-session">
-<h3>Selecting one course session<a class="headerlink" href="#selecting-one-course-session" title="Permalink to this heading">#</a></h3>
+<h3>Selecting one course session<a class="headerlink" href="#selecting-one-course-session" title="Link to this heading">#</a></h3>
 <p>We start by selecting one OULAD course session.</p>
 <p>We choose the <code class="docutils literal notranslate"><span class="pre">BBB</span></code> course from the <code class="docutils literal notranslate"><span class="pre">2013J</span></code> session.</p>
 <div class="cell docutils container">
@@ -450,7 +456,7 @@ collaborative filtering on the full dataset.</p>
 </div>
 </div>
 <section id="the-student-item-table">
-<h4>The <code class="docutils literal notranslate"><span class="pre">student_item</span></code> table<a class="headerlink" href="#the-student-item-table" title="Permalink to this heading">#</a></h4>
+<h4>The <code class="docutils literal notranslate"><span class="pre">student_item</span></code> table<a class="headerlink" href="#the-student-item-table" title="Link to this heading">#</a></h4>
 <p>It represents all student interactions with course items of the selected course
 session.</p>
 <div class="cell docutils container">
@@ -582,7 +588,7 @@ session.</p>
 </div>
 </section>
 <section id="the-student-profile-table">
-<h4>The <code class="docutils literal notranslate"><span class="pre">student_profile</span></code> table<a class="headerlink" href="#the-student-profile-table" title="Permalink to this heading">#</a></h4>
+<h4>The <code class="docutils literal notranslate"><span class="pre">student_profile</span></code> table<a class="headerlink" href="#the-student-profile-table" title="Link to this heading">#</a></h4>
 <p>It contains student demographic data along with course registration information,
 course item interactions, and the final result.</p>
 <p>It also lets us identify students that have no interaction records or have
@@ -607,37 +613,47 @@ and students marked with <code class="docutils literal notranslate"><span class=
     <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="o">.</span><span class="n">replace</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;0-35&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;35-55&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;55&lt;=&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
-            <span class="s2">&quot;disability&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
-            <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+            <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;0-35&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;35-55&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span> <span class="s2">&quot;55&lt;=&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;disability&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">},</span>
             <span class="s2">&quot;highest_education&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;No Formal quals&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;Lower Than A Level&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
-                <span class="s2">&quot;A Level or Equivalent&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-                <span class="s2">&quot;HE Qualification&quot;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
-                <span class="s2">&quot;Post Graduate Qualification&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;No Formal quals&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Lower Than A Level&quot;</span><span class="p">:</span> <span class="s2">&quot;0.25&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;A Level or Equivalent&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;HE Qualification&quot;</span><span class="p">:</span> <span class="s2">&quot;0.75&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Post Graduate Qualification&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="s2">&quot;imd_band&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="c1"># Using 0.0 instead of np.nan as NA&#39;s have been filled with zeros.</span>
-                <span class="mf">0.0</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;0-10%&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+                <span class="mf">0.0</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;0-10%&quot;</span><span class="p">:</span> <span class="s2">&quot;5.0&quot;</span><span class="p">,</span>
                 <span class="c1"># The OULAD data set is missing the `%` in the `10-20` imd_band.</span>
-                <span class="s2">&quot;10-20&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">,</span>
-                <span class="s2">&quot;20-30%&quot;</span><span class="p">:</span> <span class="mf">25.0</span><span class="p">,</span>
-                <span class="s2">&quot;30-40%&quot;</span><span class="p">:</span> <span class="mf">35.0</span><span class="p">,</span>
-                <span class="s2">&quot;40-50%&quot;</span><span class="p">:</span> <span class="mf">45.0</span><span class="p">,</span>
-                <span class="s2">&quot;50-60%&quot;</span><span class="p">:</span> <span class="mf">55.0</span><span class="p">,</span>
-                <span class="s2">&quot;60-70%&quot;</span><span class="p">:</span> <span class="mf">65.0</span><span class="p">,</span>
-                <span class="s2">&quot;70-80%&quot;</span><span class="p">:</span> <span class="mf">75.0</span><span class="p">,</span>
-                <span class="s2">&quot;80-90%&quot;</span><span class="p">:</span> <span class="mf">85.0</span><span class="p">,</span>
-                <span class="s2">&quot;90-100%&quot;</span><span class="p">:</span> <span class="mf">95.0</span><span class="p">,</span>
+                <span class="s2">&quot;10-20&quot;</span><span class="p">:</span> <span class="s2">&quot;15.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;20-30%&quot;</span><span class="p">:</span> <span class="s2">&quot;25.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;30-40%&quot;</span><span class="p">:</span> <span class="s2">&quot;35.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;40-50%&quot;</span><span class="p">:</span> <span class="s2">&quot;45.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;50-60%&quot;</span><span class="p">:</span> <span class="s2">&quot;55.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;60-70%&quot;</span><span class="p">:</span> <span class="s2">&quot;65.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;70-80%&quot;</span><span class="p">:</span> <span class="s2">&quot;75.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;80-90%&quot;</span><span class="p">:</span> <span class="s2">&quot;85.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;90-100%&quot;</span><span class="p">:</span> <span class="s2">&quot;95.0&quot;</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="s2">&quot;final_result&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;Withdrawn&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;Fail&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;Pass&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;Distinction&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;Withdrawn&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Fail&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Pass&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Distinction&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
             <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;age_band&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="s2">&quot;disability&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="s2">&quot;highest_education&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="s2">&quot;imd_band&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="s2">&quot;final_result&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">)</span>
 <span class="p">)</span>
@@ -985,7 +1001,7 @@ and students marked with <code class="docutils literal notranslate"><span class=
 </section>
 </section>
 <section id="train-test-split">
-<h2>Train/Test split<a class="headerlink" href="#train-test-split" title="Permalink to this heading">#</a></h2>
+<h2>Train/Test split<a class="headerlink" href="#train-test-split" title="Link to this heading">#</a></h2>
 <p>In this section we split the <code class="docutils literal notranslate"><span class="pre">student_profile</span></code> table into training and
 testing sets and standartize feature values.</p>
 <div class="cell docutils container">
@@ -1004,7 +1020,7 @@ testing sets and standartize feature values.</p>
 </div>
 </section>
 <section id="final-result-prediction">
-<h2>Final result prediction<a class="headerlink" href="#final-result-prediction" title="Permalink to this heading">#</a></h2>
+<h2>Final result prediction<a class="headerlink" href="#final-result-prediction" title="Link to this heading">#</a></h2>
 <p>Next, we train a decision tree model to predict the student <code class="docutils literal notranslate"><span class="pre">final_result</span></code> outcome.
 The model will be used at the final step to evaluate the quality of the
 recommendations.</p>
@@ -1054,8 +1070,8 @@ recommendations.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<p class="rubric">Decision Tree</p>
-<img alt="../_images/be217994b4c5916e2ef227edcbf561973c7607bb8d5aba2452450e53f8a35df7.png" src="../_images/be217994b4c5916e2ef227edcbf561973c7607bb8d5aba2452450e53f8a35df7.png" />
+<h4 class="rubric" id="decision-tree">Decision Tree</h4>
+<img alt="../_images/d47dd52e2108fdbc7195df7ca55fbbd6b5cfbae39e619d28098c07f29ec93d62.png" src="../_images/d47dd52e2108fdbc7195df7ca55fbbd6b5cfbae39e619d28098c07f29ec93d62.png" />
 <p>Precision: 0.8475</p>
 <p>Decision Tree Parameters: {‘criterion’: ‘gini’, ‘max_depth’: 9, ‘min_samples_leaf’: 6, ‘min_samples_split’: 13, ‘random_state’: 0, ‘splitter’: ‘best’}</p>
 <p>Out of 147 failing students, the model predicted correctly 113 failing students (76.87%)</p>
@@ -1063,9 +1079,9 @@ recommendations.</p>
 </div>
 </section>
 <section id="consensus-clustering">
-<h2>Consensus clustering<a class="headerlink" href="#consensus-clustering" title="Permalink to this heading">#</a></h2>
+<h2>Consensus clustering<a class="headerlink" href="#consensus-clustering" title="Link to this heading">#</a></h2>
 <section id="base-clusterings">
-<h3>Base clusterings<a class="headerlink" href="#base-clusterings" title="Permalink to this heading">#</a></h3>
+<h3>Base clusterings<a class="headerlink" href="#base-clusterings" title="Link to this heading">#</a></h3>
 <p>At this stage we train our base clustering models which will be used in the MultiCons
 Consensus algorithm.</p>
 <div class="cell docutils container">
@@ -1121,7 +1137,8 @@ Consensus algorithm.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;MultiCons: selected merging_threshold=0.5 with score: 0.39&#39;
 </pre></div>
 </div>
-<img alt="../_images/4bb5631941795c4f9debf7657c284dbd19644042d42bc0e6c9c2c8b1ced0b4f7.svg" src="../_images/4bb5631941795c4f9debf7657c284dbd19644042d42bc0e6c9c2c8b1ced0b4f7.svg" /><div class="output text_html"><div>
+<img alt="../_images/1f94085fd3bbbc05a303a74e040bbd0ac651d4b3c55a2148fffe39abac07979d.svg" src="../_images/1f94085fd3bbbc05a303a74e040bbd0ac651d4b3c55a2148fffe39abac07979d.svg" />
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1206,7 +1223,7 @@ Consensus algorithm.</p>
     <tr>
       <th rowspan="2" valign="top">6</th>
       <th>False</th>
-      <td>33</td>
+      <td>34</td>
     </tr>
     <tr>
       <th>True</th>
@@ -1314,7 +1331,7 @@ Consensus algorithm.</p>
     <tr>
       <th rowspan="2" valign="top">18</th>
       <th>False</th>
-      <td>98</td>
+      <td>97</td>
     </tr>
     <tr>
       <th>True</th>
@@ -1327,7 +1344,7 @@ Consensus algorithm.</p>
 </section>
 </section>
 <section id="collaborative-filtering">
-<h2>Collaborative filtering<a class="headerlink" href="#collaborative-filtering" title="Permalink to this heading">#</a></h2>
+<h2>Collaborative filtering<a class="headerlink" href="#collaborative-filtering" title="Link to this heading">#</a></h2>
 <p>Next, for each consensus group we train a collaborative filtering model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1360,7 +1377,7 @@ Consensus algorithm.</p>
 </div>
 </section>
 <section id="recommendation">
-<h2>Recommendation<a class="headerlink" href="#recommendation" title="Permalink to this heading">#</a></h2>
+<h2>Recommendation<a class="headerlink" href="#recommendation" title="Link to this heading">#</a></h2>
 <p>At this stage we generate recommedations for students that were predicted as failling.
 We simulate students to follow N recommendations and measure whether it changes the
 estimated success rate.</p>
@@ -1448,51 +1465,51 @@ estimated success rate.</p>
     </tr>
     <tr>
       <th>3</th>
-      <td>12.162162</td>
+      <td>12.837838</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>14.864865</td>
+      <td>16.216216</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>24.324324</td>
+      <td>25.675676</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>36.486486</td>
+      <td>35.135135</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>43.918919</td>
+      <td>43.243243</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>52.702703</td>
+      <td>50.675676</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>54.054054</td>
+      <td>55.405405</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>58.783784</td>
+      <td>60.810811</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>61.486486</td>
+      <td>62.162162</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>66.216216</td>
+      <td>64.189189</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>66.891892</td>
+      <td>64.189189</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>67.567568</td>
+      <td>68.243243</td>
     </tr>
   </tbody>
 </table>
@@ -1500,7 +1517,7 @@ estimated success rate.</p>
 </div>
 </section>
 <section id="validation">
-<h2>Validation<a class="headerlink" href="#validation" title="Permalink to this heading">#</a></h2>
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">#</a></h2>
 <p>Finally, we compare the quality of our approach witha baseline method that applies
 collaborative filtering on the full dataset.</p>
 <div class="cell docutils container">
@@ -1546,66 +1563,66 @@ collaborative filtering on the full dataset.</p>
     <tr>
       <th>2</th>
       <td>8.108108</td>
-      <td>5.405405</td>
+      <td>6.081081</td>
     </tr>
     <tr>
       <th>3</th>
+      <td>12.837838</td>
       <td>12.162162</td>
-      <td>8.108108</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>14.864865</td>
+      <td>16.216216</td>
       <td>18.243243</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>24.324324</td>
-      <td>28.378378</td>
+      <td>25.675676</td>
+      <td>25.675676</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>36.486486</td>
       <td>35.135135</td>
+      <td>35.810811</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>43.918919</td>
       <td>43.243243</td>
+      <td>43.918919</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>52.702703</td>
-      <td>52.027027</td>
+      <td>50.675676</td>
+      <td>53.378378</td>
     </tr>
     <tr>
       <th>9</th>
+      <td>55.405405</td>
       <td>54.054054</td>
-      <td>56.081081</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>58.783784</td>
-      <td>58.783784</td>
+      <td>60.810811</td>
+      <td>59.459459</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>61.486486</td>
       <td>62.162162</td>
+      <td>62.837838</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>66.216216</td>
-      <td>68.243243</td>
+      <td>64.189189</td>
+      <td>66.891892</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>66.891892</td>
-      <td>70.945946</td>
+      <td>64.189189</td>
+      <td>68.243243</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>67.567568</td>
+      <td>68.243243</td>
       <td>72.297297</td>
     </tr>
   </tbody>
@@ -1625,7 +1642,7 @@ collaborative filtering on the full dataset.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8061596d8c5bb643a10f3f47a1b0f41119232423f247ce845ba9b213170c054e.png" src="../_images/8061596d8c5bb643a10f3f47a1b0f41119232423f247ce845ba9b213170c054e.png" />
+<img alt="../_images/b100d4954b15b2cdaae85ee827327593d6947fbeee78daea6d459d0e622722d0.png" src="../_images/b100d4954b15b2cdaae85ee827327593d6947fbeee78daea6d459d0e622722d0.png" />
 </div>
 </div>
 </section>
@@ -1656,11 +1673,10 @@ collaborative filtering on the full dataset.</p>
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer d-print-none">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="predicting_students_final_exam_outcome.html"
@@ -1680,17 +1696,16 @@ collaborative filtering on the full dataset.</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -1737,9 +1752,10 @@ By SergioSim
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2024.
       <br/>
     
   </p>
@@ -1763,8 +1779,8 @@ By SergioSim
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>
