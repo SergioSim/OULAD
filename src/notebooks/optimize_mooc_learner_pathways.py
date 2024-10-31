@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.4
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -139,37 +139,47 @@ student_profile = (
     .fillna(0.0)
     .replace(
         {
-            "age_band": {"0-35": 0.0, "35-55": 0.5, "55<=": 1.0},
-            "disability": {"N": 0.0, "Y": 1.0},
-            "gender": {"M": 0.0, "F": 1.0},
+            "age_band": {"0-35": "0.0", "35-55": "0.5", "55<=": "1.0"},
+            "disability": {"N": "0.0", "Y": "1.0"},
+            "gender": {"M": "0.0", "F": "1.0"},
             "highest_education": {
-                "No Formal quals": 0.0,
-                "Lower Than A Level": 0.25,
-                "A Level or Equivalent": 0.5,
-                "HE Qualification": 0.75,
-                "Post Graduate Qualification": 1.0,
+                "No Formal quals": "0.0",
+                "Lower Than A Level": "0.25",
+                "A Level or Equivalent": "0.5",
+                "HE Qualification": "0.75",
+                "Post Graduate Qualification": "1.0",
             },
             "imd_band": {
                 # Using 0.0 instead of np.nan as NA's have been filled with zeros.
-                0.0: 0.0,
-                "0-10%": 5.0,
+                0.0: "0.0",
+                "0-10%": "5.0",
                 # The OULAD data set is missing the `%` in the `10-20` imd_band.
-                "10-20": 15.0,
-                "20-30%": 25.0,
-                "30-40%": 35.0,
-                "40-50%": 45.0,
-                "50-60%": 55.0,
-                "60-70%": 65.0,
-                "70-80%": 75.0,
-                "80-90%": 85.0,
-                "90-100%": 95.0,
+                "10-20": "15.0",
+                "20-30%": "25.0",
+                "30-40%": "35.0",
+                "40-50%": "45.0",
+                "50-60%": "55.0",
+                "60-70%": "65.0",
+                "70-80%": "75.0",
+                "80-90%": "85.0",
+                "90-100%": "95.0",
             },
             "final_result": {
-                "Withdrawn": False,
-                "Fail": False,
-                "Pass": True,
-                "Distinction": True,
+                "Withdrawn": "",
+                "Fail": "",
+                "Pass": "1",
+                "Distinction": "1",
             },
+        }
+    )
+    .astype(
+        {
+            "age_band": float,
+            "disability": float,
+            "gender": float,
+            "highest_education": float,
+            "imd_band": float,
+            "final_result": bool,
         }
     )
 )

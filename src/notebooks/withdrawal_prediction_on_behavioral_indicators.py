@@ -366,21 +366,21 @@ feature_table = (
     .fillna(0.0)
     .replace(
         {
-            "age_band": {"0-35": 0.0, "35-55": 0.5, "55<=": 1.0},
-            "disability": {"N": 0.0, "Y": 1.0},
-            "gender": {"M": 0.0, "F": 1.0},
+            "age_band": {"0-35": "0.0", "35-55": "0.5", "55<=": "1.0"},
+            "disability": {"N": "0.0", "Y": "1.0"},
+            "gender": {"M": "0.0", "F": "1.0"},
             "highest_education": {
-                "No Formal quals": 0.0,
-                "Lower Than A Level": 0.25,
-                "A Level or Equivalent": 0.5,
-                "HE Qualification": 0.75,
-                "Post Graduate Qualification": 1.0,
+                "No Formal quals": "0.0",
+                "Lower Than A Level": "0.25",
+                "A Level or Equivalent": "0.5",
+                "HE Qualification": "0.75",
+                "Post Graduate Qualification": "1.0",
             },
             "final_result": {
-                "Withdrawn": 1.0,
-                "Fail": 0.0,
-                "Pass": 0.0,
-                "Distinction": 0.0,
+                "Withdrawn": "1.0",
+                "Fail": "0.0",
+                "Pass": "0.0",
+                "Distinction": "0.0",
             },
         }
     )
