@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.4
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -660,7 +660,7 @@ for date in cumulative_click_count.columns:
     unique_values = np.sort(df.unique())
     max_score = 0  # pylint: disable=invalid-name
     result = {}
-    previous_value = np.NaN
+    previous_value = np.nan
     for value in unique_values:
         # Larger interval ==> more speed but less precision
         if value - previous_value < 100:

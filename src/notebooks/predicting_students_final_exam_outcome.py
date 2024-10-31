@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.4
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -95,7 +95,7 @@ def get_feature_table(max_date=500, code_presentation="2013J"):
             )
         )
         # Sum scores by date.
-        .groupby(["id_student", "date"])
+        .groupby(["id_student", "date"], observed=True)
         .agg("sum")
         .reset_index()
         # Reshape the vle table.
@@ -103,9 +103,11 @@ def get_feature_table(max_date=500, code_presentation="2013J"):
         # Rename columns
         .rename(
             columns={
-                assessment.date: f"assessment_{i+1}_sum_click"
-                if assessment.assessment_type != "Exam"
-                else "final_exam_sum_click"
+                assessment.date: (
+                    f"assessment_{i+1}_sum_click"
+                    if assessment.assessment_type != "Exam"
+                    else "final_exam_sum_click"
+                )
                 for i, (_, assessment) in enumerate(assessments.iterrows())
             }
         )
@@ -127,15 +129,23 @@ def get_feature_table(max_date=500, code_presentation="2013J"):
         # Transform gender, age_band and highest_education to numeric values.
         .replace(
             {
-                "age_band": {"0-35": 0.0, "35-55": 0.5, "55<=": 1.0},
-                "gender": {"M": 0.0, "F": 1.0},
+                "age_band": {"0-35": "0.0", "35-55": "0.5", "55<=": "1.0"},
+                "gender": {"M": "0.0", "F": "1.0"},
                 "highest_education": {
-                    "No Formal quals": 0.0,
-                    "Lower Than A Level": 0.25,
-                    "A Level or Equivalent": 0.5,
-                    "HE Qualification": 0.75,
-                    "Post Graduate Qualification": 1.0,
+                    "No Formal quals": "0.0",
+                    "Lower Than A Level": "0.25",
+                    "A Level or Equivalent": "0.5",
+                    "HE Qualification": "0.75",
+                    "Post Graduate Qualification": "1.0",
                 },
+            }
+        )
+        .astype(
+            {
+                "age_band": float,
+                "gender": float,
+                "highest_education": float,
+                "num_of_prev_attempts": float,
             }
         )
         .set_index("id_student")
@@ -156,9 +166,11 @@ def get_feature_table(max_date=500, code_presentation="2013J"):
             .pivot(index="id_student", columns="id_assessment", values="score")
             .rename(
                 columns={
-                    id_assessment: f"assessment_{i+1}_score"
-                    if assessment.assessment_type != "Exam"
-                    else "final_exam_score"
+                    id_assessment: (
+                        f"assessment_{i+1}_score"
+                        if assessment.assessment_type != "Exam"
+                        else "final_exam_score"
+                    )
                     for i, (id_assessment, assessment) in enumerate(
                         assessments.iterrows()
                     )
@@ -191,16 +203,16 @@ print(
 
 # %% [markdown]
 # This is explained in the original OULAD paper of Kuzilek et al.
-# [\[KHZ17\]](../notebooks/first_descriptive_analysis.html#id1):
+# \[[KHZ17](first_descriptive_analysis)\]:
 # ```
 # Results of the final exam are usually missing (since they are scored and used for the
 # final marking immediately at the end of the module).
 # ```
 #
-# Therefore we use the `final_results` column to fill the missing final exam
+# Therefore, we use the `final_results` column to fill in the missing final exam
 # values and then remove the `final_results` column.
 #
-# Other columns containing missing values we fill with the value `-1`.
+# Other columns containing missing values we fill out with the value `-1`.
 
 
 # %%
@@ -271,7 +283,7 @@ RANDOM_STATE = 0
 
 
 def normalized_train_test_split(feature_table_df):
-    """Returns the normalized tain/test split computed from the feature table."""
+    """Returns the normalized train/test split computed from the feature table."""
     x_train_, x_test_, y_train_, y_test_ = train_test_split(
         feature_table_df.drop(columns="final_exam_score"),
         feature_table_df["final_exam_score"],

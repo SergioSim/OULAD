@@ -45,8 +45,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from IPython.display import Markdown, display
-from pyts.classification import TimeSeriesForest
 from sklearn.model_selection import cross_val_score
+from sktime.classification.interval_based import TimeSeriesForestClassifier
 
 from oulad import get_oulad
 
@@ -177,7 +177,7 @@ def get_scores_by_activity_type() -> Iterator[list[float]]:
     for levels, course_df in click_stream.groupby(
         level=["code_module", "code_presentation", "activity_type"]
     ):
-        estimator = TimeSeriesForest(n_estimators=500)
+        estimator = TimeSeriesForestClassifier(n_estimators=500)
         X = course_df.drop(columns="final_result").values
         y = course_df["final_result"].values
         mean_score = np.mean(
@@ -216,7 +216,7 @@ def get_score_by_slice(index_slice) -> Iterator[float]:
     """Computes accuracy prediction scores for the given `index_slice`."""
     y = click_stream.loc[index_slice, "final_result"].values
     for i in range(5, 100, 5):
-        estimator = TimeSeriesForest(n_estimators=500)
+        estimator = TimeSeriesForestClassifier(n_estimators=500)
         limit = round((click_stream.columns.shape[0] - 1) * i / 100)
         X = click_stream.loc[index_slice, click_stream.columns[:limit]].values
         yield np.mean(

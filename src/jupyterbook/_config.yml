@@ -3,7 +3,7 @@
 
 title: Analysis of the OULAD dataset
 author: SergioSim
-copyright: "2023"
+copyright: "2024"
 logo: ""
 
 # Control execution of notebooks on each build.
@@ -11,9 +11,6 @@ logo: ""
 execute:
   execute_notebooks: auto
   timeout: 1200 # 20 minutes cell execution timeout.
-
-parse:
-  myst_heading_anchors: 4
 
 # Define the name of the latex output file for PDF builds
 latex:
@@ -42,3 +39,4 @@ sphinx:
   config:
     html_js_files:
     - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js
+    myst_heading_anchors: 6
