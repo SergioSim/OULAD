@@ -1,5 +1,5 @@
 # -- Base image --
-FROM python:3.10.4-slim-bullseye as base
+FROM python:3.12-slim-bookworm as base
 
 # Upgrade system packages and pip, install security updates and dependencies
 RUN apt update && \
@@ -17,7 +17,7 @@ FROM base as development
 COPY requirements.txt /app/
 
 # Install python dependencies
-RUN pip install -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
 
 # Un-privileged user running the application
 USER ${DOCKER_USER:-1000}
