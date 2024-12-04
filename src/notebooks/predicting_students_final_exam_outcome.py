@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
+#     custom_cell_magics: kql
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.4
+#       jupytext_version: 1.11.2
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: venv
 #     language: python
 #     name: python3
 # ---
@@ -27,10 +29,14 @@
 # ```
 
 # %%
+from itertools import combinations
+from functools import reduce
+
 import numpy as np
 import pandas as pd
 from IPython.display import Markdown, display
-from sklearn.ensemble import VotingClassifier
+from sklearn.base import BaseEstimator
+from sklearn.ensemble import BaggingClassifier, StackingClassifier, VotingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
@@ -46,6 +52,7 @@ from multicons import MultiCons
 from oulad import filter_by_module_presentation, get_oulad
 
 # %load_ext oulad.capture
+pd.set_option("display.max_columns", 23)
 
 
 # %%
@@ -71,171 +78,253 @@ oulad = get_oulad()
 
 
 # %%
-# %%capture -ns predicting_students_final_exam_outcome feature_table
+CODE_MODULE = "DDD"
+CODE_PRESENTATIONS = ("2013J", "2014B")
 
+# %% [markdown]
+# #### Demographic
+#
+# In this section we select the gender, highest education level and age band features from
+# students in the `DDD` course.
 
-def get_feature_table(max_date=500, code_presentation="2013J"):
-    """Returns the feature table computed from the OULAD dataset."""
-    assessments = (
-        filter_by_module_presentation(oulad.assessments, "DDD", code_presentation)
-        # Filter out assessments that are after the max_date.
-        .query(f"date <= {max_date} or assessment_type == 'Exam'").set_index(
-            "id_assessment"
-        )
-    )
-    vle = (
-        filter_by_module_presentation(oulad.student_vle, "DDD", code_presentation)
-        .loc[:, ["id_student", "date", "sum_click"]]
-        # Categorize the date field by assessment date.
-        .assign(
-            date=lambda df: pd.cut(
-                df.date,
-                [-26] + assessments.date.values.tolist(),
-                labels=assessments.date.values,
-            )
-        )
-        # Sum scores by date.
-        .groupby(["id_student", "date"], observed=True)
-        .agg("sum")
-        .reset_index()
-        # Reshape the vle table.
-        .pivot(index="id_student", columns="date", values="sum_click")
-        # Rename columns
-        .rename(
-            columns={
-                assessment.date: (
-                    f"assessment_{i+1}_sum_click"
-                    if assessment.assessment_type != "Exam"
-                    else "final_exam_sum_click"
-                )
-                for i, (_, assessment) in enumerate(assessments.iterrows())
-            }
-        )
-        .drop("final_exam_sum_click", axis=1)
-    )
-    return (
-        filter_by_module_presentation(oulad.student_info, "DDD", code_presentation)
-        .loc[
-            :,
-            [
-                "age_band",
-                "gender",
-                "id_student",
-                "highest_education",
-                "num_of_prev_attempts",
-                "final_result",
-            ],
-        ]
-        # Transform gender, age_band and highest_education to numeric values.
-        .replace(
-            {
-                "age_band": {"0-35": "0.0", "35-55": "0.5", "55<=": "1.0"},
-                "gender": {"M": "0.0", "F": "1.0"},
-                "highest_education": {
-                    "No Formal quals": "0.0",
-                    "Lower Than A Level": "0.25",
-                    "A Level or Equivalent": "0.5",
-                    "HE Qualification": "0.75",
-                    "Post Graduate Qualification": "1.0",
-                },
-            }
-        )
-        .astype(
-            {
-                "age_band": float,
-                "gender": float,
-                "highest_education": float,
-                "num_of_prev_attempts": float,
-            }
-        )
-        .set_index("id_student")
-        # Filter out students who have unregistered from the course before the start.
-        .join(
-            filter_by_module_presentation(
-                oulad.student_registration, "DDD", code_presentation
-            )
-            .set_index("id_student")
-            .query("not date_unregistration < 0")
-            .loc[:, []],
-            how="right",
-        )
-        .join(vle)
-        .join(
-            assessments.join(oulad.student_assessment.set_index("id_assessment"))
-            .reset_index()
-            .pivot(index="id_student", columns="id_assessment", values="score")
-            .rename(
-                columns={
-                    id_assessment: (
-                        f"assessment_{i+1}_score"
-                        if assessment.assessment_type != "Exam"
-                        else "final_exam_score"
-                    )
-                    for i, (id_assessment, assessment) in enumerate(
-                        assessments.iterrows()
-                    )
-                }
-            )
-        )
-    )
-
-
-feature_table = pd.concat(
-    [get_feature_table(), get_feature_table(code_presentation="2014B")]
+# %%
+student_info = (
+    filter_by_module_presentation(oulad.student_info, CODE_MODULE, CODE_PRESENTATIONS)
+    .set_index(["id_student", "code_presentation"])
 )
-display(feature_table)
+demographic = student_info.loc[:, ["gender", "highest_education", "age_band"]]
+display(Markdown("### Demographic"))
+display(demographic)
+
+# %% [markdown]
+# We note that in total 3166 students have enrolled one of the two `DDD` presentations.
+
+# %% [markdown]
+# #### Performance
+#
+# In this section we select the score for each assessment, the final exam score and the
+# number of attempts the student made.
+
+# %%
+attempts = student_info.loc[:, ["num_of_prev_attempts"]]
+assessments = (
+    filter_by_module_presentation(oulad.assessments, CODE_MODULE, CODE_PRESENTATIONS)
+    # The DDD2013J assessments and exams start with ID 25348 and end with 25354.
+    # The DDD2014B assessments and exams start with ID 25355 and end with 25361.
+    # Thus, we remove 25347 from the ID to make them between 1 and 14.
+    .assign(assessment=lambda df: df.id_assessment - 25347)
+    # Now, we align the assessments and exams of both presentations.
+    # We want the first assessment in both presentations to have the ID 1,
+    # the second assessment to have the ID 2, etc.
+    .assign(assessment=lambda df: df.assessment - (df.assessment > 7) * 7)
+    .set_index("id_assessment")
+)
+student_assessment = (
+    oulad.student_assessment.set_index("id_assessment")
+    .join(assessments, how="right")
+    .reset_index()
+    .pivot_table(
+        index=["id_student", "code_presentation"],
+        columns="assessment",
+        values="score",
+        aggfunc="sum"
+    )
+    .rename(columns=lambda x: f"assessment_{x}_score" if x < 7 else "final_exam_score")
+    # Remove students that have no final exam score.
+    # .pipe(lambda df: df[df.final_exam_score.notna()])
+)
+performance = attempts.join(student_assessment)
+display(Markdown("### Performance"))
+display(performance)
+
+# %% [markdown]
+# We note that some of the students have no final exam score (NaN).
+
+# %% [markdown]
+# #### Engagement
+#
+# In this section we compute the sum of clicks per assessment.
+
+# %%
+engagement = (
+    filter_by_module_presentation(oulad.student_vle, CODE_MODULE, CODE_PRESENTATIONS)
+    .drop(columns="id_site")
+    .merge(
+        assessments.pivot(index="code_presentation", columns="date", values="date"),
+        on="code_presentation"
+    )
+    .assign(
+        date=lambda df: (
+            (df.iloc[:, 4:].sub(df.date, axis="index"))
+            .pipe(lambda df: df.where(df >= 0))
+            .idxmin(axis=1)
+            .astype(int)
+        )
+    )
+    .replace({"date": assessments.groupby(["date"])["assessment"].first().to_dict()})
+    .pivot_table(
+        index=["id_student", "code_presentation"],
+        columns="date",
+        values="sum_click",
+        aggfunc="sum",
+        fill_value=0,
+    )
+    .rename(columns=lambda col: f"clicks_{col}")
+    .join(student_info.loc[:, []], how="right")
+)
+display(Markdown("### Engagement"))
+display(engagement)
+
+# %% [markdown]
+# We note that some students have no interactions with the VLE.
+
+# %% [markdown]
+# ### Master table
+#
+# We join the demographic, performance and engagement data into one table.
+
+# %%
+master_table = demographic.join(performance, how="inner").join(engagement, how="inner")
+display(Markdown("### Master table"))
+display(master_table)
 
 # %% [markdown]
 # ### Pre-Processing
 #
-# #### Handling NAs
+# #### Handling NaNs
 #
-# We notice many missing values from the `final_exam_score` column in the selected
-# feature table.
+# We check the master table columns for missing values.
 
 # %%
-print(
-    f"The feature table has {len(feature_table)} rows and the final exam score "
-    f"column has {feature_table.final_exam_score.isna().sum()} rows with NAs "
-    f"({100*feature_table.final_exam_score.isna().sum() / len(feature_table):.0f}%)."
+student_count = master_table.shape[0]
+display(Markdown("### Master table NaNs count and percentage"))
+display(
+    master_table
+    .isna()
+    .sum()
+    .rename("nan_count")
+    .to_frame()
+    .assign(nan_percentage=lambda df: (100 * df.nan_count / student_count).round(2))
 )
 
-
 # %% [markdown]
-# This is explained in the original OULAD paper of Kuzilek et al.
-# \[[KHZ17](first_descriptive_analysis)\]:
-# ```
-# Results of the final exam are usually missing (since they are scored and used for the
-# final marking immediately at the end of the module).
-# ```
+# More than the half of `final_exam_scores` are missing.
 #
-# Therefore, we use the `final_results` column to fill in the missing final exam
-# values and then remove the `final_results` column.
+# The high number of missing exam scores is explained in the original OULAD paper
+# of Kuzilek et al. \[[KHZ17](first_descriptive_analysis)\]:
 #
-# Other columns containing missing values we fill out with the value `-1`.
-
+# > Results of the final exam are usually missing (since they are scored and used for the
+# > final marking immediately at the end of the module).
+#
+# Therefore we check the final result repartition of students that have no final exam
+# score.
 
 # %%
-def fill_nas(feature_table_df):
-    """Fills NAs in the `final_exam_score` column with `final_result` values,
-    drops the `final_result` column and fills remaining NAs with the value `-1`.
-    """
-
-    mask = feature_table_df.final_exam_score.isna()
-    feature_table_df.loc[mask, "final_exam_score"] = (
-        feature_table_df[mask].final_result.isin(["Pass", "Distinction"]) * 40
-    )
-    return feature_table_df.drop(columns="final_result").fillna(-1)
-
-
-feature_table = fill_nas(feature_table)
-display(feature_table)
+display(
+    master_table
+    .join(student_info[["final_result"]])
+    .pipe(lambda df: df[df.final_exam_score.isna()])
+    .final_result
+    .value_counts()
+    .rename("Students without final exam score")
+    .to_frame()
+)
 
 # %% [markdown]
-# #### Splitting train/test data and Normalization
+# We note that most student either have failed or have withdrawn from the course.
+# Surprisingly, one student has passed the course.
+# We take a closer look on the student record and compare it with an average student
+# record below.
+
+# %%
+display(Markdown("The student record that passed the couse without a final exam score"))
+display(
+    master_table
+    .join(student_info[student_info.columns.difference(master_table.columns)])
+    .pipe(lambda df: df[df.final_result == "Pass"])
+    .pipe(lambda df: df[df.final_exam_score.isna()])
+)
+display(Markdown("Average student performance and engagement by final result"))
+display(
+    master_table
+    .join(student_info[student_info.columns.difference(master_table.columns)])
+    .replace(
+        {
+            "final_result": {
+                "Pass": "2",
+                "Distinction": "3",
+                "Fail": "1",
+                "Withdrawn": "0",
+            }
+        }
+    )
+    .astype({"final_result": int})
+    .select_dtypes(include="number")
+    .groupby("final_result")
+    .agg("mean")
+    .reset_index()
+    .astype({"final_result": str})
+    .replace(
+        {
+            "final_result": {
+                "2": "Pass",
+                "3": "Distinction",
+                "1": "Fail",
+                "0": "Withdrawn",
+            }
+        }
+    )
+)
+
+# %% [markdown]
+# We observe that the performance and engagement mertics for the student that passed the
+# course without having a final exam score are close to the average values of other
+# passing students.
 #
-# Now we randomly split the feature table rows into a train (80%) and test (20%) table
-# and, as in the work of Tomasevic et al., we scale and normalize the selected
+# Thus we decided to exlude this student record from the dataset as it represents an
+# outlier: a rare case of passing without a final exam score, which deviates from the
+# typical pattern of failure or withdrawal.
+#
+# Next, some students have withrawn from the course before the course start.
+
+# %%
+students_withdrawn_before_start = (
+    filter_by_module_presentation(
+        oulad.student_registration, CODE_MODULE, CODE_PRESENTATIONS
+    )
+    .set_index(["id_student", "code_presentation"])
+    .join(master_table)
+    .pipe(lambda df: df[df.date_unregistration <= 0])
+    .index
+)
+count = len(students_withdrawn_before_start)
+display(Markdown(f"{count} students withrew before course start"))
+
+# %% [markdown]
+# These students can be removed from classification dataset as it is known at course start
+# that these students would not attempt the final exam.
+#
+# We also remove those student that have made no interactions with the vle.
+#
+# For the remaining missing values we choose to fill them with zeros.
+
+# %%
+master_table_filtered = (
+    master_table
+    # Drop passing student without final exam score.
+    .drop((592315, "2013J")) 
+    .drop(students_withdrawn_before_start)
+    # Drop students without any vle interactions.
+    .pipe(lambda df: df[~df[engagement.columns].isna().all(axis=1)])
+    .fillna(0)
+)
+display(Markdown("### Master table after handling missing values"))
+display(master_table_filtered)
+
+# %% [markdown]
+# #### Normalization
+#
+# As in the work of Tomasevic et al., we scale and normalize the selected
 # features:
 #
 # ```{list-table}
@@ -279,41 +368,84 @@ display(feature_table)
 # ```
 
 # %%
-RANDOM_STATE = 0
-
-
-def normalized_train_test_split(feature_table_df):
-    """Returns the normalized train/test split computed from the feature table."""
-    x_train_, x_test_, y_train_, y_test_ = train_test_split(
-        feature_table_df.drop(columns="final_exam_score"),
-        feature_table_df["final_exam_score"],
-        test_size=0.2,
-        random_state=RANDOM_STATE,
+master_table_normalized = (
+    master_table_filtered
+    # Normalize demographic data.
+    .replace(
+        {
+            "age_band": {"0-35": "0.0", "35-55": "0.5", "55<=": "1.0"},
+            "gender": {"M": "0.0", "F": "1.0"},
+            "highest_education": {
+                "No Formal quals": "0.0",
+                "Lower Than A Level": "0.25",
+                "A Level or Equivalent": "0.5",
+                "HE Qualification": "0.75",
+                "Post Graduate Qualification": "1.0",
+            },
+        }
     )
-    # Scale scores per assessment and final_exam_score.
-    assessment_score_labels = feature_table_df.columns.values[
-        feature_table_df.columns.str.match(r"assessment_[0-9]+_score")
-    ]
-    x_train_.loc[:, assessment_score_labels] /= 100
-    x_test_.loc[:, assessment_score_labels] /= 100
-    y_train_ = (y_train_ / 100 >= 0.4).astype(int)
-    y_test_ = (y_test_ / 100 >= 0.4).astype(int)
+    .astype(float)
+    .pipe(
+        lambda df: pd.DataFrame(
+            MinMaxScaler().fit_transform(df).round(2),
+            columns=df.columns,
+            index=df.index
+        )
+    )
+)
+display(Markdown("### Master table normalized"))
+display(master_table_normalized)
 
-    # Scale the sum of clicks per assessment and number of attempts.
-    columns_slice = feature_table_df.columns.values[
-        feature_table_df.columns.str.match(r"assessment_[0-9]+_sum_click")
-    ].tolist() + ["num_of_prev_attempts"]
+# %% [markdown]
+# #### Discretisation
+#
+# We want to classify students into two categories: `Fail` (0) and `Pass` (1),
+# based on their final exam scores, where a score below 40 is classified as "Fail"
+# and a score of 40 or higher as "Pass."
 
-    # Note: we fit the scaler only on the train data to avoid leaking information
-    # from the test data.
-    scaler = MinMaxScaler().fit(x_train_.loc[:, columns_slice])
-    x_train_.loc[:, columns_slice] = scaler.transform(x_train_.loc[:, columns_slice])
-    x_test_.loc[:, columns_slice] = scaler.transform(x_test_.loc[:, columns_slice])
-    return (x_train_, x_test_, y_train_, y_test_)
+# %%
+# The `final_exam_score` was normalized using the MinMaxScaler.
+# The MinMaxScaler uses the follwing formula:
+# > X_std = (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0))
+# > X_scaled = X_std * (max - min) + min
+# We kept the default max = 1 and min = 0 values, thus X_scaled = X_std.
+get_separator = lambda x: (40 - x.min(axis=0)) / (x.max(axis=0) - x.min(axis=0))
+separator = get_separator(master_table_filtered.final_exam_score) 
+final_exam_score_classes = (
+    (master_table_normalized.final_exam_score >= separator).astype(int)
+)
+final_exam_score_classes.value_counts().to_frame()
 
+# %% [markdown]
+# #### Splitting train/test data
+#
+# Now we randomly split the normalized and discretisized master table rows into a train
+# (80%) and test (20%) table.
+#
+# We also partition the train table into a train (60%) and validation (20%) set for
+# algorithms that require a validation set e.g. Neural Networks.
+#
+# We notice a class imbalance - the `Pass` class appears much more frequently than the
+# `Fail` class.
+# Thus to avoid contructing a train or test subset without the `Fail` class, we choose
+# to make a stratified split (one that keeps the original proportions for each class).
 
-x_train, x_test, y_train, y_test = normalized_train_test_split(feature_table)
-display(x_train)
+# %%
+x_train_80, x_test_20, y_train_80_class, y_test_20_class = train_test_split(
+    master_table_normalized.drop(columns="final_exam_score"),
+    final_exam_score_classes,
+    test_size=0.2,
+    stratify=final_exam_score_classes
+)
+x_train_60, x_validate_20, y_train_60_class, y_validate_20_class = train_test_split(
+    x_train_80, y_train_80_class, test_size=0.25, stratify=y_train_80_class
+)
+get_regression_values = lambda y: master_table_normalized.final_exam_score[y.index]
+y_train_80 = get_regression_values(y_train_80_class)
+y_test_20 = get_regression_values(y_test_20_class)
+y_train_60 = get_regression_values(y_train_60_class)
+y_validate_20 = get_regression_values(y_validate_20_class)
+
 
 # %% [markdown]
 # ## Classification
@@ -341,7 +473,7 @@ display(x_train)
 # search phase.
 
 # %%
-# %%capture -ns predicting_students_final_exam_outcome gs_scores
+# # %%capture -ns predicting_students_final_exam_outcome gs_scores
 # Hyperparameter search space
 
 classifier_hyperparameters = {
@@ -367,7 +499,6 @@ classifier_hyperparameters = {
             "C": [10],  # [0.1, 1.0, 10],
             "gamma": ["scale"],  # ["scale", "auto", 0.0001, 0.01, 0.1],
             "probability": [True],
-            "random_state": [RANDOM_STATE],
         },
     ],
     # Artificial Neural Networks
@@ -376,7 +507,6 @@ classifier_hyperparameters = {
             "max_iter": [1000],
             "validation_fraction": [0.2],
             "hidden_layer_sizes": [(10,)],  # [(10,), (20,), (52, 10)],
-            "random_state": [RANDOM_STATE],
             # [(i,) for i in range(2, 100, 10)] + [
             #     (i, j) for i in range(2, 100, 10) for j in range(2, 100, 10)
             # ],
@@ -394,7 +524,6 @@ classifier_hyperparameters = {
             "max_depth": [6],  # [None, *list(range(1, 11))],
             "min_samples_split": [2],  # range(2, 11, 2),
             "min_samples_leaf": [10],  # range(2, 11, 2),
-            "random_state": [RANDOM_STATE],
         },
     ],
     # Naive Bayes
@@ -407,27 +536,113 @@ classifier_hyperparameters = {
     LogisticRegression: [
         {
             "solver": ["lbfgs"],  # ["lbfgs", "saga"],
-            "random_state": [RANDOM_STATE],
         }
     ],
 }
 
-
-def get_grid_search_scores():
+def get_grid_search_scores(
+    x_train: pd.DataFrame,
+    y_train: pd.DataFrame,
+    x_test: pd.DataFrame,
+    y_test: pd.DataFrame,
+    hyperparameters: dict[BaseEstimator, list[dict[str, list]]],
+    title: str
+) -> pd.DataFrame:
     """Returns the grid search scores."""
-    classifier_score = {"classifier": [], "score": []}
-    for classifier, hyperparameters in classifier_hyperparameters.items():
+    classifier_score = {"classifier": [], title: []}
+    estimators = []
+    train_predictions = []
+    predictions = []
+    for classifier, hyperparameter in hyperparameters.items():
         gs_classifier = GridSearchCV(
-            classifier(), hyperparameters, scoring="f1", n_jobs=-1
+            classifier(), hyperparameter, scoring="f1", n_jobs=-1
         )
         gs_classifier.fit(x_train, y_train)
+        estimators.append((classifier.__name__, gs_classifier))
+        train_predictions.append(gs_classifier.predict(x_train))
+        predictions.append(gs_classifier.predict(x_test))
         classifier_score["classifier"].append(classifier.__name__)
-        classifier_score["score"].append(gs_classifier.score(x_test, y_test))
+        classifier_score[title].append(round(f1_score(y_test, predictions[-1]), 4))
+    
 
-    return classifier_score
+    # Voting Classifier
+    voting = VotingClassifier(estimators=estimators, voting="soft")
+    voting.fit(x_train, y_train)
+    classifier_score["classifier"].append("Voting")
+    classifier_score[title].append(round(f1_score(y_test, voting.predict(x_test)), 4))
+
+    # Bagging Classifier
+    bagging = BaggingClassifier()
+    bagging.fit(x_train, y_train)
+    classifier_score["classifier"].append("Bagging")
+    classifier_score[title].append(round(f1_score(y_test, bagging.predict(x_test)), 4))
+    
+    # Stacking Classifier
+    stacking = StackingClassifier(estimators=estimators)
+    stacking.fit(x_train, y_train)
+    classifier_score["classifier"].append("Stacking")
+    classifier_score[title].append(round(f1_score(y_test, stacking.predict(x_test)), 4))
+    
+    # SupMultiCons Classifier
+    # Searching for the best merging_threshold.
+    max_score = 0
+    multicons = None
+    consensus_functions = [
+        "consensus_function_12",
+        "consensus_function_13",
+        "consensus_function_14",
+        "consensus_function_15",
+    ]
+    for consensus_function in consensus_functions:
+        for merging_threshold in np.arange(0, 1, 0.05):
+            consensus = MultiCons(
+                similarity_measure="JaccardIndex",
+                optimize_label_names=True,
+                consensus_function=consensus_function,
+                merging_threshold=merging_threshold,
+            ).fit(train_predictions)
+            score = f1_score(y_train, consensus.labels_.astype(bool))
+            if score > max_score:
+                max_score = score
+                multicons = consensus
+
+    classifier_score["classifier"].append("SupMultiCons")
+    classifier_score[title].append(
+        round(f1_score(y_test, multicons.fit(predictions).labels_.astype(bool)), 4)
+    )
+
+    return pd.DataFrame(classifier_score).set_index("classifier").round(4)
 
 
-gs_scores = pd.DataFrame(get_grid_search_scores()).round(4)
+columns = {
+    "D": list(demographic.columns),
+    "E": list(engagement.columns),
+    "P": list(performance.columns.difference(["final_exam_score"]))
+}
+columns_subsets = {
+    **columns,
+    "D+E": columns["D"] + columns["E"],
+    "D+P": columns["D"] + columns["P"],
+    "E+P": columns["E"] + columns["P"],
+    "D+E+P": columns["D"] + columns["E"] + columns["P"]
+}
+
+gs_scores = reduce(
+    lambda a, b: a.join(b),
+    [
+        get_grid_search_scores(
+            x_train_80[subset],
+            y_train_80_class,
+            x_test_20[subset],
+            y_test_20_class,
+            classifier_hyperparameters,
+            column,
+        )
+        for column, subset in columns_subsets.items()
+    ]
+)
+display(Markdown("### Comparison of F1 score for final exam classification"))
+display(Markdown("(D - demographics, E - engagement, P - performance) data"))
 display(gs_scores)
 
 
@@ -441,96 +656,35 @@ display(gs_scores)
 #
 # As in the work of Tomasevic et al., we will compare the classification performances at
 # different moments of the course based on the number of assessments passed.
-#
-# Let's start by taking a look at the assessment table for the selected courses.
 
 # %%
-oulad.assessments[
-    (oulad.assessments.code_module == "DDD")
-    & (oulad.assessments.assessment_type == "TMA")
-    & (
-        (oulad.assessments.code_presentation == "2013J")
-        | (oulad.assessments.code_presentation == "2014B")
-    )
-].sort_values("date")
+columns_subsets = {
+    "After 1st assessment": columns["D"] + columns["E"][:1] + columns["P"][:1],
+    "After 2nd assessment": columns["D"] + columns["E"][:2] + columns["P"][:2],
+    "After 3rd assessment": columns["D"] + columns["E"][:3] + columns["P"][:3],
+    "After 4th assessment": columns["D"] + columns["E"][:4] + columns["P"][:4],
+    "After 5th assessment": columns["D"] + columns["E"][:5] + columns["P"][:5],
+    "After 6th assessment": columns["D"] + columns["E"][:6] + columns["P"][:6],
+}
 
-
-# %% [markdown]
-# We note that each course module has six intermediary assessments.
-#
-# Next, we use the final submisssion `date` field to filter out assessment related
-# information after a given date and repeat the same data preprocessing and
-# classification process as done previously.
-#
-# We also add Voting and MultiCons ensemble methods to check whether they might improve
-# current results.
-
-
-# %%
-# %%capture -ns predicting_students_final_exam_outcome scores
-def get_train_test_assessments_by_day(day):
-    """Returns the train/test feature table filtered by date."""
-
-    filtered_feature_table = pd.concat(
-        [get_feature_table(day), get_feature_table(day, code_presentation="2014B")]
-    )
-    filtered_feature_table = fill_nas(filtered_feature_table)
-    return normalized_train_test_split(filtered_feature_table)
-
-
-def get_scores_by_assessment_date():
-    """Returns a DataFrame with f1 prediction scores for each classifier."""
-    # pylint: disable=too-many-locals
-    result = {}
-    # We select the date such that both courses include the same amount of assessments
-    # after the filter.
-    for day in [25, 53, 88, 123, 165, 207]:
-        result[day] = []
-        x_train_, x_test_, y_train_, y_test_ = get_train_test_assessments_by_day(day)
-        train_predictions = []
-        predictions = []
-        estimators = []
-        for classifier, hyperparameters in classifier_hyperparameters.items():
-            gs_classifier = GridSearchCV(
-                classifier(), hyperparameters, scoring="f1", n_jobs=-1
-            )
-            gs_classifier.fit(x_train_, y_train_)
-            estimators.append((classifier.__name__, gs_classifier))
-            predictions.append(gs_classifier.predict(x_test_))
-            train_predictions.append(gs_classifier.predict(x_train_))
-            result[day].append(round(f1_score(y_test_, predictions[-1]), 4))
-
-        # Voting Classifier
-        voting = VotingClassifier(estimators=estimators, voting="soft")
-        voting.fit(x_train_, y_train_)
-        result[day].append(round(f1_score(y_test_, voting.predict(x_test_)), 4))
-
-        # Searching for the best merging_threshold.
-        max_score = 0
-        multicons = None
-        for merging_threshold in np.arange(0, 1, 0.05):
-            consensus = MultiCons(
-                similarity_measure="JaccardIndex",
-                optimize_label_names=True,
-                consensus_function="consensus_function_12",
-                merging_threshold=merging_threshold,
-            ).fit(train_predictions)
-            score = f1_score(y_train_, consensus.labels_.astype(bool))
-            if score > max_score:
-                max_score = score
-                multicons = consensus
-
-        result[day].append(
-            round(f1_score(y_test_, multicons.fit(predictions).labels_.astype(bool)), 4)
+gs_scores = reduce(
+    lambda a, b: a.join(b),
+    [
+        get_grid_search_scores(
+            x_train_80[subset],
+            y_train_80_class,
+            x_test_20[subset],
+            y_test_20_class,
+            classifier_hyperparameters,
+            column,
         )
-
-    return pd.DataFrame(
-        result,
-        index=[clf.__name__ for clf in classifier_hyperparameters]
-        + ["Voting", "MultiCons"],
+        for column, subset in columns_subsets.items()
+    ]
+)
+display(
+    Markdown(
+        "### Comparison of F1 score for final exam classification"
+        "at different points in time"
     )
-
-
-scores = get_scores_by_assessment_date()
-display(Markdown("F1 score at different points in time:"))
-display(scores)
+)
+display(gs_scores)
